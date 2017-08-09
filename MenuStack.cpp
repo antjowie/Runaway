@@ -17,6 +17,7 @@ void MenuStack::pop()
 		return;
 
 	delete m_menuStack.top();
+	m_menuStack.top() = nullptr; // Probably unnecessary
 	m_menuStack.pop();
 }
 

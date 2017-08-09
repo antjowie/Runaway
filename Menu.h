@@ -5,33 +5,38 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 #include <vector>
+#include <map>
 
 class Object
 {
-private:
+protected:
 	sf::Rect<int> m_body;	// Body of the object. Used for logic or textures
+	bool m_isValid = false;	// Checks the valid condition
 
 public:
-	Object(sf::RenderWindow &window);
+	Object();
 
-	virtual void draw(sf::RenderWindow &window) = 0;		// Draws the object
 	virtual void logic(const sf::Time &elapsedTime) = 0;	// Runs the logic behind the object (the amount of hp)
-	virtual bool isValid() = 0;								// Checks if object is valid (the hud)
-	virtual void resize(sf::RenderWindow &window) = 0;		// Resizes textures
+	virtual void input(sf::RenderWindow& window) = 0;		// Checks if specific logic is allowed to run (changes m_isvalid)
+	virtual void draw(sf::RenderWindow &window) = 0;		// Draws the object
+	
+	bool isValid() const;					// Checks if object is valid (the hud)
+	void resize(sf::RenderWindow &window);	// Resizes textures
 };
 
 class MenuStack;	// Declare that this class will be used
 
 class Menu
 {
-private:
+protected:
 	MenuStack *menuStack;			// Pointer towards the menuStack. Used to push new menu's
-	std::vector<Object> m_objects;	// Vector of all objects. self explanitory (I hope)
+	std::vector<Object*> m_objects;	// Vector of all objects. self explanitory (I hope)
 
 public:
 	Menu(MenuStack* const menuStack);
+	~Menu();
 
-	virtual void input(sf::RenderWindow &window) = 0;		// Gets input
-	virtual void update(const sf::Time elapsedTime)	= 0;	// Updates all valid objects
-	virtual void draw(sf::RenderWindow &window) = 0;		// Draws all valid objects
+	virtual void input(sf::RenderWindow &window) = 0;	// Gets input
+	void update(const sf::Time &elapsedTime);			// Updates all valid objects
+	void draw(sf::RenderWindow &window);				// Draws all valid objects
 };

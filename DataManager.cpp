@@ -1,26 +1,28 @@
 #include "DataManager.h"
 
-#include <iostream>
-
-
 DataManager::DataManager()
 {
+	// Load fonts
+	loadFont("pixel", "Data/fonts/Pixeled.ttf");
 
+	// Load textures
+	loadTexture("player", "Data/textures/player.png");
+	loadTexture("box", "Data/textures/box.png");
+	loadTexture("mainMenuBackground", "Data/textures/mainMenuBackground.png");
 }
 
 DataManager & DataManager::getInstance()
 {
-	std::cout << "DataManager object created!\n";
 	static DataManager instance;
 	return instance;
 }
 
-void DataManager::loadTexture(const std::string textureName, const std::string texturePath, const bool isRepeated = false)
+void DataManager::loadTexture(const std::string textureName, const std::string texturePath, const bool isRepeated)
 {
 	sf::Texture texture;
 
 	texture.loadFromFile(texturePath);
-	texture.isRepeated = isRepeated;
+	texture.setRepeated(isRepeated);
 	m_textureMap[textureName] = texture;
 }
 

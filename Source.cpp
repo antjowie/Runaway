@@ -4,15 +4,17 @@
 //
 
 #include "MenuStack.h"
+#include "MainMenu.h"
 
 int main() 
 {
-	sf::RenderWindow window(sf::VideoMode(1280,720),"Runaway",sf::Style::Resize);
+	sf::RenderWindow window(sf::VideoMode(1280,720),"Runaway",sf::Style::Default);
 	sf::Clock time;
 	sf::Time elapsedTime;
 	MenuStack menuStack;
 	
-	menuStack.push();
+	window.setFramerateLimit(60);
+	menuStack.push(new MainMenu(&menuStack));
 	time.restart();
 
 	while (window.isOpen())
