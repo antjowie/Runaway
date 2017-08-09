@@ -31,7 +31,7 @@ private:
 public:
 	Menu(MenuStack* const menuStack);
 
-	virtual void input(sf::RenderWindow &windo) = 0;		// Gets input
+	virtual void input(sf::RenderWindow &window) = 0;		// Gets input
 	virtual void update(const sf::Time elapsedTime)	= 0;	// Updates all valid objects
 	virtual void draw(sf::RenderWindow &window) = 0;		// Draws all valid objects
 };
