@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Menu.h"
+#include "TextButtonObject.h"
 
 class BackgroundObject :
 	public Object
@@ -15,16 +16,21 @@ public:
 	BackgroundObject();
 
 	virtual void draw(sf::RenderWindow &window);					
-	virtual void logic(const sf::Time &elapsedTime);				
+	virtual void logic(const float elapsedTime);				
 	virtual void input(sf::RenderWindow& window);												
 };
 
 class MainMenu :
 	public Menu
 {
+private:
+	std::vector<TextButtonObject*> m_buttons;
+
 public:
 	MainMenu(MenuStack *const menuStack);
+	~MainMenu();
 
 	virtual void input(sf::RenderWindow &window);
+	virtual void update(const float elapsedTime);
+	virtual void draw(sf::RenderWindow &window);
 };
-

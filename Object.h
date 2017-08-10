@@ -13,7 +13,7 @@ protected:
 public:
 	Object();
 
-	virtual void logic(const sf::Time &elapsedTime) = 0;	// Runs the logic behind the object (the amount of hp)
+	virtual void logic(const float elapsedTime) = 0;		// Runs the logic behind the object (the amount of hp)
 	virtual void input(sf::RenderWindow& window) = 0;		// Checks if specific logic is allowed to run (changes m_isvalid)
 	virtual void draw(sf::RenderWindow &window) = 0;		// Draws the object
 

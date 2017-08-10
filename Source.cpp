@@ -10,7 +10,7 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1280,720),"Runaway",sf::Style::Default);
 	sf::Clock time;
-	sf::Time elapsedTime;
+	float elapsedTime;
 	MenuStack menuStack;
 	
 	window.setFramerateLimit(60);
@@ -20,7 +20,7 @@ int main()
 	while (window.isOpen())
 	{
 		// Used for animation and consistent movement over all fps values
-		elapsedTime = time.restart();
+		elapsedTime = time.restart().asSeconds();
 
 		// Logic
 		menuStack.peek()->input(window);

@@ -23,6 +23,6 @@ public:
 	~Menu();
 
 	virtual void input(sf::RenderWindow &window) = 0;	// Gets input
-	void update(const sf::Time &elapsedTime);			// Updates all valid objects
-	void draw(sf::RenderWindow &window);				// Draws all valid objects
+	virtual void update(const float elapsedTime);		// Updates all valid objects
+	virtual void draw(sf::RenderWindow &window);		// Draws all valid objects
 };

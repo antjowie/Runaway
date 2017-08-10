@@ -16,10 +16,12 @@ public:
 	TextObject();
 
 	virtual void draw(sf::RenderWindow &window);
-	virtual void logic(const sf::Time &elapsedTime);
+	virtual void logic(const float elapsedTime);
 	virtual void input(sf::RenderWindow& window);
 
-	sf::Vector2f const &getText() const;
 	void setText(const sf::Vector2f pos);
+	void setTextSize(const unsigned int newTextSize);
 	void setString(const std::string text);
+
+	sf::Vector2f const &getText() const;
 };

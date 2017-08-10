@@ -14,7 +14,7 @@ Menu::~Menu()
 	}
 }
 
-void Menu::update(const sf::Time & elapsedTime)
+void Menu::update(const float elapsedTime)
 {
 	for (auto iter : m_objects)
 	{

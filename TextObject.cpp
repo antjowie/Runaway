@@ -12,7 +12,7 @@ void TextObject::draw(sf::RenderWindow & window)
 	window.draw(m_text);
 }
 
-void TextObject::logic(const sf::Time & elapsedTime)
+void TextObject::logic(const float elapsedTime)
 {
 }
 
@@ -23,6 +23,11 @@ void TextObject::input(sf::RenderWindow & window)
 void TextObject::setText(const sf::Vector2f pos)
 {
 	m_text.setPosition(pos);
+}
+
+void TextObject::setTextSize(const unsigned int newTextSize)
+{
+	m_text.setCharacterSize(newTextSize);
 }
 
 sf::Vector2f const &TextObject::getText() const
