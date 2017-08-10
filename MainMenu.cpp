@@ -1,12 +1,30 @@
 #include "MainMenu.h"
 #include "DataManager.h"
-#include <iostream>
+#include "TextButtonObject.h"
 
 MainMenu::MainMenu(MenuStack *const menuStack) :
 	Menu(menuStack)
 {
 	m_objects.push_back(new BackgroundObject());
 
+	TextButtonObject *play = new TextButtonObject;
+	play->setString("PLAY");
+	play->setBody(sf::IntRect(0, 400, 1280, 60));
+	play->setText(sf::Vector2f(100, 420));
+
+	TextButtonObject *options = new TextButtonObject;
+	options->setString("OPTIONS");
+	options->setBody(sf::IntRect(0, 500, 1280, 60));
+	options->setText(sf::Vector2f(100, 520));
+
+	TextButtonObject *quit = new TextButtonObject;
+	quit->setString("QUIT");
+	quit->setBody(sf::IntRect(0, 600, 1280, 60));
+	quit->setText(sf::Vector2f(100, 620));
+
+	m_objects.push_back(play);
+	m_objects.push_back(options);
+	m_objects.push_back(quit);
 }
 
 void MainMenu::input(sf::RenderWindow & window)
@@ -18,11 +36,16 @@ void MainMenu::input(sf::RenderWindow & window)
 		{
 		case sf::Event::Closed:
 			window.close();
-			break;
+			break; 
+		case sf::Event::Resized:
 		default:
 			break;
 		}
 	}
+	
+	for (auto iter : m_objects)
+		if (iter->isValid())
+			iter->input(window);
 }
 
 BackgroundObject::BackgroundObject()
@@ -44,61 +67,3 @@ void BackgroundObject::input(sf::RenderWindow & window)
 {
 }
 
-TextButtonObject::TextButtonObject()
-{
-	m_text.setFont(DataManager::getInstance().getFont("pixel"));
-	m_isValid = true;
-}
-
-void TextButtonObject::draw(sf::RenderWindow & window)
-{
-	window.draw(m_bodyTexture);
-	window.draw(m_text);
-}
-
-void TextButtonObject::logic(const sf::Time & elapsedTime)
-{
-	const int fadeIn = 10;
-	const int fadeOut = 5;
-	const int maxFade = 100;
-
-	m_fade -= fadeOut;
-
-	if (hover)
-		m_fade += fadeIn;
-	
-	// Bounds check
-	if (m_fade > maxFade)
-		m_fade = maxFade;
-	else if (m_fade <= 0)
-		m_fade = 0;
-
-	m_bodyTexture.setFillColor(sf::Color(255, 0, 0, static_cast<sf::Uint8>(m_fade)));
-}
-
-void TextButtonObject::input(sf::RenderWindow & window)
-{
-	sf::Mouse mouse;
-	if (m_body.contains(mouse.getPosition(window)))
-		hover = true;
-	else
-		hover = false;
-}
-
-void TextButtonObject::setPosition(const sf::Vector2i pos)
-{
-	m_body.left = pos.x;
-	m_body.top = pos.y;
-}
-
-void TextButtonObject::setBody(const sf::Rect<int> body)
-{
-	m_body = body;
-	m_bodyTexture.setPosition(sf::Vector2f(static_cast<float>(m_body.left), static_cast<float>(m_body.top)));
-	m_bodyTexture.setSize(sf::Vector2f(static_cast<float>(m_body.width), static_cast<float>(m_body.height)));
-}
-
-void TextButtonObject::setText(const std::string text)
-{
-	m_text.setString(text);
-}

@@ -1,21 +1,5 @@
 #include "Menu.h"
 
-#include <iostream>
-
-Object::Object()
-{
-}
-
-bool Object::isValid() const
-{
-	return m_isValid;
-}
-
-void Object::resize(sf::RenderWindow & window)
-{
-	std::cout << "Resize event!\n";
-}
-
 Menu::Menu(MenuStack* const menuStack):
 	menuStack(menuStack)
 {

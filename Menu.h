@@ -3,26 +3,12 @@
 //
 
 #pragma once
+#include "Object.h"
+
 #include <SFML\Graphics.hpp>
 #include <vector>
 #include <map>
 
-class Object
-{
-protected:
-	sf::Rect<int> m_body;	// Body of the object. Used for logic or textures
-	bool m_isValid = false;	// Checks the valid condition
-
-public:
-	Object();
-
-	virtual void logic(const sf::Time &elapsedTime) = 0;	// Runs the logic behind the object (the amount of hp)
-	virtual void input(sf::RenderWindow& window) = 0;		// Checks if specific logic is allowed to run (changes m_isvalid)
-	virtual void draw(sf::RenderWindow &window) = 0;		// Draws the object
-	
-	bool isValid() const;					// Checks if object is valid (the hud)
-	void resize(sf::RenderWindow &window);	// Resizes textures
-};
 
 class MenuStack;	// Declare that this class will be used
 

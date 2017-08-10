@@ -1,6 +1,6 @@
 //
 // Start of the program
-// Initiates the stack
+// Initiates the stack and game loop
 //
 
 #include "MenuStack.h"
