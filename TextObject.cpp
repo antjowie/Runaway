@@ -1,10 +1,16 @@
 #include "TextObject.h"
 #include "DataManager.h"
 
-TextObject::TextObject()
+TextObject::TextObject(const bool isValid):
+	Object(isValid)
 {
 	m_text.setFont(DataManager::getInstance().getFont("pixel"));
-	m_isValid = true;
+}
+
+TextObject::TextObject(const std::string &text, const bool isValid) : 
+	TextObject(isValid)
+{
+	setString(text);
 }
 
 void TextObject::draw(sf::RenderWindow & window)
@@ -39,3 +45,9 @@ void TextObject::setString(const std::string text)
 {
 	m_text.setString(text);
 }
+
+void TextObject::setOriginToLeftMiddle()
+{
+	m_text.setOrigin(0, m_text.getLocalBounds().height / 2);
+}
+ 

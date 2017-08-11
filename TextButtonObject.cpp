@@ -1,9 +1,21 @@
 #include "TextButtonObject.h"
 #include "DataManager.h"
 
-TextButtonObject::TextButtonObject() :
-	TextObject()
+TextButtonObject::TextButtonObject(const bool isValid) :
+	TextObject(isValid)
 {
+}
+
+TextButtonObject::TextButtonObject(const std::string &text,const bool isValid) :
+	TextObject(isValid)
+{
+	setString(text);
+}
+
+TextButtonObject::TextButtonObject(const std::string & text, const Function function, const bool isValid):
+	TextButtonObject(text,isValid)
+{
+	m_function = function ;
 }
 
 void TextButtonObject::draw(sf::RenderWindow & window)
@@ -14,9 +26,10 @@ void TextButtonObject::draw(sf::RenderWindow & window)
 
 void TextButtonObject::logic(const float elapsedTime)
 {
-	const int fadeIn = 25;		// Fade in speed
-	const int fadeOut = 5;		// Fade out speed
-	const int maxFade = 150;	// Max opacity of fade
+	// The middle rvalue represents the ammount in 1 second (8 means that the maxfade will be reached in 1/8 of a second)
+	const int maxFade{ 150 };							// Max opacity of fade
+	const float fadeIn{ maxFade * 8 * elapsedTime };	// Fade in speed
+	const float fadeOut{ maxFade * 2 * elapsedTime };	// Fade out speed
 
 	m_fade -= fadeOut;
 

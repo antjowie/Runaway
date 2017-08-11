@@ -7,19 +7,21 @@ Menu::Menu(MenuStack* const menuStack):
 
 Menu::~Menu()
 {
-	for (auto *iter : m_objects)
+	for (auto iter : m_objects)
 	{
 		delete iter;
-		iter = nullptr;
 	}
+	m_objects.clear();
 }
 
 void Menu::update(const float elapsedTime)
 {
 	for (auto iter : m_objects)
 	{
-		if (iter->isValid())
+		if (iter->isValid()) 
+		{
 			iter->logic(elapsedTime);
+		}
 	}
 }
 
@@ -27,7 +29,8 @@ void Menu::draw(sf::RenderWindow & window)
 {
 	for (auto iter : m_objects)
 	{
-		if (iter->isValid()) {
+		if (iter->isValid()) 
+		{
 			iter->draw(window);
 		}
 	}

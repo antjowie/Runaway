@@ -1,22 +1,23 @@
 //
-// The MainMenu class handles the main menu
+// Class for the options menu
 //
 
 #pragma once
 #include "Menu.h"
 #include "TextButtonObject.h"
 
-class MainMenu :
+class OptionsMenu :
 	public Menu
 {
 private:
 	std::vector<TextButtonObject*> m_buttons;
 
 public:
-	MainMenu(MenuStack *const menuStack);
-	~MainMenu();
+	OptionsMenu(MenuStack* const menuStack);
+	~OptionsMenu();
 
 	virtual void input(sf::RenderWindow &window);
 	virtual void update(const float elapsedTime);
 	virtual void draw(sf::RenderWindow &window);
 };
+
