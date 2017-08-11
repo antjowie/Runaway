@@ -1,5 +1,7 @@
 #include "TextObject.h"
 #include "DataManager.h"
+#include <iostream>
+
 
 TextObject::TextObject(const bool isValid):
 	Object(isValid)
@@ -48,6 +50,6 @@ void TextObject::setString(const std::string text)
 
 void TextObject::setOriginToLeftMiddle()
 {
-	m_text.setOrigin(0, m_text.getLocalBounds().height / 2);
+	m_text.setOrigin(0, m_text.getLocalBounds().top + m_text.getLocalBounds().height / 2);
 }
  

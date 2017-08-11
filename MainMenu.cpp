@@ -5,29 +5,26 @@
 MainMenu::MainMenu(MenuStack *const menuStack) :
 	Menu(menuStack)
 {
+	// Maybe unnecessarily 
+	m_objects.reserve(2);
+	m_buttons.reserve(3);
+
 	// Background
 	m_objects.push_back(new BackgroundObject("mainMenuBackground",false));
 
 	// Menu buttons
-	TextButtonObject *menuButtons[3] { new TextButtonObject(true),new TextButtonObject(true), new TextButtonObject(true) };
-	
-	menuButtons[0]->setString("PLAY");
-	menuButtons[0]->setFunction(Function::Play);
-	menuButtons[1]->setString("OPTIONS");
-	menuButtons[1]->setFunction(Function::Options);
-	menuButtons[2]->setString("QUIT");
-	menuButtons[2]->setFunction(Function::Quit);
+	m_buttons.push_back(new TextButtonObject("PLAY", Function::Play, true));
+	m_buttons.push_back(new TextButtonObject("OPTIONS", Function::Options, true));
+	m_buttons.push_back(new TextButtonObject("QUIT", Function::Quit, true));
 
-	for (int i = 0; i < 3; ++i)
+	int i{ 0 };
+	for (auto iter: m_buttons)
 	{
-		//menuButtons[i]->setOriginToMiddle();
-		menuButtons[i]->setText(sf::Vector2f(100, 400 + static_cast<float>(100 * i)));
-		menuButtons[i]->setBody(sf::IntRect(0, 400 + 100 * i, 1280, 60));
+		const int offset{ i++ * 100 };
+		iter->setOriginToLeftMiddle();
+		iter->setText(sf::Vector2f(100, 430 + offset));
+		iter->setBody(sf::IntRect(0, 400 + offset, 1280, 60));
 	}
-
-
-	for (int i = 0; i < 3; ++i)
-		m_buttons.push_back(menuButtons[i]);
 
 	// Title
 	TextObject *title = new TextObject("RUNAWAY",true);
