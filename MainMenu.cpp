@@ -1,6 +1,9 @@
 #include "MainMenu.h"
 #include "DataManager.h"
 #include "BackgroundObject.h"
+#include "MenuStack.h"
+#include "OptionsMenu.h"
+#include "GameMenu.h"
 
 MainMenu::MainMenu(MenuStack *const menuStack) :
 	Menu(menuStack)
@@ -10,7 +13,7 @@ MainMenu::MainMenu(MenuStack *const menuStack) :
 	m_buttons.reserve(3);
 
 	// Background
-	m_objects.push_back(new BackgroundObject("mainMenuBackground",false));
+	m_objects.push_back(new BackgroundObject("mainMenuBackground",true));
 
 	// Menu buttons
 	m_buttons.push_back(new TextButtonObject("PLAY", Function::Play, true));
@@ -22,7 +25,7 @@ MainMenu::MainMenu(MenuStack *const menuStack) :
 	{
 		const int offset{ i++ * 100 };
 		iter->setOriginToLeftMiddle();
-		iter->setText(sf::Vector2f(100, 430 + offset));
+		iter->setText(sf::Vector2f(100, 430 + static_cast<float>(offset)));
 		iter->setBody(sf::IntRect(0, 400 + offset, 1280, 60));
 	}
 
@@ -76,9 +79,11 @@ void MainMenu::input(sf::RenderWindow & window)
 				switch (iter->getFunction())
 				{
 				case Function::Play:
+					m_menuStack->push(new GameMenu(m_menuStack));
 					break;
 
 				case Function::Options:
+					m_menuStack->push(new OptionsMenu(m_menuStack));
 					break;
 
 				case Function::Quit:
@@ -122,6 +127,7 @@ void MainMenu::update(const float elapsedTime)
 
 void MainMenu::draw(sf::RenderWindow & window)
 {
+	window.setView(window.getDefaultView());
 	Menu::draw(window);
 	for (auto iter : m_buttons)
 	{

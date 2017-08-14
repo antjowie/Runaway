@@ -1,7 +1,7 @@
 #include "Menu.h"
 
 Menu::Menu(MenuStack* const menuStack):
-	menuStack(menuStack)
+	m_menuStack(menuStack)
 {
 }
 
@@ -34,4 +34,9 @@ void Menu::draw(sf::RenderWindow & window)
 			iter->draw(window);
 		}
 	}
+}
+
+bool const Menu::isPop() const
+{
+	return m_isPop;
 }
