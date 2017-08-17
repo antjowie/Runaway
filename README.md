@@ -13,6 +13,7 @@ It will also show me my weaker spots which is always a good thing. And that conc
 I've learned C++ at http://www.learncpp.com/ and http://www.cplusplus.com/doc/tutorial/  
 SFML can be found at https://www.sfml-dev.org/index.php  
 My choice of IDE was Visual Studio which can be found at https://www.visualstudio.com/vs/
+The levels were made with an open source tile map editor called Tiled found at http://www.mapeditor.org/
 
 # Contact
 Feel free to ask me any questions! Although I'm not entirely honest, because I have not listed any way to communicate with me.  

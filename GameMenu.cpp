@@ -3,7 +3,7 @@
 #include "BackgroundObject.h"
 
 GameMenu::GameMenu(MenuStack* const menuStack):
-	Menu(menuStack), m_camera(sf::FloatRect(1280 / 2,720 / 2,1280,720),0.5f)
+	Menu(menuStack), m_camera(sf::FloatRect(1280 / 2,720 / 2,1280,720),0.1f)
 {
 	m_objects.push_back(new BackgroundObject("mainMenuBackground",true));
 }
