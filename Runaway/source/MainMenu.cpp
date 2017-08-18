@@ -122,13 +122,13 @@ void MainMenu::update(const float elapsedTime)
 
 void MainMenu::draw(sf::RenderWindow & window)
 {
-	window.setView(window.getDefaultView());
+	window.setView(window.getDefaultView()); // If returning from the gameMenu, restores camera positions
 	Menu::draw(window);
 	for (auto iter : m_buttons)
 	{
 		if (iter->isValid())
 		{
-		iter->draw(window);
+			iter->draw(window);
 		}
 	}
 }

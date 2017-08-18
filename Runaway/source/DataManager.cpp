@@ -3,11 +3,11 @@
 DataManager::DataManager()
 {
 	// Load fonts
-	loadFont("pixel", "Data/fonts/Pixeled.ttf");
+	loadFont("pixel", "Runaway/data/fonts/Pixeled.ttf");
 
 	// Load textures
-	loadTexture("player", "Data/textures/player.png");
-	loadTexture("mainMenuBackground", "Data/textures/mainMenuBackground.png");
+	loadTexture("player", "Runaway/data/textures/player.png");
+	loadTexture("mainMenuBackground", "Runaway/data/textures/mainMenuBackground.png");
 }
 
 DataManager & DataManager::getInstance()
