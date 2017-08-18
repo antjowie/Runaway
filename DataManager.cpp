@@ -7,7 +7,6 @@ DataManager::DataManager()
 
 	// Load textures
 	loadTexture("player", "Data/textures/player.png");
-	loadTexture("box", "Data/textures/box.png");
 	loadTexture("mainMenuBackground", "Data/textures/mainMenuBackground.png");
 }
 

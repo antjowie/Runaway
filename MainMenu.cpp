@@ -16,7 +16,7 @@ MainMenu::MainMenu(MenuStack *const menuStack) :
 	m_objects.push_back(new BackgroundObject("mainMenuBackground",true));
 
 	// Menu buttons
-	m_buttons.push_back(new TextButtonObject("PLAY", Function::Play, true));
+	m_buttons.push_back(new TextButtonObject("NEW GAME", Function::Play, true));
 	m_buttons.push_back(new TextButtonObject("OPTIONS", Function::Options, true));
 	m_buttons.push_back(new TextButtonObject("QUIT", Function::Quit, true));
 
@@ -24,15 +24,16 @@ MainMenu::MainMenu(MenuStack *const menuStack) :
 	for (auto iter: m_buttons)
 	{
 		const int offset{ i++ * 100 };
-		iter->setOriginToLeftMiddle();
-		iter->setText(sf::Vector2f(100, 430 + static_cast<float>(offset)));
-		iter->setBody(sf::IntRect(0, 400 + offset, 1280, 60));
+		
+		iter->m_text.setOriginToLeftMiddle();
+		iter->m_text.setText(sf::Vector2f(100, 430 + static_cast<float>(offset)));
+		iter->m_textButtonBody.setBody(sf::IntRect(0, 400 + offset, 1280, 60));
 	}
 
 	// Title
 	TextObject *title = new TextObject("RUNAWAY",true);
-	title->setText(sf::Vector2f(100, 175));
-	title->setTextSize(100);
+	title->m_text.setText(sf::Vector2f(100, 175));
+	title->m_text.setTextSize(100);
 
 	m_objects.push_back(title);
 }
@@ -76,7 +77,7 @@ void MainMenu::input(sf::RenderWindow & window)
 		case sf::Event::MouseButtonPressed:
 			for (auto iter : m_buttons)
 			{
-				switch (iter->getFunction())
+				switch (iter->m_textButtonBody.getFunction())
 				{
 				case Function::Play:
 					m_menuStack->push(new GameMenu(m_menuStack));
@@ -101,13 +102,7 @@ void MainMenu::input(sf::RenderWindow & window)
 			break; 
 
 		case sf::Event::KeyPressed:
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-			{
-				window.close();
-			}
-			break;
-
-		default:
+			if (event.key.code == sf::Keyboard::Key::Escape) window.close();
 			break;
 		}
 	}

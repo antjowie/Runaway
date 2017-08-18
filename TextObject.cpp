@@ -12,12 +12,12 @@ TextObject::TextObject(const bool isValid):
 TextObject::TextObject(const std::string &text, const bool isValid) : 
 	TextObject(isValid)
 {
-	setString(text);
+	m_text.setString(text);
 }
 
 void TextObject::draw(sf::RenderWindow & window)
 {
-	window.draw(m_text);
+	m_text.draw(window);
 }
 
 void TextObject::logic(const float elapsedTime)
@@ -28,27 +28,37 @@ void TextObject::input(sf::RenderWindow & window)
 {
 }
 
-void TextObject::setText(const sf::Vector2f pos)
+void Text::setFont(const sf::Font & font)
+{
+	m_text.setFont(font);
+}
+
+void Text::setText(const sf::Vector2f &pos)
 {
 	m_text.setPosition(pos);
 }
 
-void TextObject::setTextSize(const unsigned int newTextSize)
+void Text::setTextSize(const unsigned int newTextSize)
 {
 	m_text.setCharacterSize(newTextSize);
 }
 
-sf::Vector2f const &TextObject::getText() const
+sf::Vector2f const &Text::getText() const
 {
 	return m_text.getPosition();
 }
 
-void TextObject::setString(const std::string text)
+void Text::draw(sf::RenderWindow & window)
+{
+	window.draw(m_text);
+}
+
+void Text::setString(const std::string &text)
 {
 	m_text.setString(text);
 }
 
-void TextObject::setOriginToLeftMiddle()
+void Text::setOriginToLeftMiddle()
 {
 	m_text.setOrigin(0, m_text.getLocalBounds().top + m_text.getLocalBounds().height / 2);
 }

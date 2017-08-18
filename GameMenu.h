@@ -5,12 +5,16 @@
 #pragma once
 #include "Menu.h"
 #include "Camera.h"
+#include "Level.h"
 
 class GameMenu :
 	public Menu
 {
 private:
-	Camera m_camera;
+	Level *m_level;
+	int m_levelCount;
+
+	//void changeLevel();
 
 public:
 	GameMenu(MenuStack* const menuStack);

@@ -3,17 +3,23 @@
 // 
 
 #pragma once
+#include "Tile.h"
+
 #include <SFML\Graphics.hpp>
 #include <vector>
 
 class Level
 {
 private:
-	sf::FloatRect m_cameraSize;
-	std::vector<std::vector<int>> m_tileMap; // Int will be replaced with Tile
+	sf::Vector2f m_cameraSize;
+	int m_levelWidth, m_levelHeight; // Not in tiles
+	int m_spawnX, m_spawnY;
+	std::vector<std::vector<int>> m_tileMap;
 
 public:
-	Level();
+	//Level(const std::string &tileMapPath, const float cameraWidth, const float camerHeight);
 	~Level();
+
+	//void loadMap(std::vector<std::vector<Tile*>> const *tileMap);
 };
 
