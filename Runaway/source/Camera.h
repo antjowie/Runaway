@@ -15,10 +15,13 @@ private:
 					// if value is 0.5 it means 1/0.5 (2) second to move towards m_target
 
 public:
+	Camera();
 	Camera(const sf::FloatRect &view, const float speed);
 
 	void setView(const sf::Vector2f &target);
 	void moveView(const sf::Vector2f &target);
+
+	void setViewSize(const sf::Vector2f &size);
 
 	void update(const float elapsedTime);
 

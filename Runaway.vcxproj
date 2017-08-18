@@ -45,6 +45,7 @@
     <ClInclude Include="Runaway\source\MenuStack.h" />
     <ClInclude Include="Runaway\source\Object.h" />
     <ClInclude Include="Runaway\source\OptionsMenu.h" />
+    <ClInclude Include="Runaway\source\rapidxml.hpp" />
     <ClInclude Include="Runaway\source\TextButtonObject.h" />
     <ClInclude Include="Runaway\source\TextObject.h" />
     <ClInclude Include="Runaway\source\Tile.h" />
@@ -120,7 +121,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\tiles;E:\Docs\C++ projects\Runaway\Runaway\levels;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\tiles;E:\Docs\C++ projects\Runaway\Runaway\levels;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,7 +154,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\tiles;E:\Docs\C++ projects\Runaway\Runaway\levels;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\tiles;E:\Docs\C++ projects\Runaway\Runaway\levels;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -2,6 +2,10 @@
 #include "DataManager.h"
 #include "BackgroundObject.h"
 
+void GameMenu::changeLevel()
+{
+}
+
 GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
@@ -41,4 +45,6 @@ void GameMenu::update(const float elapsedTime)
 void GameMenu::draw(sf::RenderWindow & window)
 {
 	Menu::draw(window);
+	Level level("Runaway/data/levels/level1/level1.tmx", 100, 100);
+	level.loadLevel(m_tileMap, m_camera);
 }

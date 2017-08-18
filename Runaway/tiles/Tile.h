@@ -3,10 +3,13 @@
 //
 
 #pragma once
+
 class Tile
 {
 public:
 	Tile();
+	Tile(int id);
+
 	~Tile();
 };
 

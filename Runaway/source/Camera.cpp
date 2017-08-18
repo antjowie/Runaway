@@ -1,6 +1,13 @@
 #include "Camera.h"
 #include <iostream>
 
+Camera::Camera()
+{
+	m_speed = 0;
+	m_view = sf::View();
+	m_target = m_view.getCenter();
+}
+
 Camera::Camera(const sf::FloatRect &view, const float speed) :
 	m_view(view)
 {
@@ -19,6 +26,11 @@ void Camera::setView(const sf::Vector2f &target)
 void Camera::moveView(const sf::Vector2f &target)
 {
 	m_target = target;
+}
+
+void Camera::setViewSize(const sf::Vector2f & size)
+{
+	m_view.setSize(size);
 }
 
 void Camera::update(const float elapsedTime)
