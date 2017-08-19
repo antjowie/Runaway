@@ -9,13 +9,14 @@ void GameMenu::changeLevel()
 GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
-	m_objects.push_back(new BackgroundObject("mainMenuBackground",true));
+	m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 12800/4, 7200/4);
+	m_level->loadLevel(m_camera);
 }
-
 
 GameMenu::~GameMenu()
 {
 	Menu::~Menu();
+	delete m_level;
 }
 
 void GameMenu::input(sf::RenderWindow & window)
@@ -35,16 +36,23 @@ void GameMenu::input(sf::RenderWindow & window)
 			break;
 		}
 	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_camera.moveTarget(sf::Vector2f(-10, 0));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_camera.moveTarget(sf::Vector2f(0, 10));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_camera.moveTarget(sf::Vector2f(10, 0));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_camera.moveTarget(sf::Vector2f(0, -10));
 }
 
 void GameMenu::update(const float elapsedTime)
 {
 	Menu::update(elapsedTime);
+	m_camera.update(elapsedTime);
 }
 
 void GameMenu::draw(sf::RenderWindow & window)
 {
 	Menu::draw(window);
-	Level level("Runaway/data/levels/level1/level1.tmx", 100, 100);
-	level.loadLevel(m_tileMap, m_camera);
+	window.setView(m_camera.getView());
+	if (m_level == nullptr) return;
+	m_level->draw(window);
 }

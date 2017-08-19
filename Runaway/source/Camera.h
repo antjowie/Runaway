@@ -20,6 +20,8 @@ public:
 
 	void setView(const sf::Vector2f &target);
 	void moveView(const sf::Vector2f &target);
+	void moveTarget(const sf::Vector2f &target);
+	void setSpeed(const float speed);
 
 	void setViewSize(const sf::Vector2f &size);
 

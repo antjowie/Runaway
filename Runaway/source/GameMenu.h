@@ -7,16 +7,12 @@
 #include "Camera.h"
 #include "Level.h"
 
-#include <vector>
-
 class GameMenu :
 	public Menu
 {
 private:
-	std::vector<std::vector<Tile*>> *m_tileMap;
 	Camera m_camera;
 	Level *m_level;
-	int m_levelCount;
 
     void changeLevel();
 

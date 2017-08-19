@@ -28,6 +28,16 @@ void Camera::moveView(const sf::Vector2f &target)
 	m_target = target;
 }
 
+void Camera::moveTarget(const sf::Vector2f & target)
+{
+	m_target += target;
+}
+
+void Camera::setSpeed(const float speed)
+{
+	m_speed = speed;
+}
+
 void Camera::setViewSize(const sf::Vector2f & size)
 {
 	m_view.setSize(size);

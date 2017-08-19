@@ -10,22 +10,29 @@
 #include <SFML\Graphics.hpp>
 #include <vector>
 
+void remove_char(std::string &str, char ch);
+
 class Level
 {
 private:
-	sf::Vector2f m_cameraSize;
+	std::vector<std::vector<Tile*>> m_tileMap;
+	const sf::Vector2f m_cameraSize;
+	const std::string m_levelMapPath;
 
-	const int m_levelWidth{ 0 }, m_levelHeight{ 0 }; // Not in tiles 
+	const float m_cameraSpeed{ 0 };
+	int m_levelWidth{ 0 }, m_levelHeight{ 0 };	// Not in tiles
+	int m_tileWidth{ 0 }, m_tileHeight{ 0 };	// In tiles
 	const int m_spawnX{ 0 }, m_spawnY{ 0 };
-	const std::string m_tileMapPath, m_title;
+	const std::string m_title;
 
-	bool initMap(std::vector<std::vector<Tile*>> *tileMap);
+	bool initMap();
 	bool initCamera(Camera &camera);
 	
 public:
-	Level(const std::string &tileMapPath, const float cameraWidth, const float camerHeight);
-	~Level();
+	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight);
 
-	bool loadLevel(std::vector<std::vector<Tile*>> *tileMap, Camera &camera); // This will load all the files for this level
+	bool loadLevel(Camera &camera); // This will load all the files for this level
+
+	void draw(sf::RenderWindow &window);
 };
 

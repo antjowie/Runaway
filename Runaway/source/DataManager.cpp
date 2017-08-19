@@ -8,6 +8,7 @@ DataManager::DataManager()
 	// Load textures
 	loadTexture("player", "Runaway/data/textures/player.png");
 	loadTexture("mainMenuBackground", "Runaway/data/textures/mainMenuBackground.png");
+	loadTexture("tileset", "Runaway/data/textures/runawayTileset.png");
 }
 
 DataManager & DataManager::getInstance()
