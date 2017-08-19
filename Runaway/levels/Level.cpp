@@ -84,8 +84,10 @@ bool Level::initMap()
 
 bool Level::initCamera(Camera & camera)
 {
-	if (m_cameraSize.x <= 0 || m_cameraSize.y <= 0) return false; // Invalid camera size
+	if (m_cameraSize.x <= 0 || m_cameraSize.y <= 0) return false; // Camera size too small
+	if (m_cameraSize.x > m_levelWidth || m_cameraSize.y > m_levelHeight) return false; // Camera size too big
 	camera.setViewSize(m_cameraSize);
+	camera.setBounds(sf::Vector2f(m_levelWidth, m_levelHeight));
 	camera.setSpeed(1.0f);
 
 	return true;

@@ -9,20 +9,23 @@ class Camera
 {
 private:
 	sf::Vector2f m_target;
+	sf::Vector2f m_bounds;
 	sf::View m_view;
 
-	float m_speed;	// The value is how many seconds the camera will take to move to m_target
-					// if value is 0.5 it means 1/0.5 (2) second to move towards m_target
+	float m_speed; // The value is how many seconds the camera will take to move to m_target
+				   // if value is 0.5 it means 1/0.5 (2) second to move towards m_target
+	void checkBounds();
 
 public:
 	Camera();
-	Camera(const sf::FloatRect &view, const float speed);
+	Camera(const sf::FloatRect &view, const sf::Vector2f &bounds, const float speed);
 
-	void setView(const sf::Vector2f &target);
-	void moveView(const sf::Vector2f &target);
-	void moveTarget(const sf::Vector2f &target);
+	void moveTarget(sf::Vector2f &target);
+	void moveView(sf::Vector2f &target);
+	void setView(sf::Vector2f &target);
+
 	void setSpeed(const float speed);
-
+	void setBounds(const sf::Vector2f &bounds);
 	void setViewSize(const sf::Vector2f &size);
 
 	void update(const float elapsedTime);

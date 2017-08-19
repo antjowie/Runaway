@@ -1,6 +1,7 @@
 #include "GameMenu.h"
 #include "DataManager.h"
 #include "BackgroundObject.h"
+#include <cassert>
 
 void GameMenu::changeLevel()
 {
@@ -10,7 +11,7 @@ GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
 	m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 12800/4, 7200/4);
-	m_level->loadLevel(m_camera);
+	assert(m_level->loadLevel(m_camera) && "Load level failed");
 }
 
 GameMenu::~GameMenu()
