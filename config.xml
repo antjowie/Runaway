@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<keyboard jump="57" moveDown="18" moveLeft="0" moveRight="3" moveUp="22"/>
-	<mouse/>
-	<logic/>
+	<keyboard moveUp="4"/>
+	<mouse jump="1"/>
+	<logic run="0"/>
 </config>
 

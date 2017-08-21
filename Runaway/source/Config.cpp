@@ -11,7 +11,6 @@
 
 Config::Config()
 {
-		loadConfig();
 }
 
 void Config::loadConfig()
@@ -31,23 +30,23 @@ void Config::loadConfig()
 	// Parse the buffer
 	rapidxml::xml_document<> config;
 	config.parse<0>(&buffer[0]);
-	
 	// Read necessary attributes
 	std::stringstream converter;
-	for (rapidxml::xml_node<> *node = config.first_node("config"); node; node = node->next_sibling())
+	for (rapidxml::xml_node<> *node = config.first_node("config")->first_node(); node; node = node->next_sibling())
 	{
 		int temp;
 		for (rapidxml::xml_attribute<> * attr = node->first_attribute(); attr; attr = attr->next_attribute())
 		{
+			std::cout << node->name() << '\t' << attr->value() << '\n';
 			converter << attr->value();
 			converter >> temp;
 			converter.clear();
-			if (node->name() == "keyboard")
+			if (std::string(node->name()) == "keyboard")
 				m_config.emplace(attr->name(), sf::Keyboard::Key(temp));
-			else if (node->name() == "mouse")
+			else if (std::string(node->name()) == "mouse")
 				m_config.emplace(attr->name(), sf::Mouse::Button(temp));
-			else if (node->name() == "logic")
-				m_config.emplace(attr->name(), temp == 0 ? true : false);
+			else if (std::string(node->name()) == "logic")
+				m_config.emplace(attr->name(), temp == 1 ? true : false);
 		}
 	}
 }

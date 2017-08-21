@@ -25,4 +25,3 @@ public:
 	virtual void update(const float elapsedTime);
 	virtual void draw(sf::RenderWindow &window);
 };
-

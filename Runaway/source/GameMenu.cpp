@@ -66,7 +66,9 @@ void GameMenu::update(const float elapsedTime)
 void GameMenu::draw(sf::RenderWindow & window)
 {
 	Menu::draw(window);
-	window.setView(m_camera.getView());
+	window.setView(window.getDefaultView());
 	if (m_level == nullptr) return;
+
+	window.setView(m_camera.getView());
 	m_level->draw(window,m_camera);
 }
