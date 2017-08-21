@@ -1,17 +1,31 @@
 #include "GameMenu.h"
 #include "DataManager.h"
 #include "BackgroundObject.h"
+
 #include <cassert>
 
-void GameMenu::changeLevel()
+void GameMenu::changeLevel(const int level)
 {
+	switch (level)
+	{
+	case 1:
+		m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 3200, 3200, 0.5f, 1550,1728);
+		assert(m_level->loadLevel(m_camera) && "Load level failed");
+		m_config.loadDefaultConfig();
+		m_config.saveConfig();
+
+		break;
+		
+	default:
+		assert(false && "Level doesn't exist");
+		break;
+	}
 }
 
 GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
-	m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 12800/4, 7200/4);
-	assert(m_level->loadLevel(m_camera) && "Load level failed");
+	changeLevel(1);
 }
 
 GameMenu::~GameMenu()

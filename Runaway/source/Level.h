@@ -19,9 +19,10 @@ private:
 	const sf::Vector2f m_cameraSize;
 	const std::string m_levelMapPath;
 
-	const float m_cameraSpeed{ 0 };
-	int m_levelWidth{ 0 }, m_levelHeight{ 0 };	// Not in tiles
-	int m_tileWidth{ 0 }, m_tileHeight{ 0 };	// In tiles
+	float m_cameraSpeed{ 0 };
+	int m_levelWidth{ 0 }, m_levelHeight{ 0 };		// Not in tiles
+	int m_tilemapWidth{ 0 }, m_tilemapHeight{ 0 };	// In tiles
+	int m_tileWidth{ 0 }, m_tileHeight{ 0 };		// Size of a tile
 	const int m_spawnX{ 0 }, m_spawnY{ 0 };
 	const std::string m_title;
 
@@ -29,7 +30,8 @@ private:
 	bool initCamera(Camera &camera);
 	
 public:
-	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight);
+	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight, const float cameraSpeed,
+		const int spawnX, const int spawnY);
 
 	bool loadLevel(Camera &camera); // This will load all the files for this level
 

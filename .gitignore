@@ -31,7 +31,6 @@
 # Visual Studio project files
 *opendb
 *db
-*filters
 *vs/
 *user
 *Debug/

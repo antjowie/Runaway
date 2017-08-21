@@ -6,15 +6,17 @@
 #include "Menu.h"
 #include "Camera.h"
 #include "Level.h"
+#include "Config.h"
 
 class GameMenu :
 	public Menu
 {
 private:
+	Config m_config;
 	Camera m_camera;
 	Level *m_level;
 
-    void changeLevel();
+    void changeLevel(const int level);
 
 public:
 	GameMenu(MenuStack* const menuStack);

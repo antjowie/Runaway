@@ -1,7 +1,5 @@
 #include "Camera.h"
 
-#include <iostream>
-
 void Camera::checkBounds()
 {
 	if (m_view.getCenter().x - m_view.getSize().x / 2 < 0)

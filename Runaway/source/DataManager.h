@@ -11,10 +11,10 @@
 class DataManager
 {
 private:
+	DataManager();
+
 	std::map<std::string, sf::Texture>  m_textureMap;
 	std::map<std::string, sf::Font>		m_fontMap;
-
-	DataManager();
 
 public:
 	static DataManager &getInstance();

@@ -19,11 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Runaway\levels\Level.cpp" />
+    <ClCompile Include="Runaway\source\Config.cpp" />
     <ClCompile Include="Runaway\source\BackgroundObject.cpp" />
     <ClCompile Include="Runaway\source\Camera.cpp" />
     <ClCompile Include="Runaway\source\DataManager.cpp" />
     <ClCompile Include="Runaway\source\GameMenu.cpp" />
+    <ClCompile Include="Runaway\source\Level.cpp" />
     <ClCompile Include="Runaway\source\MainMenu.cpp" />
     <ClCompile Include="Runaway\source\Menu.cpp" />
     <ClCompile Include="Runaway\source\MenuStack.cpp" />
@@ -35,17 +36,19 @@
     <ClCompile Include="Runaway\source\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Runaway\levels\Level.h" />
+    <ClInclude Include="Runaway\source\Config.h" />
     <ClInclude Include="Runaway\source\BackgroundObject.h" />
     <ClInclude Include="Runaway\source\Camera.h" />
     <ClInclude Include="Runaway\source\DataManager.h" />
     <ClInclude Include="Runaway\source\GameMenu.h" />
+    <ClInclude Include="Runaway\source\Level.h" />
     <ClInclude Include="Runaway\source\MainMenu.h" />
     <ClInclude Include="Runaway\source\Menu.h" />
     <ClInclude Include="Runaway\source\MenuStack.h" />
     <ClInclude Include="Runaway\source\Object.h" />
     <ClInclude Include="Runaway\source\OptionsMenu.h" />
     <ClInclude Include="Runaway\source\rapidxml.hpp" />
+    <ClInclude Include="Runaway\source\rapidxml_print.hpp" />
     <ClInclude Include="Runaway\source\TextButtonObject.h" />
     <ClInclude Include="Runaway\source\TextObject.h" />
     <ClInclude Include="Runaway\source\Tile.h" />
