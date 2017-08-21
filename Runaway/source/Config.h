@@ -39,6 +39,8 @@ private:
 
 	std::map<std::string, Item> m_config;
 
+	void checkConfig();
+
 public:
 	static Config &getInstance();
 	

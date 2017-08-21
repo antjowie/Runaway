@@ -49,6 +49,7 @@ void Config::loadConfig()
 				m_config.emplace(attr->name(), temp == 1 ? true : false);
 		}
 	}
+	checkConfig();
 }
 
 void Config::loadDefaultConfig()
@@ -107,6 +108,24 @@ void Config::saveConfig()
 Config::~Config()
 {
 	saveConfig();
+}
+
+void Config::checkConfig()
+{
+	// This function checks if all config data is initialized. If someone didn't modify the file from within the program,
+	// the file may be missing some setting and thus will load the default config
+	bool corrupt = false;
+
+	// Quite ugly
+	if (!m_config.count("moveUp")) corrupt = true;
+	if (!m_config.count("moveLeft")) corrupt = true;
+	if (!m_config.count("moveDown")) corrupt = true;
+	if (!m_config.count("moveRight")) corrupt = true;
+
+	if (!m_config.count("jump")) corrupt = true;
+
+	if (corrupt)
+		loadDefaultConfig();
 }
 
 Config & Config::getInstance()
