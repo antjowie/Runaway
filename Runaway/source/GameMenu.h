@@ -12,7 +12,6 @@ class GameMenu :
 	public Menu
 {
 private:
-	Config m_config;
 	Camera m_camera;
 	Level *m_level;
 

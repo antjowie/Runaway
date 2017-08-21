@@ -9,10 +9,9 @@ void GameMenu::changeLevel(const int level)
 	switch (level)
 	{
 	case 1:
-		m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 3200, 3200, 0.5f, 1550,1728);
+		m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 1280, 720 , 1.0f, 1550,1728);
 		assert(m_level->loadLevel(m_camera) && "Load level failed");
-		m_config.loadDefaultConfig();
-		m_config.saveConfig();
+		Config::getInstance().loadConfig();
 
 		break;
 		
@@ -69,5 +68,5 @@ void GameMenu::draw(sf::RenderWindow & window)
 	Menu::draw(window);
 	window.setView(m_camera.getView());
 	if (m_level == nullptr) return;
-	m_level->draw(window);
+	m_level->draw(window,m_camera);
 }

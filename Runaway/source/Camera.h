@@ -31,6 +31,6 @@ public:
 	void update(const float elapsedTime);
 
 	sf::View const getView() const;
-	sf::IntRect const getTileBounds() const;
+	sf::IntRect const getTileBounds(const int tileX, const int tileY) const;
 };
 

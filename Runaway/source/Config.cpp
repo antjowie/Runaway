@@ -5,23 +5,13 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <iostream>
 #include <cassert>
 #include <sstream>
+#include <iostream>
 
 Config::Config()
 {
-	std::ifstream configFile("config.xml");
-	if (configFile.is_open())
-	{
 		loadConfig();
-	}
-	else
-	{
-		std::cout << "No config file found. Loading default config file.\n";
-		loadDefaultConfig();
-		saveConfig();
-	}
 }
 
 void Config::loadConfig()
@@ -75,7 +65,7 @@ void Config::loadDefaultConfig()
 }
 
 void Config::saveConfig()
-{
+{ 
 	std::ofstream config("config.xml", std::ios::trunc);
 	rapidxml::xml_document<> doc;
 	
@@ -111,7 +101,7 @@ void Config::saveConfig()
 			logic->append_attribute(doc.allocate_attribute(pool.allocate_string(iter.first.c_str()), pool.allocate_string(std::to_string(iter.second.logic).c_str())));
 	root->append_node(logic);
 
-	std::cout << doc;
+	config << doc;
 	config.close();
 }
 

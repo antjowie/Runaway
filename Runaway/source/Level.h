@@ -35,6 +35,6 @@ public:
 
 	bool loadLevel(Camera &camera); // This will load all the files for this level
 
-	void draw(sf::RenderWindow &window);
+	void draw(sf::RenderWindow &window,const Camera &camera);
 };
 

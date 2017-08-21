@@ -34,20 +34,18 @@ public:
 class Config
 {
 private:
-
-	void loadConfig();
+	Config();
+	~Config();
 
 	std::map<std::string, Item> m_config;
 
 public:
-	Config();
-	~Config();
-
 	static Config &getInstance();
 	
 	const Item getConfig(const std::string key);
 	void setConfig(const std::string key, Item value); 
 
+	void loadConfig();
 	void loadDefaultConfig();
 	void saveConfig();
 };

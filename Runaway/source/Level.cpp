@@ -113,9 +113,11 @@ bool Level::loadLevel(Camera & camera)
 	return true;
 }
 
-void Level::draw(sf::RenderWindow & window)
+void Level::draw(sf::RenderWindow & window, const Camera &camera)
 {
-	for (int i = 0; i < m_tilemapHeight; ++i)
-		for (int j = 0; j < m_tilemapWidth; ++j)
+	sf::IntRect tileBounds = camera.getTileBounds(m_tileWidth, m_tileHeight);
+
+	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
+		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
 			m_tileMap[i][j]->draw(window);
 }
