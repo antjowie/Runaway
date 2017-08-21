@@ -13,6 +13,7 @@ class GameMenu :
 {
 private:
 	Camera m_camera;
+	int m_levelId;
 	Level *m_level;
 
     void changeLevel(const int level);

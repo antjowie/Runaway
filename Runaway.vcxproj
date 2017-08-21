@@ -20,37 +20,37 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runaway\source\Config.cpp" />
-    <ClCompile Include="Runaway\source\BackgroundObject.cpp" />
     <ClCompile Include="Runaway\source\Camera.cpp" />
     <ClCompile Include="Runaway\source\DataManager.cpp" />
-    <ClCompile Include="Runaway\source\GameMenu.cpp" />
     <ClCompile Include="Runaway\source\Level.cpp" />
-    <ClCompile Include="Runaway\source\MainMenu.cpp" />
-    <ClCompile Include="Runaway\source\Menu.cpp" />
     <ClCompile Include="Runaway\source\MenuStack.cpp" />
-    <ClCompile Include="Runaway\source\Object.cpp" />
-    <ClCompile Include="Runaway\source\OptionsMenu.cpp" />
+    <ClCompile Include="Runaway\source\menus\GameMenu.cpp" />
+    <ClCompile Include="Runaway\source\menus\MainMenu.cpp" />
+    <ClCompile Include="Runaway\source\menus\Menu.cpp" />
+    <ClCompile Include="Runaway\source\menus\OptionsMenu.cpp" />
+    <ClCompile Include="Runaway\source\objects\BackgroundObject.cpp" />
+    <ClCompile Include="Runaway\source\objects\Object.cpp" />
+    <ClCompile Include="Runaway\source\objects\TextButtonObject.cpp" />
+    <ClCompile Include="Runaway\source\objects\TextObject.cpp" />
     <ClCompile Include="Runaway\source\Source.cpp" />
-    <ClCompile Include="Runaway\source\TextButtonObject.cpp" />
-    <ClCompile Include="Runaway\source\TextObject.cpp" />
     <ClCompile Include="Runaway\source\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Runaway\source\Config.h" />
-    <ClInclude Include="Runaway\source\BackgroundObject.h" />
     <ClInclude Include="Runaway\source\Camera.h" />
     <ClInclude Include="Runaway\source\DataManager.h" />
-    <ClInclude Include="Runaway\source\GameMenu.h" />
     <ClInclude Include="Runaway\source\Level.h" />
-    <ClInclude Include="Runaway\source\MainMenu.h" />
-    <ClInclude Include="Runaway\source\Menu.h" />
     <ClInclude Include="Runaway\source\MenuStack.h" />
-    <ClInclude Include="Runaway\source\Object.h" />
-    <ClInclude Include="Runaway\source\OptionsMenu.h" />
+    <ClInclude Include="Runaway\source\menus\GameMenu.h" />
+    <ClInclude Include="Runaway\source\menus\MainMenu.h" />
+    <ClInclude Include="Runaway\source\menus\Menu.h" />
+    <ClInclude Include="Runaway\source\menus\OptionsMenu.h" />
+    <ClInclude Include="Runaway\source\objects\BackgroundObject.h" />
+    <ClInclude Include="Runaway\source\objects\Object.h" />
+    <ClInclude Include="Runaway\source\objects\TextButtonObject.h" />
+    <ClInclude Include="Runaway\source\objects\TextObject.h" />
     <ClInclude Include="Runaway\source\rapidxml.hpp" />
     <ClInclude Include="Runaway\source\rapidxml_print.hpp" />
-    <ClInclude Include="Runaway\source\TextButtonObject.h" />
-    <ClInclude Include="Runaway\source\TextObject.h" />
     <ClInclude Include="Runaway\source\Tile.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -124,7 +124,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\levels;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\source\menus;E:\Docs\C++ projects\Runaway\Runaway\source\objects;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,7 +157,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\levels;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\source\menus;E:\Docs\C++ projects\Runaway\Runaway\source\objects;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

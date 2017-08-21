@@ -7,7 +7,6 @@
 #include <fstream>
 #include <cassert>
 #include <sstream>
-#include <iostream>
 
 Config::Config()
 {
@@ -37,7 +36,6 @@ void Config::loadConfig()
 		int temp;
 		for (rapidxml::xml_attribute<> * attr = node->first_attribute(); attr; attr = attr->next_attribute())
 		{
-			std::cout << node->name() << '\t' << attr->value() << '\n';
 			converter << attr->value();
 			converter >> temp;
 			converter.clear();
