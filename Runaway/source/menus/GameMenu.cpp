@@ -3,6 +3,7 @@
 #include "BackgroundObject.h"
 
 #include <cassert>
+#include <iostream>
 
 void GameMenu::changeLevel(const int level)
 {
@@ -16,9 +17,11 @@ void GameMenu::changeLevel(const int level)
 		break;
 
 	case 1:
-		m_objects.clear();
+		clearObject();
 
-		m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 1280, 720 , 1.0f, 1550,1728);
+		m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 1280 / 2, 720 /2, 1.0f, 1550,1728);
+		m_player->m_player.setPos(sf::Vector2f(1550, 1728));
+		m_camera.setView(m_player->m_player.getPos());
 		assert(m_level->loadLevel(m_camera) && "Load level failed");
 		Config::getInstance().loadConfig();
 
@@ -33,6 +36,8 @@ void GameMenu::changeLevel(const int level)
 GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
+	// I should start learning smart pointers, shouldn't I? (Wasn't it not called unique_ptr?)
+	m_player = new PlayerObject(true);
 	changeLevel(1);
 }
 
@@ -44,6 +49,7 @@ GameMenu::~GameMenu()
 
 void GameMenu::input(sf::RenderWindow & window)
 {
+	Menu::input(window);
 	sf::Event event;
 	
 	while (window.pollEvent(event))
@@ -59,16 +65,18 @@ void GameMenu::input(sf::RenderWindow & window)
 			break;
 		}
 	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_camera.moveTarget(sf::Vector2f(-10, 0));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_camera.moveTarget(sf::Vector2f(0, 10));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_camera.moveTarget(sf::Vector2f(10, 0));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_camera.moveTarget(sf::Vector2f(0, -10));
+	if (m_level == nullptr) return;
+	m_player->input(window);
+	sf::Mouse::setPosition(sf::Vector2i(1280 / 2, 720 / 2),window);
 }
 
 void GameMenu::update(const float elapsedTime)
 {
 	Menu::update(elapsedTime);
+	if (m_level == nullptr) return;
+	m_player->logic(elapsedTime);
+
+	m_camera.moveView(m_player->m_player.getPos());
 	m_camera.update(elapsedTime);
 }
 
@@ -80,7 +88,7 @@ void GameMenu::draw(sf::RenderWindow & window)
 		window.setView(window.getDefaultView());
 		return;
 	}
-
-	window.setView(m_camera.getView());
+	m_camera.draw(window);
 	m_level->draw(window,m_camera);
+	m_player->m_player._draw(window);
 }

@@ -7,11 +7,13 @@
 #include "Camera.h"
 #include "Level.h"
 #include "Config.h"
+#include "PlayerObject.h"
 
 class GameMenu :
 	public Menu
 {
 private:
+	PlayerObject *m_player; // I have 2 pointers toward player, one in the m_objects and one here.
 	Camera m_camera;
 	int m_levelId;
 	Level *m_level;

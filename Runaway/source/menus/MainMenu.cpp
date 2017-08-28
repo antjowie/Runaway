@@ -9,11 +9,12 @@ MainMenu::MainMenu(MenuStack *const menuStack) :
 	Menu(menuStack)
 {
 	// Maybe unnecessarily 
-	m_objects.reserve(2);
+	std::vector<Object*> tempVec;
+	tempVec.reserve(2);
 	m_buttons.reserve(3);
 
 	// Background
-	m_objects.push_back(new BackgroundObject("mainMenuBackground",true));
+	tempVec.push_back(new BackgroundObject("mainMenuBackground",true));
 
 	// Menu buttons
 	m_buttons.push_back(new TextButtonObject("NEW GAME", Function::Play, true));
@@ -34,38 +35,25 @@ MainMenu::MainMenu(MenuStack *const menuStack) :
 	TextObject *title = new TextObject("RUNAWAY",true);
 	title->m_text.setText(sf::Vector2f(100, 175));
 	title->m_text.setTextSize(100);
+	tempVec.push_back(title);
 
-	m_objects.push_back(title);
+	pushObject(tempVec);
 }
 
 MainMenu::~MainMenu()
 {
 	Menu::~Menu();
-	for (auto iter : m_buttons)
-	{
+	for (auto iter : m_buttons) 
 		delete iter;
-	}
 	m_buttons.clear();
 }
 
 void MainMenu::input(sf::RenderWindow & window)
 {
 	// Update objects
-	for (auto iter : m_objects)
-	{
-		if (iter->isValid())
-		{ 
-			iter->input(window);
-		}
-	}
-
+	Menu::input(window);
 	for (auto iter : m_buttons)
-	{
-		if (iter->isValid())
-		{
-			iter->input(window);
-		}
-	}
+		if (iter->isValid()) iter->input(window);
 
 	// Run standard event loop
 	sf::Event event;
@@ -112,23 +100,13 @@ void MainMenu::update(const float elapsedTime)
 {
 	Menu::update(elapsedTime);
 	for (auto iter : m_buttons)
-	{
-		if (iter->isValid())
-		{
-			iter->logic(elapsedTime);
-		}
-	}
+		if (iter->isValid()) iter->logic(elapsedTime);
 }
 
 void MainMenu::draw(sf::RenderWindow & window)
 {
-	window.setView(window.getDefaultView()); // If returning from the gameMenu, restores camera positions
 	Menu::draw(window);
+	window.setView(window.getDefaultView()); // If returning from the gameMenu, restores camera positions
 	for (auto iter : m_buttons)
-	{
-		if (iter->isValid())
-		{
-			iter->draw(window);
-		}
-	}
+		if (iter->isValid()) iter->draw(window);
 }

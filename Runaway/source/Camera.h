@@ -30,7 +30,7 @@ public:
 
 	void update(const float elapsedTime);
 
-	sf::View const getView() const;
+	void draw(sf::RenderWindow &window) const;
 	sf::IntRect const getTileBounds(const int tileX, const int tileY) const;
 };
 

@@ -6,25 +6,27 @@
 #pragma once
 #include "Menu.h"
 
-class Text {
-private:
-	sf::Text m_text;
-
-public:
-	void setFont(const sf::Font &font);
-	void setText(const sf::Vector2f &pos);
-	void setTextSize(const unsigned int newTextSize);
-	void setString(const std::string &text);
-	void setOriginToLeftMiddle();	// Odd name but sets the origin to the middle of the left edge
-
-	sf::Vector2f const &getText() const;
-	
-	void draw(sf::RenderWindow &window);
-};
-
 class TextObject :
 	public Object
 {
+private:
+	class Text {
+	private:
+		sf::Text m_text;
+
+
+	public:
+		void _draw(sf::RenderWindow &window);
+		
+		void setFont(const sf::Font &font);
+		void setText(const sf::Vector2f &pos);
+		void setTextSize(const unsigned int newTextSize);
+		void setString(const std::string &text);
+		void setOriginToLeftMiddle();	// Odd name but sets the origin to the middle of the left edge
+
+		sf::Vector2f const &getText() const;
+	};
+
 public:
 	Text m_text;
 

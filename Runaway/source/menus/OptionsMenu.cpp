@@ -6,21 +6,24 @@
 OptionsMenu::OptionsMenu(MenuStack * const menuStack):
 	Menu(menuStack)
 {
-	m_objects.reserve(2);
+	std::vector<Object*> tempVec;
+	tempVec.reserve(2);
 	m_buttons.reserve(1);
 
 	// Initialize background (temp)
-	m_objects.push_back(new BackgroundObject("mainMenuBackground", true));
+	tempVec.push_back(new BackgroundObject("mainMenuBackground", true));
 
-	TextObject *temp = new TextObject("THE OPTION MENU IS WORK IN PROGRESS", true);
-	temp->m_text.setText(sf::Vector2f(180, 300));
-	m_objects.push_back(temp);
+	TextObject *tempText = new TextObject("THE OPTION MENU IS WORK IN PROGRESS", true);
+	tempText->m_text.setText(sf::Vector2f(180, 300));
+	tempVec.push_back(tempText);
 
 	// Initialize buttons
 	m_buttons.push_back(new TextButtonObject("BACK", Function::Back, true));
 	m_buttons[0]->m_text.setOriginToLeftMiddle();
 	m_buttons[0]->m_text.setText(sf::Vector2f(100, 630));
 	m_buttons[0]->m_textButtonBody.setBody(sf::IntRect(0, 600, 1280, 60));
+
+	pushObject(tempVec);
 }
 
 OptionsMenu::~OptionsMenu()
@@ -33,9 +36,7 @@ OptionsMenu::~OptionsMenu()
 
 void OptionsMenu::input(sf::RenderWindow & window)
 {
-	for (auto iter : m_objects)
-		if (iter->isValid()) iter->input(window);
-	
+	Menu::input(window);
 	for (auto iter : m_buttons)
 		if (iter->isValid()) iter->input(window);
 
@@ -47,6 +48,7 @@ void OptionsMenu::input(sf::RenderWindow & window)
 			case sf::Event::Closed:
 				window.close();
 				break;
+
 			case sf::Event::MouseButtonPressed:
 				for (auto iter : m_buttons)
 				{
@@ -55,6 +57,7 @@ void OptionsMenu::input(sf::RenderWindow & window)
 					case Function::Back:
 						m_isPop = true;
 						break;
+				
 					}
 				}
 		}

@@ -30,6 +30,7 @@
     <ClCompile Include="Runaway\source\menus\OptionsMenu.cpp" />
     <ClCompile Include="Runaway\source\objects\BackgroundObject.cpp" />
     <ClCompile Include="Runaway\source\objects\Object.cpp" />
+    <ClCompile Include="Runaway\source\objects\PlayerObject.cpp" />
     <ClCompile Include="Runaway\source\objects\TextButtonObject.cpp" />
     <ClCompile Include="Runaway\source\objects\TextObject.cpp" />
     <ClCompile Include="Runaway\source\Source.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="Runaway\source\menus\OptionsMenu.h" />
     <ClInclude Include="Runaway\source\objects\BackgroundObject.h" />
     <ClInclude Include="Runaway\source\objects\Object.h" />
+    <ClInclude Include="Runaway\source\objects\PlayerObject.h" />
     <ClInclude Include="Runaway\source\objects\TextButtonObject.h" />
     <ClInclude Include="Runaway\source\objects\TextObject.h" />
     <ClInclude Include="Runaway\source\rapidxml.hpp" />

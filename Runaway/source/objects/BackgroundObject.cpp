@@ -1,20 +1,14 @@
 #include "BackgroundObject.h"
 #include "DataManager.h"
 
-BackgroundObject::BackgroundObject(const bool isValid) :
-	Object(isValid)
-{
-}
-
 BackgroundObject::BackgroundObject(const std::string & texture, bool isValid):
-	Object(isValid)
+	Object(isValid),m_background(texture)
 {
-	setTexture(texture);
 }
 
 void BackgroundObject::draw(sf::RenderWindow & window)
 {
-	window.draw(m_background);
+	m_background._draw(window);
 }
 
 void BackgroundObject::logic(const float elapsedTime)
@@ -25,7 +19,12 @@ void BackgroundObject::input(sf::RenderWindow & window)
 {
 }
 
-void BackgroundObject::setTexture(const std::string & texture)
+BackgroundObject::Background::Background(const std::string & texture)
 {
 	m_background.setTexture(DataManager::getInstance().getTexture(texture));
+}
+
+void BackgroundObject::Background::_draw(sf::RenderWindow &window)
+{
+	window.draw(m_background);
 }

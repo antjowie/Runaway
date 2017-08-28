@@ -1,5 +1,5 @@
 #include "Camera.h"
-
+#include <iostream>
 void Camera::checkBounds()
 {
 	if (m_view.getCenter().x - m_view.getSize().x / 2 < 0)
@@ -84,7 +84,8 @@ void Camera::update(const float elapsedTime)
 	else
 	{
 		float d{ sqrt(x * x + y * y) };
-		float v = d * m_speed * elapsedTime;
+		float v = (d * m_speed) / 60;
+		std::cout << v << '\n';
 		if (v < 1.0f) v = 1.0f;
 
 		x *= (v / d); // If our speed decreases by 4 times
@@ -95,9 +96,9 @@ void Camera::update(const float elapsedTime)
 	checkBounds();
 }
 
-sf::View const Camera::getView() const
+void Camera::draw(sf::RenderWindow &window) const
 {
-	return m_view;
+	window.setView(m_view);
 }
 
 sf::IntRect const Camera::getTileBounds(const int tileX, const int tileY) const
