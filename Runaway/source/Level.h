@@ -6,6 +6,7 @@
 #include "Level.h"
 #include "Tile.h"
 #include "Camera.h"
+#include "PlayerObject.h"
 
 #include <SFML\Graphics.hpp>
 #include <vector>
@@ -28,13 +29,15 @@ private:
 
 	bool initMap();
 	bool initCamera(Camera &camera);
+	bool initPlayer(PlayerObject *const  player);
 	
 public:
 	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight, const float cameraSpeed,
 		const int spawnX, const int spawnY);
 
-	bool loadLevel(Camera &camera); // This will load all the files for this level
-
 	void draw(sf::RenderWindow &window,const Camera &camera);
-};
+	
+	bool loadLevel(Camera &camera, PlayerObject * const player); // This will load all the files for this level
 
+	const std::vector<std::vector<Tile*>> &getTileMap() const;
+};

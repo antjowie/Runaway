@@ -10,6 +10,7 @@ enum tileType{Air, Block, Top, Light};
 class Tile
 {
 private:
+	tileType m_type;
 	sf::Sprite m_sprite;
 	bool m_solid = true;
 
@@ -18,4 +19,7 @@ public:
 
 	//void update();
 	void draw(sf::RenderWindow& window);
+
+	const tileType getType() const;
+	const sf::FloatRect getHitbox() const;
 };

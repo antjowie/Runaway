@@ -21,16 +21,12 @@ public:
 	Camera(const sf::FloatRect &view, const sf::Vector2f &bounds, const float speed);
 
 	void moveTarget(sf::Vector2f &target);
-	void moveView(sf::Vector2f &target);
+	void setTarget(sf::Vector2f &target);
 	void setView(sf::Vector2f &target);
-
-	void setSpeed(const float speed);
-	void setBounds(const sf::Vector2f &bounds);
-	void setViewSize(const sf::Vector2f &size);
 
 	void update(const float elapsedTime);
 
-	void draw(sf::RenderWindow &window) const;
 	sf::IntRect const getTileBounds(const int tileX, const int tileY) const;
+	const sf::View &getView() const;
 };
 

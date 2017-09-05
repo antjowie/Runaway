@@ -92,10 +92,19 @@ bool Level::initCamera(Camera & camera)
 {
 	if (m_cameraSize.x <= 0 || m_cameraSize.y <= 0) return false; // Camera size too small
 	if (m_cameraSize.x > m_levelWidth || m_cameraSize.y > m_levelHeight) return false; // Camera size too big
-	camera.setViewSize(m_cameraSize);
-	camera.setView(sf::Vector2f(static_cast<float>(m_spawnX), static_cast<float>(m_spawnY)));
-	camera.setBounds(sf::Vector2f(static_cast<float>(m_levelWidth), static_cast<float>(m_levelHeight)));
-	camera.setSpeed(m_cameraSpeed);
+	camera = Camera::Camera(
+		sf::FloatRect(static_cast<float>(m_spawnX), static_cast<float>(m_spawnY),m_cameraSize.x,m_cameraSize.y), 
+		sf::Vector2f(static_cast<float>(m_levelWidth), static_cast<float>(m_levelHeight)),
+		m_cameraSpeed);
+
+	return true;
+}
+
+bool Level::initPlayer(PlayerObject * const player)
+{
+	if (player == nullptr) return false; // Prob will never happen
+	player->m_player.setTileSize(sf::Vector2i(m_tileWidth, m_tileHeight));
+	player->m_player.setPos(sf::Vector2f((float)m_spawnX, (float)m_spawnY));
 
 	return true;
 }
@@ -106,9 +115,10 @@ Level::Level(const std::string &levelMapPath, const std::string &title, const fl
 {
 }
 
-bool Level::loadLevel(Camera & camera)
+bool Level::loadLevel(Camera & camera, PlayerObject * const player)
 {
 	if (!initMap()) return false;
+	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
 	return true;
 }
@@ -120,4 +130,9 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
 		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
 			m_tileMap[i][j]->draw(window);
+}
+
+const std::vector<std::vector<Tile*>> &Level::getTileMap() const
+{
+	return m_tileMap;
 }

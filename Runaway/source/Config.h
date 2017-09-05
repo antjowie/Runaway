@@ -13,7 +13,8 @@ public:
 	{
 		Keyboard,
 		Mouse,
-		Logic
+		Logic,
+		Integer
 	}itemType;
 	
 	union
@@ -21,11 +22,13 @@ public:
 		sf::Keyboard::Key	keyboard; 
 		sf::Mouse::Button	mouse; 
 		bool				logic;
+		int					integer;
 	};
 
 	Item(const sf::Keyboard::Key key);
 	Item(const sf::Mouse::Button button);
 	Item(const bool logic);
+	Item(const int integer);
 	Item();
 
 	Item operator=(const Item&);

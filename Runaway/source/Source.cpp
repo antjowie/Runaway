@@ -5,15 +5,21 @@
 
 #include "MenuStack.h"
 #include "MainMenu.h"
+#include "Config.h"
 
 int main() 
 {
-	sf::RenderWindow window(sf::VideoMode(1280,720),"Runaway",sf::Style::Default);
+	Config::getInstance().loadConfig();
+	sf::RenderWindow window;
+	window.create(sf::VideoMode(1280, 720), "Runaway", sf::Style::Default);
+
 	sf::Clock time;
 	float elapsedTime;
+	float elapsedRenderTime = 0;
 	MenuStack menuStack;
 	
-	window.setFramerateLimit(60);
+	const float frameLimit{ static_cast<float>(Config::getInstance().getConfig("frameLimit").integer) }; // So that our keyboard pollrate will not be tied to loop
+	window.setFramerateLimit(static_cast<unsigned>(frameLimit));
 	menuStack.push(new MainMenu(&menuStack));
 	time.restart();
 
@@ -21,6 +27,7 @@ int main()
 	{
 		// Used for animation and consistent movement over all fps values
 		elapsedTime = time.restart().asSeconds();
+		elapsedRenderTime += elapsedTime;
 
 		// Failsave
 		if (menuStack.peek() == nullptr) continue;
@@ -30,15 +37,19 @@ int main()
 		menuStack.peek()->update(elapsedTime);
 
 		// Draw
+		if (elapsedRenderTime > (1 / frameLimit))
+		{
+		elapsedRenderTime = fmod(elapsedRenderTime,(1 / frameLimit));
 		window.clear(sf::Color::Black);
 		menuStack.peek()->draw(window);
 		window.display();
+		}
 
 		if (menuStack.peek()->isPop())
 		{
 			menuStack.pop();
 		}
 	}
-
+	
 	return 0;
 }

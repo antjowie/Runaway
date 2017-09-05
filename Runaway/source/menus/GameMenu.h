@@ -13,7 +13,7 @@ class GameMenu :
 	public Menu
 {
 private:
-	PlayerObject *m_player; // I have 2 pointers toward player, one in the m_objects and one here.
+	PlayerObject *m_player; // I have 2 pointers toward player, one in the m_objects and one here, to access the unique functions
 	Camera m_camera;
 	int m_levelId;
 	Level *m_level;

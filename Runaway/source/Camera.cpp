@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include <iostream>
+
 void Camera::checkBounds()
 {
 	if (m_view.getCenter().x - m_view.getSize().x / 2 < 0)
@@ -47,7 +47,7 @@ void Camera::setView(sf::Vector2f &target)
 	m_view.setCenter(target);
 }
 
-void Camera::moveView(sf::Vector2f &target)
+void Camera::setTarget(sf::Vector2f &target)
 {
 	m_target = target;
 }
@@ -57,25 +57,11 @@ void Camera::moveTarget(sf::Vector2f & target)
 	m_target += target;
 }
 
-void Camera::setSpeed(const float speed)
-{
-	m_speed = speed;
-}
-
-void Camera::setBounds(const sf::Vector2f & bounds)
-{
-	m_bounds = bounds;
-}
-
-void Camera::setViewSize(const sf::Vector2f & size)
-{
-	m_view.setSize(size);
-}
-
 void Camera::update(const float elapsedTime)
 {
 	float x{ m_target.x - m_view.getCenter().x };
 	float y{ m_target.y - m_view.getCenter().y };
+
 
 	if (x * x + y * y <= 1)
 	{
@@ -84,21 +70,15 @@ void Camera::update(const float elapsedTime)
 	else
 	{
 		float d{ sqrt(x * x + y * y) };
-		float v = (d * m_speed) / 60;
-		std::cout << v << '\n';
+		float v = d * m_speed *elapsedTime;
 		if (v < 1.0f) v = 1.0f;
 
 		x *= (v / d); // If our speed decreases by 4 times
 		y *= (v / d); // these will also decrease by 4 times
-		
+
 		m_view.move(x, y);
 	}
 	checkBounds();
-}
-
-void Camera::draw(sf::RenderWindow &window) const
-{
-	window.setView(m_view);
 }
 
 sf::IntRect const Camera::getTileBounds(const int tileX, const int tileY) const
@@ -128,4 +108,9 @@ sf::IntRect const Camera::getTileBounds(const int tileX, const int tileY) const
 		--height;
 
 	return sf::IntRect(upperLeft.x, upperLeft.y, width, height);
+}
+
+const sf::View & Camera::getView() const
+{
+	return m_view;
 }

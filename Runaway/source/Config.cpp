@@ -8,6 +8,8 @@
 #include <cassert>
 #include <sstream>
 
+#include <iostream>
+
 Config::Config()
 {
 }
@@ -45,6 +47,8 @@ void Config::loadConfig()
 				m_config.emplace(attr->name(), sf::Mouse::Button(temp));
 			else if (std::string(node->name()) == "logic")
 				m_config.emplace(attr->name(), temp == 1 ? true : false);
+			else if (std::string(node->name()) == "integer")
+				m_config.emplace(attr->name(), temp);
 		}
 	}
 	checkConfig();
@@ -60,6 +64,8 @@ void Config::loadDefaultConfig()
 	m_config.emplace("moveRight",	sf::Keyboard::Key::D);
 
 	m_config.emplace("jump",		sf::Keyboard::Key::Space);
+
+	m_config.emplace("frameLimit",	60);
 }
 
 void Config::saveConfig()
@@ -99,6 +105,13 @@ void Config::saveConfig()
 			logic->append_attribute(doc.allocate_attribute(pool.allocate_string(iter.first.c_str()), pool.allocate_string(std::to_string(iter.second.logic).c_str())));
 	root->append_node(logic);
 
+	// Add int node
+	rapidxml::xml_node<> *integer = doc.allocate_node(rapidxml::node_element, "integer");
+	for (auto iter : m_config)
+		if (iter.second.itemType == Item::ItemType::Integer)
+			integer->append_attribute(doc.allocate_attribute(pool.allocate_string(iter.first.c_str()), pool.allocate_string(std::to_string(iter.second.integer).c_str())));
+	root->append_node(integer);
+
 	config << doc;
 	config.close();
 }
@@ -121,6 +134,8 @@ void Config::checkConfig()
 	if (!m_config.count("moveRight")) corrupt = true;
 
 	if (!m_config.count("jump")) corrupt = true;
+
+	if (!m_config.count("frameLimit")) corrupt = true;
 
 	if (corrupt)
 		loadDefaultConfig();
@@ -154,6 +169,11 @@ Item::Item(const sf::Mouse::Button button):
 
 Item::Item(const bool logic):
 	itemType(ItemType::Logic), logic(logic)
+{
+}
+
+Item::Item(const int integer) :
+	itemType(ItemType::Integer), integer(integer)
 {
 }
 

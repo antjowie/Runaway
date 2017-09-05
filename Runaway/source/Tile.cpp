@@ -1,7 +1,8 @@
 #include "Tile.h"
 #include "DataManager.h"
 
-Tile::Tile(const int id, const float x, const float y)
+Tile::Tile(const int id, const float x, const float y):
+	m_type(tileType(id))
 {
 	m_sprite.setPosition(x, y);
 	m_sprite.setTexture(DataManager::getInstance().getTexture("tileset"));
@@ -29,4 +30,14 @@ Tile::Tile(const int id, const float x, const float y)
 void Tile::draw(sf::RenderWindow &window)
 {
 	window.draw(m_sprite);
+}
+
+const tileType Tile::getType() const
+{
+	return m_type;
+}
+
+const sf::FloatRect Tile::getHitbox() const
+{
+	return m_sprite.getGlobalBounds();
 }
