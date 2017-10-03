@@ -40,19 +40,19 @@ Camera::Camera(const sf::FloatRect &view, const sf::Vector2f &bounds, const floa
 	m_target = m_view.getCenter(); // To prevent undefined error
 }
 
-void Camera::setView(sf::Vector2f &target)
+void Camera::setView(sf::Vector2f const &target)
 {
 	
 	m_target = target;
 	m_view.setCenter(target);
 }
 
-void Camera::setTarget(sf::Vector2f &target)
+void Camera::setTarget(sf::Vector2f const &target)
 {
 	m_target = target;
 }
 
-void Camera::moveTarget(sf::Vector2f & target)
+void Camera::moveTarget(sf::Vector2f const &target)
 {
 	m_target += target;
 }

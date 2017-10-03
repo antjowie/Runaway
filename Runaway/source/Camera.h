@@ -20,9 +20,9 @@ public:
 	Camera();
 	Camera(const sf::FloatRect &view, const sf::Vector2f &bounds, const float speed);
 
-	void moveTarget(sf::Vector2f &target);
-	void setTarget(sf::Vector2f &target);
-	void setView(sf::Vector2f &target);
+	void moveTarget	(sf::Vector2f const	&target);
+	void setTarget	(sf::Vector2f const	&target);
+	void setView	(sf::Vector2f const	&target);
 
 	void update(const float elapsedTime);
 

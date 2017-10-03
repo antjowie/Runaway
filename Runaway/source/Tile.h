@@ -22,4 +22,5 @@ public:
 
 	const tileType getType() const;
 	const sf::FloatRect getHitbox() const;
+	const bool isSolid() const;
 };

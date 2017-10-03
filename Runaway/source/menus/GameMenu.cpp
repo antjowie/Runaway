@@ -10,6 +10,10 @@ void GameMenu::changeLevel(const int level)
 	if (m_levelId == level) return;
 	m_levelId = level;
 
+	clearObject(); // Should delete player
+	m_player = new PlayerObject(true);
+	pushObject(m_player);
+
 	switch (m_levelId)
 	{
 	case 0:
@@ -17,14 +21,12 @@ void GameMenu::changeLevel(const int level)
 		break;
 
 	case 1:
-		clearObject();
 
-		pushObject(m_player);
 		m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 1280 / 2, 720 /2, 1.0f, 1550,1728);
 		assert(m_level->loadLevel(m_camera,m_player) && "Load level failed");
 
 		break;
-		
+
 	default:
 		assert(false && "Level doesn't exist");
 		break;
@@ -35,7 +37,7 @@ GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
 	// I should start learning smart pointers, shouldn't I? (Wasn't it not called unique_ptr?)
-	m_player = new PlayerObject(true);
+	//m_player = new PlayerObject(true);
 	changeLevel(1);
 }
 
@@ -49,7 +51,7 @@ void GameMenu::input(sf::RenderWindow & window)
 {
 	Menu::input(window);
 	sf::Event event;
-	
+
 	while (window.pollEvent(event))
 	{
 		switch (event.type)
@@ -72,8 +74,8 @@ void GameMenu::update(const float elapsedTime)
 	Menu::update(elapsedTime);
 	if (m_level == nullptr) return;
 
-
-	m_player->m_player.isDropping(m_level->getTileMap());
+	m_player->m_player.updateCollisionDistance(m_level->getTileMap());
+	//m_player->m_player.isDropping(m_level->getTileMap());
 	m_camera.setView(m_player->m_player.getPos());
 	m_camera.update(elapsedTime);
 }

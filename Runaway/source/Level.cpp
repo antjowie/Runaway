@@ -102,16 +102,18 @@ bool Level::initCamera(Camera & camera)
 
 bool Level::initPlayer(PlayerObject * const player)
 {
-	if (player == nullptr) return false; // Prob will never happen
 	player->m_player.setTileSize(sf::Vector2i(m_tileWidth, m_tileHeight));
 	player->m_player.setPos(sf::Vector2f((float)m_spawnX, (float)m_spawnY));
 
 	return true;
 }
 
-Level::Level(const std::string &levelMapPath, const std::string &title, const float cameraWidth, const float camerHeight, const float cameraSpeed,
-	const int spawnX, const int spawnY):
-	m_cameraSize(cameraWidth,camerHeight), m_title(title), m_levelMapPath(levelMapPath), m_cameraSpeed(cameraSpeed), m_spawnX(spawnX), m_spawnY(spawnY)
+Level::Level(const std::string &levelMapPath, const std::string &title, 
+	const float cameraWidth, const float camerHeight, 
+	const float cameraSpeed, const int spawnX, const int spawnY):
+	m_cameraSize(cameraWidth,camerHeight), m_title(title), 
+	m_levelMapPath(levelMapPath), m_cameraSpeed(cameraSpeed), 
+	m_spawnX(spawnX), m_spawnY(spawnY)
 {
 }
 
@@ -135,4 +137,9 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 const std::vector<std::vector<Tile*>> &Level::getTileMap() const
 {
 	return m_tileMap;
+}
+
+const sf::Vector2i Level::getSpawn() const
+{
+	return sf::Vector2i(m_spawnX, m_spawnY);
 }

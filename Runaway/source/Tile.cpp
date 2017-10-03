@@ -11,7 +11,7 @@ Tile::Tile(const int id, const float x, const float y):
 	switch (id)
 	{
 	case tileType::Air:
-		m_sprite.setColor(sf::Color::Blue);
+		m_sprite.setColor(sf::Color::Cyan);
 		m_solid = false;
 		break;
 	case tileType::Block:
@@ -40,4 +40,9 @@ const tileType Tile::getType() const
 const sf::FloatRect Tile::getHitbox() const
 {
 	return m_sprite.getGlobalBounds();
+}
+
+const bool Tile::isSolid() const
+{
+	return m_solid;
 }

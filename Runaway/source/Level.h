@@ -1,6 +1,9 @@
 //
 // Level class template
 // 
+// Map is loaded from left to right
+// from top to bottom
+// 
 
 #pragma once
 #include "Level.h"
@@ -40,4 +43,5 @@ public:
 	bool loadLevel(Camera &camera, PlayerObject * const player); // This will load all the files for this level
 
 	const std::vector<std::vector<Tile*>> &getTileMap() const;
+	const sf::Vector2i getSpawn() const;
 };
