@@ -18,11 +18,10 @@ const float PlayerObject::Player::distanceTillBottomCollision(const std::vector<
 {
 	// Get lower hitbox
 	sf::FloatRect bottomHit{ m_player.getGlobalBounds() };
-	bottomHit.top += bottomHit.height / 2;
 
 	for (auto iter : surroundingTiles)
 		if (iter->isSolid() && bottomHit.intersects(iter->getHitbox()))
-			return bottomHit.top - iter->getHitbox().top;
+			return (bottomHit.top + bottomHit.height)- iter->getHitbox().top;
 
 	return 0.0f;
 }
@@ -116,8 +115,8 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 	if (m_isCrouching)
 		movement.y = speed;
 
-	std::cout << bottomDistance << '\n';
 	m_player.move(movement * elapsedTime);
+		
 	m_movement.x = m_movement.y = 0;
 }
 
@@ -155,21 +154,30 @@ void PlayerObject::Player::updateCollisionDistance(const std::vector<std::vector
 	sf::Vector2i tileMapPlayerCoords{ mapWorldToTilemap(m_player.getPosition()) };
 
 	std::vector<Tile*> surroundingTiles;
-	for (int horizontal = tileMapPlayerCoords.x - 1; horizontal < tileMapPlayerCoords.x + 1; horizontal++)
+	for (int horizontal = tileMapPlayerCoords.x - 1; horizontal <= tileMapPlayerCoords.x + 1; horizontal++)
 	{
-		for (int vertical = tileMapPlayerCoords.y - 1; vertical < tileMapPlayerCoords.y + 1; vertical++)
+		for (int vertical = tileMapPlayerCoords.y - 1; vertical <= tileMapPlayerCoords.y + 1; vertical++)
 		{
 			if (horizontal < tileMap.size() && vertical < tileMap[horizontal].size()) 
 			{
 				// Order shouldn't matter. If we do map this vector to tileMap vector. Our function calls would do 6 comparisons less each
-				std::cout << tileMap[horizontal][vertical]->getHitbox().left << ' ' << tileMap[horizontal][vertical]->getHitbox().left  / 32 << ' ' << tileMap[horizontal][vertical]->getHitbox().top << ' ' << tileMap[horizontal][vertical]->getHitbox().top / 32 << "      ";
-				surroundingTiles.push_back(tileMap[horizontal][vertical]);
-			}
+				// Our first vector is y, the subsequent vectors are x.
+				surroundingTiles.push_back(tileMap[vertical][horizontal]);
+			}	
 		}
-		std::cout << '\n';
 	}
-	
-	bottomDistance = distanceTillBottomCollision(surroundingTiles);
+	m_bottomDistance = distanceTillBottomCollision(surroundingTiles);
+}
+
+void PlayerObject::Player::snapOutOfBlocks(const std::vector<std::vector<Tile*>>& tileMap)
+{
+	updateCollisionDistance(tileMap);
+
+	// Bad code design because player location handling is handled outside update function
+	if (m_bottomDistance > 0)
+	{
+		m_player.move(0, -m_bottomDistance);
+	}
 }
 
 void PlayerObject::Player::setTileSize(const sf::Vector2i & tileSize)

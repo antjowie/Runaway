@@ -67,17 +67,18 @@ bool Level::initMap()
 
 	// Load the map into the vector
 	m_tileMap.clear();
-	m_tileMap.resize(m_tilemapHeight);
+	m_tileMap.resize(m_tilemapWidth);
 	
-	for (int i = 0; i < m_tilemapHeight; ++i)
+	for (int i = 0; i < m_tilemapWidth; i++)
 	{
-		m_tileMap[i].resize(m_tilemapWidth);
-		for (int j = 0, id = 0; j < m_tilemapWidth; ++j)
+		m_tileMap[i].resize(m_tilemapHeight);
+		for (int j = 0, id = 0; j < m_tilemapHeight; j++)
 		{
-			converter << tileMapString[j + m_tilemapWidth * i];
+			converter << tileMapString[i * m_tilemapHeight + j];
 			converter >> id;
 			converter.clear();
 
+			// While j represent y, it's value is used to evaluate the x axis.
 			m_tileMap[i][j] = new Tile(id, static_cast<float>(m_tileWidth* j), static_cast<float>(m_tileHeight* i));
 		}
 	}

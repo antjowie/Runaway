@@ -74,8 +74,8 @@ void GameMenu::update(const float elapsedTime)
 	Menu::update(elapsedTime);
 	if (m_level == nullptr) return;
 
-	m_player->m_player.updateCollisionDistance(m_level->getTileMap());
-	//m_player->m_player.isDropping(m_level->getTileMap());
+	// Had to be called after update because this will fix positions when player already has moved
+	m_player->m_player.snapOutOfBlocks(m_level->getTileMap());
 	m_camera.setView(m_player->m_player.getPos());
 	m_camera.update(elapsedTime);
 }
