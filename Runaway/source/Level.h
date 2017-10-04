@@ -19,7 +19,7 @@ void remove_char(std::string &str, char ch);
 class Level
 {
 private:
-	std::vector<std::vector<Tile*>> m_tileMap;
+	std::vector<std::vector<Tile*>> m_tilemap;
 	const sf::Vector2f m_cameraSize;
 	const std::string m_levelMapPath;
 

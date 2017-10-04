@@ -75,7 +75,6 @@ void GameMenu::update(const float elapsedTime)
 	if (m_level == nullptr) return;
 
 	// Had to be called after update because this will fix positions when player already has moved
-	m_player->m_player.snapOutOfBlocks(m_level->getTileMap());
 	m_camera.setView(m_player->m_player.getPos());
 	m_camera.update(elapsedTime);
 }

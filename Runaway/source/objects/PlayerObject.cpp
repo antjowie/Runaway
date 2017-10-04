@@ -14,16 +14,72 @@ bool const PlayerObject::Player::isItemPressed(const std::string itemString) con
 	== true ? true : false;
 }
 
-const float PlayerObject::Player::distanceTillBottomCollision(const std::vector<Tile*>& surroundingTiles) const
+void PlayerObject::Player::distanceTillBottomCollision()
 {
 	// Get lower hitbox
 	sf::FloatRect bottomHit{ m_player.getGlobalBounds() };
+	m_bottomDistance = bottomHit.height*3; // To get the closest block to the player
 
-	for (auto iter : surroundingTiles)
-		if (iter->isSolid() && bottomHit.intersects(iter->getHitbox()))
-			return (bottomHit.top + bottomHit.height)- iter->getHitbox().top;
+	for (auto iter : m_surroundingTiles) 
+	{
+		float distance = abs(bottomHit.top + bottomHit.height - iter->getHitbox().top);
+		if (iter->isSolid() && bottomHit.intersects(iter->getHitbox()) && distance < m_bottomDistance)
+			m_bottomDistance = distance;
+	}
 
-	return 0.0f;
+	if(m_bottomDistance == bottomHit.height*3)
+	m_bottomDistance = 0.0f;
+}
+
+void PlayerObject::Player::distanceTillUpperCollision()
+{	
+	// Get upper hitbox	
+	sf::FloatRect upperHit{ m_player.getGlobalBounds() };
+	m_upperDistance = upperHit.height * 3; // To get the closest block to the player
+
+	for (auto iter : m_surroundingTiles) 
+	{
+		float distance = abs(upperHit.top - (iter->getHitbox().top + iter->getHitbox().height));
+		if (iter->isSolid() && upperHit.intersects(iter->getHitbox()) && distance < m_upperDistance)
+			m_upperDistance = distance;
+	}
+
+	if (m_upperDistance == upperHit.height * 3)
+	m_upperDistance = 0.0f;
+}
+
+void PlayerObject::Player::distanceTillLeftCollision()
+{
+	// Get left collision
+	sf::FloatRect leftHit{ m_player.getGlobalBounds() };
+	m_leftDistance = leftHit.width * 3; // To get the closest block to the player
+
+	for (auto iter : m_surroundingTiles) 
+	{
+		float distance = abs(leftHit.left - (iter->getHitbox().left + iter->getHitbox().width));
+		if (iter->isSolid() && leftHit.intersects(iter->getHitbox()) && distance < m_leftDistance)
+			m_leftDistance = distance;
+	}
+
+	if (m_leftDistance == leftHit.width * 3)
+	m_leftDistance = 0.0f;
+}
+
+void PlayerObject::Player::distanceTillRightCollision()
+{	
+	// Get right collision
+	sf::FloatRect rightHit{ m_player.getGlobalBounds() };
+	m_rightDistance = rightHit.width * 3; // To get the closest block to the player
+
+	for (auto iter : m_surroundingTiles)
+	{
+		float distance = abs((rightHit.left + rightHit.width) - iter->getHitbox().left);
+		if (iter->isSolid() && rightHit.intersects(iter->getHitbox()) && distance < m_rightDistance)
+			m_rightDistance = distance;
+	}
+
+	if (m_rightDistance == rightHit.width * 3)
+		m_rightDistance = 0.0f;
 }
 
 const sf::Vector2i PlayerObject::Player::mapWorldToTilemap(const sf::Vector2f &coords) const
@@ -93,15 +149,31 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 	//m_movement.y *= slowDownSpeed;
 	if (m_movement.x > -0.1f && m_movement.x < 0.1f)
 		m_movement.x = 0;
-	*/
-
+	*/	
+	
 	float speed{ 32*4 };
 
 	sf::Vector2f movement;
 	if (m_movement.x == 1)
+	{
 		movement.x = speed;
+		m_player.move(movement.x * elapsedTime, 0);
+		
+		loadSurroundingTiles();
+		distanceTillRightCollision();
+		if (m_rightDistance> 0)
+			m_player.move(-m_rightDistance, 0);
+	}
 	if (m_movement.x == -1)
+	{
 		movement.x = -speed;
+		m_player.move(movement.x * elapsedTime,0);
+
+		loadSurroundingTiles();
+		distanceTillLeftCollision();
+		if (m_leftDistance > 0)
+			m_player.move(m_leftDistance, 0);
+	}
 
 	/*
 	if (verticalDistance > 0)
@@ -111,12 +183,27 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 	*/
 
 	if (m_movement.y == 1)
+	{
 		movement.y = -speed;
-	if (m_isCrouching)
-		movement.y = speed;
+		m_player.move(0, movement.y * elapsedTime);
 
-	m_player.move(movement * elapsedTime);
-		
+		loadSurroundingTiles();
+		distanceTillUpperCollision();
+		if (m_upperDistance > 0)
+			m_player.move(0, m_upperDistance);
+	}
+
+	if (m_isCrouching)
+	{
+		movement.y = speed; 
+		m_player.move(0, movement.y * elapsedTime);
+
+		loadSurroundingTiles();
+		distanceTillBottomCollision();
+		if (m_bottomDistance > 0)
+			m_player.move(0, -m_bottomDistance);
+	}
+
 	m_movement.x = m_movement.y = 0;
 }
 
@@ -144,39 +231,33 @@ void PlayerObject::Player::_draw(sf::RenderWindow & window)
 	window.draw(m_player);
 }
 
+void PlayerObject::Player::loadTilemap(std::vector<std::vector<Tile*>>* const tilemap)
+{
+	m_tilemap = tilemap;
+}
+
 void PlayerObject::Player::setPos(const sf::Vector2f & pos)
 {
 	m_player.setPosition(pos);
 }
 
-void PlayerObject::Player::updateCollisionDistance(const std::vector<std::vector<Tile*>>& tileMap)
+void PlayerObject::Player::loadSurroundingTiles()
 {
-	sf::Vector2i tileMapPlayerCoords{ mapWorldToTilemap(m_player.getPosition()) };
+	sf::Vector2i tilemapPlayerCoords{ mapWorldToTilemap(m_player.getPosition()) };
+	const int offset{ 2 };
 
-	std::vector<Tile*> surroundingTiles;
-	for (int horizontal = tileMapPlayerCoords.x - 1; horizontal <= tileMapPlayerCoords.x + 1; horizontal++)
+	m_surroundingTiles.clear();
+	for (int horizontal = tilemapPlayerCoords.x - offset; horizontal <= tilemapPlayerCoords.x + offset; horizontal++)
 	{
-		for (int vertical = tileMapPlayerCoords.y - 1; vertical <= tileMapPlayerCoords.y + 1; vertical++)
+		for (int vertical = tilemapPlayerCoords.y - offset; vertical <= tilemapPlayerCoords.y + offset; vertical++)
 		{
-			if (horizontal < tileMap.size() && vertical < tileMap[horizontal].size()) 
+			if (horizontal < m_tilemap->size() && vertical < (*m_tilemap)[horizontal].size()) 
 			{
-				// Order shouldn't matter. If we do map this vector to tileMap vector. Our function calls would do 6 comparisons less each
+				// Order shouldn't matter. If we do map this vector to tilemap vector. Our function calls would do 6 comparisons less each
 				// Our first vector is y, the subsequent vectors are x.
-				surroundingTiles.push_back(tileMap[vertical][horizontal]);
+				m_surroundingTiles.push_back((*m_tilemap)[vertical][horizontal]);
 			}	
 		}
-	}
-	m_bottomDistance = distanceTillBottomCollision(surroundingTiles);
-}
-
-void PlayerObject::Player::snapOutOfBlocks(const std::vector<std::vector<Tile*>>& tileMap)
-{
-	updateCollisionDistance(tileMap);
-
-	// Bad code design because player location handling is handled outside update function
-	if (m_bottomDistance > 0)
-	{
-		m_player.move(0, -m_bottomDistance);
 	}
 }
 

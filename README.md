@@ -17,5 +17,6 @@ The levels were made with an open source tile map editor called Tiled found at h
 I used the parser RapidXML, which can be found at http://rapidxml.sourceforge.net/ to parse the tilemap made by Tiled
 
 # Contact
-Feel free to ask me any questions! Although I'm not entirely honest, because I have not listed any way to communicate with me.  
+Feel free to ask me any questions! Although I'm not entirely honest, because I have not listed any way to communicate with me.
+Follow this project on my website at http://angelorettob.ddns.net/2017/10/02/runaway/
 Thanks for reading!

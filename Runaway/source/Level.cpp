@@ -55,31 +55,31 @@ bool Level::initMap()
 	converter >> m_tileHeight;
 	
 	// Get the map from the file
-	std::string tileMapString;
+	std::string tilemapString;
 	
 	for (rapidxml::xml_node<> *iter = node->first_node(); iter; iter = iter->next_sibling())
 		if (std::string(iter->name()) == "layer")
-			tileMapString = iter->first_node("data")->value();
+			tilemapString = iter->first_node("data")->value();
 	
-	// Format the tileMapString
-	remove_char(tileMapString, ',');
-	remove_char(tileMapString, '\n');
+	// Format the tilemapString
+	remove_char(tilemapString, ',');
+	remove_char(tilemapString, '\n');
 
 	// Load the map into the vector
-	m_tileMap.clear();
-	m_tileMap.resize(m_tilemapWidth);
+	m_tilemap.clear();
+	m_tilemap.resize(m_tilemapWidth);
 	
 	for (int i = 0; i < m_tilemapWidth; i++)
 	{
-		m_tileMap[i].resize(m_tilemapHeight);
+		m_tilemap[i].resize(m_tilemapHeight);
 		for (int j = 0, id = 0; j < m_tilemapHeight; j++)
 		{
-			converter << tileMapString[i * m_tilemapHeight + j];
+			converter << tilemapString[i * m_tilemapHeight + j];
 			converter >> id;
 			converter.clear();
 
 			// While j represent y, it's value is used to evaluate the x axis.
-			m_tileMap[i][j] = new Tile(id, static_cast<float>(m_tileWidth* j), static_cast<float>(m_tileHeight* i));
+			m_tilemap[i][j] = new Tile(id, static_cast<float>(m_tileWidth* j), static_cast<float>(m_tileHeight* i));
 		}
 	}
 	
@@ -105,7 +105,7 @@ bool Level::initPlayer(PlayerObject * const player)
 {
 	player->m_player.setTileSize(sf::Vector2i(m_tileWidth, m_tileHeight));
 	player->m_player.setPos(sf::Vector2f((float)m_spawnX, (float)m_spawnY));
-
+	player->m_player.loadTilemap(&m_tilemap);
 	return true;
 }
 
@@ -132,12 +132,12 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 
 	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
 		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
-			m_tileMap[i][j]->draw(window);
+			m_tilemap[i][j]->draw(window);
 }
 
 const std::vector<std::vector<Tile*>> &Level::getTileMap() const
 {
-	return m_tileMap;
+	return m_tilemap;
 }
 
 const sf::Vector2i Level::getSpawn() const
