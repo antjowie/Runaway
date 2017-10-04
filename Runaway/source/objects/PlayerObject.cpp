@@ -18,7 +18,7 @@ void PlayerObject::Player::distanceTillBottomCollision()
 {
 	// Get lower hitbox
 	sf::FloatRect bottomHit{ m_player.getGlobalBounds() };
-	m_bottomDistance = bottomHit.height*3; // To get the closest block to the player
+	m_bottomDistance = bottomHit.height * 3; // To get the closest block to the player
 
 	for (auto iter : m_surroundingTiles) 
 	{
@@ -105,7 +105,6 @@ void PlayerObject::logic(const float elapsedTime)
 void PlayerObject::input(sf::RenderWindow &window)
 {	
 	m_player._input(window);
-	
 }
 
 void PlayerObject::draw(sf::RenderWindow &window)
@@ -114,10 +113,20 @@ void PlayerObject::draw(sf::RenderWindow &window)
 }
 
 PlayerObject::Player::Player():
-	m_movement(0,0)
+	m_movement(0,0),
+	m_animHandler(32,32)
 {
 	m_player.setTexture(DataManager::getInstance().getTexture("player"));
-	m_player.setOrigin(m_player.getLocalBounds().width / 2, m_player.getLocalBounds().height / 2);
+
+	// Animation related
+	// Rest
+	m_animHandler.addAnimation(Animation(0, 3, 0.75f, true));
+	for (int i = 0; i < 4; i++)
+		// Jump up right, drop down right, jump up left, drop down left
+		m_animHandler.addAnimation(Animation(0, 3, 0.1f, false));
+	for (int i = 0; i < 2; i++)
+		// Walk right, walk left
+		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true));
 }
 
 void PlayerObject::Player::_logic(const float elapsedTime)
@@ -150,15 +159,18 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 	if (m_movement.x > -0.1f && m_movement.x < 0.1f)
 		m_movement.x = 0;
 	*/	
-	
+
 	float speed{ 32*4 };
+	m_animHandler.update(elapsedTime);
 
 	sf::Vector2f movement;
+	sf::Vector2f oldPos{ getPos() };
+
 	if (m_movement.x == 1)
 	{
 		movement.x = speed;
 		m_player.move(movement.x * elapsedTime, 0);
-		
+
 		loadSurroundingTiles();
 		distanceTillRightCollision();
 		if (m_rightDistance> 0)
@@ -184,25 +196,55 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 
 	if (m_movement.y == 1)
 	{
-		movement.y = -speed;
+		movement.y = -speed* 3;
 		m_player.move(0, movement.y * elapsedTime);
 
 		loadSurroundingTiles();
 		distanceTillUpperCollision();
 		if (m_upperDistance > 0)
-			m_player.move(0, m_upperDistance);
+			m_player.move(0, m_upperDistance);	
 	}
 
 	if (m_isCrouching)
 	{
 		movement.y = speed; 
 		m_player.move(0, movement.y * elapsedTime);
-
-		loadSurroundingTiles();
-		distanceTillBottomCollision();
-		if (m_bottomDistance > 0)
-			m_player.move(0, -m_bottomDistance);
 	}
+
+	loadSurroundingTiles();
+	distanceTillBottomCollision();
+	// Gravity
+	if (m_bottomDistance == 0)
+	{
+		m_player.move(0, speed * elapsedTime);
+		distanceTillBottomCollision();
+	}
+	if (m_bottomDistance > 0)
+		m_player.move(0, -m_bottomDistance);
+
+
+	sf::Vector2f newPos{ getPos() - oldPos };
+	// Brace for some ugly vector checking
+	if (newPos.x > 0 && newPos.y == 0)
+		m_animHandler.changeAnimation(playerDirection::Right);
+	else if (newPos.x < 0 && newPos.y == 0)
+		m_animHandler.changeAnimation(playerDirection::Left);
+	else if (newPos.x >= 0 && newPos.y != 0)
+	{
+		if (newPos.y > 0)
+			m_animHandler.changeAnimation(playerDirection::DropRight);
+		else
+			m_animHandler.changeAnimation(playerDirection::JumpRight);
+	}
+	else if (newPos.x <= 0 && newPos.y != 0)
+	{
+		if (newPos.y > 0)
+			m_animHandler.changeAnimation(playerDirection::DropLeft);
+		else
+			m_animHandler.changeAnimation(playerDirection::JumpLeft);
+	}
+	else
+		m_animHandler.changeAnimation(playerDirection::Rest);
 
 	m_movement.x = m_movement.y = 0;
 }
@@ -228,6 +270,9 @@ void PlayerObject::Player::_input(sf::RenderWindow & window)
 
 void PlayerObject::Player::_draw(sf::RenderWindow & window)
 {
+	m_player.setTextureRect(m_animHandler.getFrame()); // Should this be handled in logic or draw?
+	m_player.setTextureRect(sf::IntRect(m_player.getTextureRect().left + m_player.getTextureRect().width / 4,
+		m_player.getTextureRect().top, m_player.getTextureRect().width / 2, m_player.getTextureRect().height));
 	window.draw(m_player);
 }
 
@@ -251,7 +296,7 @@ void PlayerObject::Player::loadSurroundingTiles()
 	{
 		for (int vertical = tilemapPlayerCoords.y - offset; vertical <= tilemapPlayerCoords.y + offset; vertical++)
 		{
-			if (horizontal < m_tilemap->size() && vertical < (*m_tilemap)[horizontal].size()) 
+			if ((unsigned int)horizontal < m_tilemap->size() && (unsigned int)vertical < (*m_tilemap)[horizontal].size()) 
 			{
 				// Order shouldn't matter. If we do map this vector to tilemap vector. Our function calls would do 6 comparisons less each
 				// Our first vector is y, the subsequent vectors are x.

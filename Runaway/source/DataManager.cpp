@@ -6,7 +6,7 @@ DataManager::DataManager()
 	loadFont("pixel", "Runaway/data/fonts/Pixeled.ttf");
 
 	// Load textures
-	loadTexture("player", "Runaway/data/textures/player.png");
+	loadTexture("player", "Runaway/data/textures/playerSpritesheet.png");
 	loadTexture("mainMenuBackground", "Runaway/data/textures/mainMenuBackground.png");
 	loadTexture("tileset", "Runaway/data/textures/runawayTileset.png");
 }

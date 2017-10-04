@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Runaway\source\AnimationHandler.cpp" />
     <ClCompile Include="Runaway\source\Config.cpp" />
     <ClCompile Include="Runaway\source\Camera.cpp" />
     <ClCompile Include="Runaway\source\DataManager.cpp" />
@@ -37,6 +38,7 @@
     <ClCompile Include="Runaway\source\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Runaway\source\AnimationHandler.h" />
     <ClInclude Include="Runaway\source\Config.h" />
     <ClInclude Include="Runaway\source\Camera.h" />
     <ClInclude Include="Runaway\source\DataManager.h" />
