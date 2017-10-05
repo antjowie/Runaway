@@ -10,8 +10,9 @@ struct Animation
 
 	float m_duration;
 	bool m_isRepeated;
+	bool m_isTransition;
 
-	Animation(const unsigned int startFrame, const unsigned int endFrame, const float duration, const bool isRepeated = true);
+	Animation(const unsigned int startFrame, const unsigned int endFrame, const float duration, const bool isRepeated = true, const bool isTransition = false);
 	int getLength() const;
 };
 

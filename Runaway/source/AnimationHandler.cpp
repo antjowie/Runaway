@@ -1,11 +1,12 @@
 #include "AnimationHandler.h"
 #include <math.h>
 
-Animation::Animation(const unsigned int startFrame, const unsigned int endFrame, const float duration, const bool isRepeated):
+Animation::Animation(const unsigned int startFrame, const unsigned int endFrame, const float duration, const bool isRepeated, const bool isTransition):
 	m_startFrame(startFrame),
 	m_endFrame(endFrame),
 	m_duration(duration),
-	m_isRepeated(isRepeated)
+	m_isRepeated(isRepeated),
+	m_isTransition(isTransition)
 {
 }
 
@@ -22,18 +23,25 @@ void AnimationHandler::addAnimation(const Animation &anim)
 void AnimationHandler::changeAnimation(unsigned int animID)
 {
 	if (animID == m_currentAnim || animID > m_animations.size()) return;
-	m_elapsed = 0.0f;
+
 	m_currentAnim = animID;
-	
 	sf::IntRect rect;
-	rect = m_frameSize;
+	
+	if (!m_animations[animID].m_isTransition)
+	{
+		m_elapsed = 0.0f;
+		rect = m_frameSize;
+	}
+	else
+		rect = m_currentFrame;
+	
 	rect.top = rect.height * animID;
 	m_currentFrame = rect;
 }
 
 void AnimationHandler::update(const float dt)
 {
-	if (m_currentAnim >= m_animations.size() || (unsigned int)m_currentAnim < 0) return;
+	if (m_currentAnim >= (int)m_animations.size() || m_currentAnim < 0) return;
 
 	const float duration = m_animations[m_currentAnim].m_duration;
 	if (int((m_elapsed + dt) / duration) > int((m_elapsed / duration))) {

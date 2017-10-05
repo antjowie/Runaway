@@ -120,13 +120,13 @@ PlayerObject::Player::Player():
 
 	// Animation related
 	// Rest
-	m_animHandler.addAnimation(Animation(0, 3, 0.75f, true));
+	m_animHandler.addAnimation(Animation(0, 3, 0.75f, true,false));
 	for (int i = 0; i < 4; i++)
 		// Jump up right, drop down right, jump up left, drop down left
-		m_animHandler.addAnimation(Animation(0, 3, 0.1f, false));
+		m_animHandler.addAnimation(Animation(0, 3, 0.1f, false,true));
 	for (int i = 0; i < 2; i++)
 		// Walk right, walk left
-		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true));
+		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true,false));
 }
 
 void PlayerObject::Player::_logic(const float elapsedTime)
@@ -224,25 +224,33 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 
 
 	sf::Vector2f newPos{ getPos() - oldPos };
+
 	// Brace for some ugly vector checking
-	if (newPos.x > 0 && newPos.y == 0)
+	float offset{ elapsedTime };
+
+	// Horizontal movement
+	if (newPos.x > offset && newPos.y > -offset && newPos.y < offset)
 		m_animHandler.changeAnimation(playerDirection::Right);
-	else if (newPos.x < 0 && newPos.y == 0)
+	else if (newPos.x < -offset && newPos.y > -offset && newPos.y < offset)
 		m_animHandler.changeAnimation(playerDirection::Left);
-	else if (newPos.x >= 0 && newPos.y != 0)
+	
+	// Vertical movement
+	else if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset))
 	{
-		if (newPos.y > 0)
+		if (newPos.y > offset)
 			m_animHandler.changeAnimation(playerDirection::DropRight);
 		else
 			m_animHandler.changeAnimation(playerDirection::JumpRight);
 	}
-	else if (newPos.x <= 0 && newPos.y != 0)
+	else if (newPos.x <= -offset && (newPos.y < -offset || newPos.y > offset))
 	{
-		if (newPos.y > 0)
+		if (newPos.y > offset)
 			m_animHandler.changeAnimation(playerDirection::DropLeft);
 		else
 			m_animHandler.changeAnimation(playerDirection::JumpLeft);
 	}
+
+	// No movement
 	else
 		m_animHandler.changeAnimation(playerDirection::Rest);
 
