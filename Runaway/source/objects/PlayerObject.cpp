@@ -127,6 +127,10 @@ PlayerObject::Player::Player():
 	for (int i = 0; i < 2; i++)
 		// Walk right, walk left
 		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true,false));
+	
+	// Otherwise player is initialized with wrong hitbox which makes him teleport when spawned
+	m_animHandler.changeAnimation(1);
+	m_player.setTextureRect(m_animHandler.getFrame());
 }
 
 void PlayerObject::Player::_logic(const float elapsedTime)
@@ -220,7 +224,11 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 		distanceTillBottomCollision();
 	}
 	if (m_bottomDistance > 0)
+	{
 		m_player.move(0, -m_bottomDistance);
+		if (m_bottomDistance > 3)
+		std::cout << m_bottomDistance << "\t\t" << elapsedTime<< '\n';
+	}
 
 
 	sf::Vector2f newPos{ getPos() - oldPos };
@@ -271,8 +279,8 @@ void PlayerObject::Player::_input(sf::RenderWindow & window)
 	{
 		m_movement.y = 1; //jumpSpeed;
 	}
-	if (isItemPressed("moveLeft")) m_movement.x = -1;	//walkSpeed;
-	if (isItemPressed("moveRight")) m_movement.x = 1;	//walkSpeed;
+	if (isItemPressed("moveLeft")) m_movement.x += -1;	//walkSpeed;
+	if (isItemPressed("moveRight")) m_movement.x += 1;	//walkSpeed;
 	m_isCrouching = isItemPressed("moveDown");
 }
 
