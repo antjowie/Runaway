@@ -13,9 +13,11 @@ private:
 	private:
 		// Sprite related
 		sf::Sprite m_player;
-		sf::Vector2f m_movement;
-		bool m_isCrouching = false;
-		
+		sf::Vector2i m_moveDirection;
+		sf::Vector2f m_acceleration;
+		bool m_isCrouching{ false };
+		bool m_hasJumped{ false };
+
 		// Collision related
 		std::vector<std::vector<Tile*>> *m_tilemap;
 		std::vector<Tile*> m_surroundingTiles;

@@ -13,12 +13,17 @@ class GameMenu :
 	public Menu
 {
 private:
+	enum class levelName {
+		NoLevel,
+		TestLevel
+	};
+
 	PlayerObject *m_player; // I have 2 pointers toward player, one in the m_objects and one here, to access the unique functions
 	Camera m_camera;
-	int m_levelId;
+	levelName m_levelId{ levelName::NoLevel };
 	Level *m_level;
 
-    void changeLevel(const int level);
+    void changeLevel(const levelName level);
 
 public:
 	GameMenu(MenuStack* const menuStack);

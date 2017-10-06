@@ -5,7 +5,7 @@
 #include <cassert>
 #include <iostream>
 
-void GameMenu::changeLevel(const int level)
+void GameMenu::changeLevel(const GameMenu::levelName level)
 {
 	if (m_levelId == level) return;
 	m_levelId = level;
@@ -16,13 +16,9 @@ void GameMenu::changeLevel(const int level)
 
 	switch (m_levelId)
 	{
-	case 0:
+	case levelName::TestLevel:
 
-		break;
-
-	case 1:
-
-		m_level = new Level("Runaway/data/levels/level1/level1.tmx", "Test level", 1280 / 2, 720 /2, 1.0f, 1550,1728);
+		m_level = new Level("Runaway/data/levels/levelTest.tmx", "Test level", 1280 , 720 , 1.0f, 48 * 32,54 * 32);
 		assert(m_level->loadLevel(m_camera,m_player) && "Load level failed");
 
 		break;
@@ -31,6 +27,8 @@ void GameMenu::changeLevel(const int level)
 		assert(false && "Level doesn't exist");
 		break;
 	}
+	
+	changeTitle("Runaway - " + m_level->getTitle());
 }
 
 GameMenu::GameMenu(MenuStack* const menuStack):
@@ -38,7 +36,7 @@ GameMenu::GameMenu(MenuStack* const menuStack):
 {
 	// I should start learning smart pointers, shouldn't I? (Wasn't it not called unique_ptr?)
 	//m_player = new PlayerObject(true);
-	changeLevel(1);
+	changeLevel(levelName::TestLevel);
 }
 
 GameMenu::~GameMenu()
@@ -66,7 +64,6 @@ void GameMenu::input(sf::RenderWindow & window)
 		}
 	}
 	if (m_level == nullptr) return;
-	//m_player->m_player.isDropping(m_level->getTileMap());
 }
 
 void GameMenu::update(const float elapsedTime)
@@ -89,5 +86,5 @@ void GameMenu::draw(sf::RenderWindow & window)
 	}
 	window.setView(m_camera.getView());
 	m_level->draw(window,m_camera);
-	m_player->m_player._draw(window); // Else player will be drawn behind all the tiles
+	m_player->draw(window); // Else player will be drawn behind all the tiles
 }

@@ -1,7 +1,10 @@
 #include "Menu.h"
+#include "MenuStack.h"
 
-Menu::Menu(MenuStack* const menuStack):
-	m_menuStack(menuStack)
+
+Menu::Menu(MenuStack* const menuStack, const std::string &title) :
+	m_menuStack(menuStack),
+	m_title(title)
 {
 }
 
@@ -45,6 +48,12 @@ void Menu::draw(sf::RenderWindow & window)
 			iter->draw(window);
 		}
 	}
+
+	if (m_titleSwap)
+	{
+		window.setTitle(m_title);
+		m_titleSwap = false;
+	}
 }
 
 bool const Menu::isPop() const
@@ -66,4 +75,15 @@ void Menu::pushObject(const std::vector<Object*> objects)
 void Menu::clearObject()
 {
 	m_objects.clear();
+}
+
+void Menu::changeTitle(const std::string & title)
+{
+	m_title = title;
+	m_titleSwap = true;
+}
+
+void Menu::defaultTitle()
+{
+	changeTitle("Runaway");
 }

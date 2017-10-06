@@ -7,6 +7,8 @@
 #include "MainMenu.h"
 #include "Config.h"
 
+#include <iostream>
+
 int main() 
 {
 	Config::getInstance().loadConfig();
@@ -30,7 +32,7 @@ int main()
 		elapsedRenderTime += elapsedTime;
 
 		// Failsave
-		if (menuStack.peek() == nullptr) continue;
+		if (menuStack.peek() == nullptr ) continue;
 
 		// Logic
 		menuStack.peek()->input(window);
@@ -39,10 +41,10 @@ int main()
 		// Draw
 		if (elapsedRenderTime > (1 / frameLimit))
 		{
-		elapsedRenderTime = fmod(elapsedRenderTime,(1 / frameLimit));
-		window.clear(sf::Color::Black);
-		menuStack.peek()->draw(window);
-		window.display();
+			elapsedRenderTime = fmod(elapsedRenderTime,(1 / frameLimit));
+			window.clear(sf::Color::Black);
+			menuStack.peek()->draw(window);
+			window.display();
 		}
 
 		if (menuStack.peek()->isPop())

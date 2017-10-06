@@ -144,3 +144,8 @@ const sf::Vector2i Level::getSpawn() const
 {
 	return sf::Vector2i(m_spawnX, m_spawnY);
 }
+
+const std::string & Level::getTitle() const
+{
+	return m_title;
+}

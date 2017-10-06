@@ -18,6 +18,10 @@ void MenuStack::pop()
 
 	delete m_menuStack.top();
 	m_menuStack.pop();
+	
+	// When swapping from gameMenu makes sure to fix title
+	if(!m_menuStack.empty())
+	peek()->defaultTitle();
 }
 
 void MenuStack::push(Menu * newMenu)

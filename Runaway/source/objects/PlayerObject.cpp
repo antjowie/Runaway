@@ -113,7 +113,7 @@ void PlayerObject::draw(sf::RenderWindow &window)
 }
 
 PlayerObject::Player::Player():
-	m_movement(0,0),
+	m_acceleration(0,0),
 	m_animHandler(32,32)
 {
 	m_player.setTexture(DataManager::getInstance().getTexture("player"));
@@ -143,36 +143,76 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 	const float slowDownSpeed{ 0.5f };		// This value represent an acceleraion, 0.5 means it wil take 2 frames to slow down (wait isn't this useless)
 
 	// Horizontal movement bound check
-	if (m_movement.x > 1.0f)
-		m_movement.x = 1.0f;
-	else if (m_movement.x < -1.0f)
-		m_movement.x = -1.0f;
+	if (m_acceleration.x > 1.0f)
+		m_acceleration.x = 1.0f;
+	else if (m_acceleration.x < -1.0f)
+		m_acceleration.x = -1.0f;
 	
 	// Drop check
 	if (m_isFloating)
-		m_movement.y += gravity;
+		m_acceleration.y += gravity;
 	else
 	{
-		m_movement.y = 0;
+		m_acceleration.y = 0;
 		m_jumped = false;
 	}
 
-	m_player.move(maxHorizonSpeed*m_movement.x*elapsedTime, maxVerticSpeed*m_movement.y*elapsedTime);
-	m_movement.x *= slowDownSpeed;
-	//m_movement.y *= slowDownSpeed;
-	if (m_movement.x > -0.1f && m_movement.x < 0.1f)
-		m_movement.x = 0;
+	m_player.move(maxHorizonSpeed*m_acceleration.x*elapsedTime, maxVerticSpeed*m_acceleration.y*elapsedTime);
+	m_acceleration.x *= slowDownSpeed;
+	//m_acceleration.y *= slowDownSpeed;
+	if (m_acceleration.x > -0.1f && m_acceleration.x < 0.1f)
+		m_acceleration.x = 0;
 	*/	
 
-	float speed{ 32*4 };
+
+	// All these values could be defined by level, but I won't because I have no intention to
+	float speed{ 32*3 };					// Distance with acceleration 1
+	float jumpStrength{ 32 * 20 };
+	float maxAccelerate{ 2 };				
+	float accelerate{ elapsedTime * 4 };    // How much time to reach that acceleration
+	float decelerate{ elapsedTime * 6 };	// How much times slower in one sec
+	// TODO: level should define this
+	float gravity{ 32 * 8 };				// Drop this many pixels in one sec
+
 	m_animHandler.update(elapsedTime);
 
 	sf::Vector2f movement;
 	sf::Vector2f oldPos{ getPos() };
 
-	if (m_movement.x == 1)
+	// Update accelerations
+	if (m_moveDirection.x == 1)
 	{
-		movement.x = speed;
+		if (m_acceleration.x < 0)
+			m_acceleration.x = 0;
+		m_acceleration.x += accelerate;
+	}
+	else if (m_moveDirection.x == -1)
+	{
+		if (m_acceleration.x > 0)
+			m_acceleration.x = 0;
+		m_acceleration.x -= accelerate;;
+	}
+	if (m_moveDirection.y == -1)
+	{
+		m_moveDirection.y = 0;
+		m_acceleration.y = -jumpStrength;
+	}
+
+	// Check movement bounds
+	if (m_acceleration.x > maxAccelerate)
+		m_acceleration.x = maxAccelerate;
+	else if (m_acceleration.x < -maxAccelerate)
+		m_acceleration.x = -maxAccelerate;
+
+	// Update position
+	if (m_isCrouching)
+	{
+		m_acceleration.x = m_moveDirection.x = 0;
+	}
+
+	if (m_acceleration.x > 0)
+	{
+		movement.x = speed * m_acceleration.x;
 		m_player.move(movement.x * elapsedTime, 0);
 
 		loadSurroundingTiles();
@@ -180,9 +220,9 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 		if (m_rightDistance> 0)
 			m_player.move(-m_rightDistance, 0);
 	}
-	if (m_movement.x == -1)
+	if (m_acceleration.x < 0)
 	{
-		movement.x = -speed;
+		movement.x = speed * m_acceleration.x;
 		m_player.move(movement.x * elapsedTime,0);
 
 		loadSurroundingTiles();
@@ -191,16 +231,9 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 			m_player.move(m_leftDistance, 0);
 	}
 
-	/*
-	if (verticalDistance > 0)
-		movement.y += 5;
-	if (m_movement.y == 1)
-		movement.y = -32 * 3;
-	*/
-
-	if (m_movement.y == 1)
+	if (m_acceleration.y < 0)
 	{
-		movement.y = -speed* 3;
+		movement.y = m_acceleration.y; // jumpStrength
 		m_player.move(0, movement.y * elapsedTime);
 
 		loadSurroundingTiles();
@@ -209,27 +242,38 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 			m_player.move(0, m_upperDistance);	
 	}
 
-	if (m_isCrouching)
-	{
-		movement.y = speed; 
-		m_player.move(0, movement.y * elapsedTime);
-	}
-
+	// Gravity
 	loadSurroundingTiles();
 	distanceTillBottomCollision();
-	// Gravity
 	if (m_bottomDistance == 0)
 	{
-		m_player.move(0, speed * elapsedTime);
+		m_acceleration.y += gravity * 2 * elapsedTime;
+		m_player.move(0, gravity * elapsedTime);
 		distanceTillBottomCollision();
 	}
 	if (m_bottomDistance > 0)
 	{
 		m_player.move(0, -m_bottomDistance);
-		if (m_bottomDistance > 3)
-		std::cout << m_bottomDistance << "\t\t" << elapsedTime<< '\n';
+		m_hasJumped = false;
 	}
 
+	// Updating accelerations to decelerate
+	if (m_moveDirection.x == 0 )
+	{
+		if (m_acceleration.x > 0)
+		{
+			m_acceleration.x -= decelerate;
+		if (m_acceleration.x < 0)
+				m_acceleration.x = 0;
+		}
+		else if (m_acceleration.x < 0)
+		{
+			m_acceleration.x += decelerate;
+			if (m_acceleration.x > 0)
+				m_acceleration.x = 0;
+		}
+	}
+	m_moveDirection.x = m_moveDirection.y = 0;
 
 	sf::Vector2f newPos{ getPos() - oldPos };
 
@@ -261,26 +305,21 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 	// No movement
 	else
 		m_animHandler.changeAnimation(playerDirection::Rest);
-
-	m_movement.x = m_movement.y = 0;
 }
 
 void PlayerObject::Player::_input(sf::RenderWindow & window)
 {
-	/*
-	// Arbitrary values. The value represents acceleration. 0.25 means that it will take 4 seconds to get max speed
-	const float jumpSpeed{ -1 };
-	const float walkSpeed{ 0.25 };
-	*/
-	// Update jump value depending on being in air
-
-
-	if ((isItemPressed("moveUp") || isItemPressed("jump")))// && verticalDistance == 0)
+	if ((isItemPressed("moveUp") || isItemPressed("jump")) && !m_hasJumped)
 	{
-		m_movement.y = 1; //jumpSpeed;
+		m_moveDirection.y = -1;	
+		m_hasJumped = true;
 	}
-	if (isItemPressed("moveLeft")) m_movement.x += -1;	//walkSpeed;
-	if (isItemPressed("moveRight")) m_movement.x += 1;	//walkSpeed;
+	
+	if (isItemPressed("moveLeft")) m_moveDirection.x -= 1;
+	if (m_moveDirection.x < -1) m_moveDirection.x = -1;
+	if (isItemPressed("moveRight")) m_moveDirection.x += 1;
+	if (m_moveDirection.x > 1) m_moveDirection.x = 1;
+
 	m_isCrouching = isItemPressed("moveDown");
 }
 

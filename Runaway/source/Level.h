@@ -44,4 +44,5 @@ public:
 
 	const std::vector<std::vector<Tile*>> &getTileMap() const;
 	const sf::Vector2i getSpawn() const;
+	const std::string &getTitle() const;
 };
