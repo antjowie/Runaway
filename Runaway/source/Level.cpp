@@ -103,9 +103,14 @@ bool Level::initCamera(Camera & camera)
 
 bool Level::initPlayer(PlayerObject * const player)
 {
-	player->m_player.setTileSize(sf::Vector2i(m_tileWidth, m_tileHeight));
 	player->m_player.setPos(sf::Vector2f((float)m_spawnX, (float)m_spawnY));
-	player->m_player.loadTilemap(&m_tilemap);
+	return true;
+}
+
+bool Level::initCollisionHandler(CollisionHandler & collisionHandler)
+{
+	collisionHandler.setTileSize(sf::Vector2i(m_tileWidth, m_tileHeight));
+	collisionHandler.loadTilemap(&m_tilemap);
 	return true;
 }
 
@@ -118,11 +123,12 @@ Level::Level(const std::string &levelMapPath, const std::string &title,
 {
 }
 
-bool Level::loadLevel(Camera & camera, PlayerObject * const player)
+bool Level::loadLevel(Camera & camera, PlayerObject * const player, CollisionHandler &collisionHandler)
 {
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
+	if (!initCollisionHandler(collisionHandler)) return false;
 	return true;
 }
 

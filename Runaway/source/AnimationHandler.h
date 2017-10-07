@@ -1,3 +1,14 @@
+//
+// -- Instructions
+// - Initialization
+// Call addAnimation in specific order
+//
+// - Usage
+// Always call update in an update loop
+// getFrame returns the current animation,
+// use it for your textureRect
+//
+
 #pragma once
 #include <SFML\Graphics.hpp>
 #include <vector>

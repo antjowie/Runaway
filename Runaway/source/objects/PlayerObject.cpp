@@ -1,9 +1,6 @@
 #include "PlayerObject.h"
 #include "Config.h"
 #include "DataManager.h"
-#include "Tile.h"
-
-#include <iostream>
 
 bool const PlayerObject::Player::isItemPressed(const std::string itemString) const
 {
@@ -14,82 +11,19 @@ bool const PlayerObject::Player::isItemPressed(const std::string itemString) con
 	== true ? true : false;
 }
 
-void PlayerObject::Player::distanceTillBottomCollision()
-{
-	// Get lower hitbox
-	sf::FloatRect bottomHit{ m_player.getGlobalBounds() };
-	m_bottomDistance = bottomHit.height * 3; // To get the closest block to the player
-
-	for (auto iter : m_surroundingTiles) 
-	{
-		float distance = abs(bottomHit.top + bottomHit.height - iter->getHitbox().top);
-		if (iter->isSolid() && bottomHit.intersects(iter->getHitbox()) && distance < m_bottomDistance)
-			m_bottomDistance = distance;
-	}
-
-	if(m_bottomDistance == bottomHit.height*3)
-	m_bottomDistance = 0.0f;
-}
-
-void PlayerObject::Player::distanceTillUpperCollision()
-{	
-	// Get upper hitbox	
-	sf::FloatRect upperHit{ m_player.getGlobalBounds() };
-	m_upperDistance = upperHit.height * 3; // To get the closest block to the player
-
-	for (auto iter : m_surroundingTiles) 
-	{
-		float distance = abs(upperHit.top - (iter->getHitbox().top + iter->getHitbox().height));
-		if (iter->isSolid() && upperHit.intersects(iter->getHitbox()) && distance < m_upperDistance)
-			m_upperDistance = distance;
-	}
-
-	if (m_upperDistance == upperHit.height * 3)
-	m_upperDistance = 0.0f;
-}
-
-void PlayerObject::Player::distanceTillLeftCollision()
-{
-	// Get left collision
-	sf::FloatRect leftHit{ m_player.getGlobalBounds() };
-	m_leftDistance = leftHit.width * 3; // To get the closest block to the player
-
-	for (auto iter : m_surroundingTiles) 
-	{
-		float distance = abs(leftHit.left - (iter->getHitbox().left + iter->getHitbox().width));
-		if (iter->isSolid() && leftHit.intersects(iter->getHitbox()) && distance < m_leftDistance)
-			m_leftDistance = distance;
-	}
-
-	if (m_leftDistance == leftHit.width * 3)
-	m_leftDistance = 0.0f;
-}
-
-void PlayerObject::Player::distanceTillRightCollision()
-{	
-	// Get right collision
-	sf::FloatRect rightHit{ m_player.getGlobalBounds() };
-	m_rightDistance = rightHit.width * 3; // To get the closest block to the player
-
-	for (auto iter : m_surroundingTiles)
-	{
-		float distance = abs((rightHit.left + rightHit.width) - iter->getHitbox().left);
-		if (iter->isSolid() && rightHit.intersects(iter->getHitbox()) && distance < m_rightDistance)
-			m_rightDistance = distance;
-	}
-
-	if (m_rightDistance == rightHit.width * 3)
-		m_rightDistance = 0.0f;
-}
-
-const sf::Vector2i PlayerObject::Player::mapWorldToTilemap(const sf::Vector2f &coords) const
+const sf::Vector2i mapWorldToTilemap(const sf::Vector2f &coords, sf::Vector2i &tileSize)
 {
 	sf::Vector2i tempVec{ coords };
 
 	// Value mapped to int will always be correct. Since int will round down
-	tempVec.x /= m_tileWidth;
-	tempVec.y /= m_tileHeight;
+	tempVec.x /= tileSize.x;
+	tempVec.y /= tileSize.y;
 	return tempVec;
+}
+
+const sf::Vector2i mapWorldToTilemap(const sf::Vector2f & coords, const int tileWidth, const int tileHeight)
+{
+	return mapWorldToTilemap(coords, sf::Vector2i(tileWidth,tileHeight));
 }
 
 PlayerObject::PlayerObject(const bool isValid) :
@@ -115,7 +49,7 @@ void PlayerObject::draw(sf::RenderWindow &window)
 PlayerObject::Player::Player():
 	m_acceleration(0,0),
 	m_animHandler(32,32)
-{
+{	
 	m_player.setTexture(DataManager::getInstance().getTexture("player"));
 
 	// Animation related
@@ -135,36 +69,6 @@ PlayerObject::Player::Player():
 
 void PlayerObject::Player::_logic(const float elapsedTime)
 {
-	/*
-	// Gravity will be determined by the level. This is a temporary value
-	const float gravity{ 0.005f };
-	const float maxHorizonSpeed{ 32 * 15};
-	const float maxVerticSpeed{ 32* 32};
-	const float slowDownSpeed{ 0.5f };		// This value represent an acceleraion, 0.5 means it wil take 2 frames to slow down (wait isn't this useless)
-
-	// Horizontal movement bound check
-	if (m_acceleration.x > 1.0f)
-		m_acceleration.x = 1.0f;
-	else if (m_acceleration.x < -1.0f)
-		m_acceleration.x = -1.0f;
-	
-	// Drop check
-	if (m_isFloating)
-		m_acceleration.y += gravity;
-	else
-	{
-		m_acceleration.y = 0;
-		m_jumped = false;
-	}
-
-	m_player.move(maxHorizonSpeed*m_acceleration.x*elapsedTime, maxVerticSpeed*m_acceleration.y*elapsedTime);
-	m_acceleration.x *= slowDownSpeed;
-	//m_acceleration.y *= slowDownSpeed;
-	if (m_acceleration.x > -0.1f && m_acceleration.x < 0.1f)
-		m_acceleration.x = 0;
-	*/	
-
-
 	// All these values could be defined by level, but I won't because I have no intention to
 	float speed{ 32*3 };					// Distance with acceleration 1
 	float jumpStrength{ 32 * 20 };
@@ -206,29 +110,28 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 
 	// Update position
 	if (m_isCrouching)
-	{
 		m_acceleration.x = m_moveDirection.x = 0;
-	}
 
 	if (m_acceleration.x > 0)
 	{
 		movement.x = speed * m_acceleration.x;
 		m_player.move(movement.x * elapsedTime, 0);
 
-		loadSurroundingTiles();
-		distanceTillRightCollision();
-		if (m_rightDistance> 0)
-			m_player.move(-m_rightDistance, 0);
-	}
+		m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
+		const float rightDistance{ m_collisionHandler.distanceTillRightCollision() };
+		if (rightDistance> 0)
+			m_player.move(-rightDistance, 0);
+    }
+	
 	if (m_acceleration.x < 0)
 	{
 		movement.x = speed * m_acceleration.x;
 		m_player.move(movement.x * elapsedTime,0);
 
-		loadSurroundingTiles();
-		distanceTillLeftCollision();
-		if (m_leftDistance > 0)
-			m_player.move(m_leftDistance, 0);
+		m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
+		const float leftDistance{ m_collisionHandler.distanceTillLeftCollision() };
+		if (leftDistance > 0)
+			m_player.move(leftDistance, 0);
 	}
 
 	if (m_acceleration.y < 0)
@@ -236,24 +139,26 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 		movement.y = m_acceleration.y; // jumpStrength
 		m_player.move(0, movement.y * elapsedTime);
 
-		loadSurroundingTiles();
-		distanceTillUpperCollision();
-		if (m_upperDistance > 0)
-			m_player.move(0, m_upperDistance);	
+		m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
+		const float upperDistance{ m_collisionHandler.distanceTillUpperCollision() };
+		if (upperDistance > 0)
+			m_player.move(0, upperDistance);	
 	}
-
+	
 	// Gravity
-	loadSurroundingTiles();
-	distanceTillBottomCollision();
-	if (m_bottomDistance == 0)
+	m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
+	float bottomDistance{ m_collisionHandler.distanceTillBottomCollision() };
+	if (bottomDistance == 0)
 	{
 		m_acceleration.y += gravity * 2 * elapsedTime;
 		m_player.move(0, gravity * elapsedTime);
-		distanceTillBottomCollision();
+
+		m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
+		bottomDistance = m_collisionHandler.distanceTillBottomCollision();
 	}
-	if (m_bottomDistance > 0)
+	if (bottomDistance> 0)
 	{
-		m_player.move(0, -m_bottomDistance);
+		m_player.move(0, -bottomDistance);
 		m_hasJumped = false;
 	}
 
@@ -277,7 +182,7 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 
 	sf::Vector2f newPos{ getPos() - oldPos };
 
-	// Brace for some ugly vector checking
+	// Brace for some ugly vector checking for animation
 	float offset{ elapsedTime };
 
 	// Horizontal movement
@@ -331,40 +236,9 @@ void PlayerObject::Player::_draw(sf::RenderWindow & window)
 	window.draw(m_player);
 }
 
-void PlayerObject::Player::loadTilemap(std::vector<std::vector<Tile*>>* const tilemap)
-{
-	m_tilemap = tilemap;
-}
-
 void PlayerObject::Player::setPos(const sf::Vector2f & pos)
 {
 	m_player.setPosition(pos);
-}
-
-void PlayerObject::Player::loadSurroundingTiles()
-{
-	sf::Vector2i tilemapPlayerCoords{ mapWorldToTilemap(m_player.getPosition()) };
-	const int offset{ 2 };
-
-	m_surroundingTiles.clear();
-	for (int horizontal = tilemapPlayerCoords.x - offset; horizontal <= tilemapPlayerCoords.x + offset; horizontal++)
-	{
-		for (int vertical = tilemapPlayerCoords.y - offset; vertical <= tilemapPlayerCoords.y + offset; vertical++)
-		{
-			if ((unsigned int)horizontal < m_tilemap->size() && (unsigned int)vertical < (*m_tilemap)[horizontal].size()) 
-			{
-				// Order shouldn't matter. If we do map this vector to tilemap vector. Our function calls would do 6 comparisons less each
-				// Our first vector is y, the subsequent vectors are x.
-				m_surroundingTiles.push_back((*m_tilemap)[vertical][horizontal]);
-			}	
-		}
-	}
-}
-
-void PlayerObject::Player::setTileSize(const sf::Vector2i & tileSize)
-{
-	m_tileWidth = tileSize.x;
-	m_tileHeight = tileSize.y;
 }
 
 sf::FloatRect const PlayerObject::Player::getHitbox() const
@@ -375,4 +249,9 @@ sf::FloatRect const PlayerObject::Player::getHitbox() const
 sf::Vector2f const PlayerObject::Player::getPos() const
 {
 	return m_player.getPosition();
+}
+
+CollisionHandler &PlayerObject::Player::getCollisionHandler()
+{
+	return m_collisionHandler;
 }
