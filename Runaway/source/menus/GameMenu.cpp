@@ -19,7 +19,7 @@ void GameMenu::changeLevel(const GameMenu::levelName level)
 	case levelName::TestLevel:
 
 		m_level = new Level("Runaway/data/levels/levelTest.tmx", "Test level", 1280 , 720 , 1.0f, 48 * 32,54 * 32);
-		assert(m_level->loadLevel(m_camera,m_player,m_player->m_player.getCollisionHandler()) && "Load level failed");
+		assert(m_level->loadLevel(m_camera,m_player) && "Load level failed");
 
 		break;
 
@@ -72,7 +72,7 @@ void GameMenu::update(const float elapsedTime)
 	if (m_level == nullptr) return;
 
 	// Had to be called after update because this will fix positions when player already has moved
-	m_camera.setView(m_player->m_player.getPos());
+	m_camera.setView(m_player->m_sprite.getPos());
 	m_camera.update(elapsedTime);
 }
 

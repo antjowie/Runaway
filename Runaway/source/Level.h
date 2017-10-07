@@ -33,7 +33,6 @@ private:
 	bool initMap();
 	bool initCamera(Camera &camera);
 	bool initPlayer(PlayerObject *const player);
-	bool initCollisionHandler(CollisionHandler &collisionHandler);
 
 public:
 	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight, const float cameraSpeed,
@@ -41,7 +40,7 @@ public:
 
 	void draw(sf::RenderWindow &window,const Camera &camera);
 	
-	bool loadLevel(Camera &camera, PlayerObject * const player, CollisionHandler &collisionHandler); // This will load all the files for this level
+	bool loadLevel(Camera &camera, PlayerObject * const player); // This will load all the files for this level
 
 	const std::vector<std::vector<Tile*>> &getTileMap() const;
 	const sf::Vector2i getSpawn() const;

@@ -2,7 +2,7 @@
 #include "Config.h"
 #include "DataManager.h"
 
-bool const PlayerObject::Player::isItemPressed(const std::string itemString) const
+bool const Sprite::isItemPressed(const std::string itemString) const
 {
 	// This looks totally odd
 	return 
@@ -27,61 +27,112 @@ const sf::Vector2i mapWorldToTilemap(const sf::Vector2f & coords, const int tile
 }
 
 PlayerObject::PlayerObject(const bool isValid) :
-	Object(isValid)
+	Object(isValid),
+	m_animHandler(32 , 32)
 {
+	m_sprite.setTexture(DataManager::getInstance().getTexture("player"));
+
+	// Animation related
+	// Rest
+	m_animHandler.addAnimation(Animation(0, 3, 0.75f, true, false));
+	for (int i = 0; i < 4; i++)
+		// Jump up right, drop down right, jump up left, drop down left
+		m_animHandler.addAnimation(Animation(0, 3, 0.1f, false, true));
+	for (int i = 0; i < 2; i++)
+		// Walk right, walk left
+		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true, false));
+
+	// Otherwise player is initialized with wrong hitbox which makes him teleport when spawned
+	m_animHandler.changeAnimation(1);
+	m_sprite.setTextureRect(m_animHandler.getFrame());
 }
 
 void PlayerObject::logic(const float elapsedTime)
 {
-	m_player._logic(elapsedTime);
+	m_animHandler.update(elapsedTime);
+	sf::Vector2f oldPos{ m_sprite.getPos() };
+
+	m_sprite.update(elapsedTime, m_collisionHandler);
+	sf::Vector2f newPos{ m_sprite.getPos() - oldPos };
+
+	// Brace for some ugly vector checking for animation
+	float offset{ elapsedTime };
+
+	// Horizontal movement
+	if (newPos.x > offset && newPos.y > -offset && newPos.y < offset)
+		m_animHandler.changeAnimation(playerDirection::Right);
+	else if (newPos.x < -offset && newPos.y > -offset && newPos.y < offset)
+		m_animHandler.changeAnimation(playerDirection::Left);
+
+	// Vertical movement
+	else if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset))
+	{
+		if (newPos.y > offset)
+			m_animHandler.changeAnimation(playerDirection::DropRight);
+		else
+			m_animHandler.changeAnimation(playerDirection::JumpRight);
+	}
+	else if (newPos.x <= -offset && (newPos.y < -offset || newPos.y > offset))
+	{
+		if (newPos.y > offset)
+			m_animHandler.changeAnimation(playerDirection::DropLeft);
+		else
+			m_animHandler.changeAnimation(playerDirection::JumpLeft);
+	}
+
+	// No movement
+	else
+		m_animHandler.changeAnimation(playerDirection::Rest);
+
 }
 
 void PlayerObject::input(sf::RenderWindow &window)
 {	
-	m_player._input(window);
+	m_sprite.input();
 }
 
 void PlayerObject::draw(sf::RenderWindow &window)
 {
-	m_player._draw(window);
+	m_sprite.setTextureRect(m_animHandler.getFrame()); // Should this be handled in logic or draw?
+	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4,
+		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width / 2, m_sprite.getTextureRect().height));
+	m_sprite.draw(window);
 }
 
-PlayerObject::Player::Player():
+Sprite::Sprite():
 	m_acceleration(0,0),
-	m_animHandler(32,32)
+	m_moveDirection(0,0)
 {	
-	m_player.setTexture(DataManager::getInstance().getTexture("player"));
-
-	// Animation related
-	// Rest
-	m_animHandler.addAnimation(Animation(0, 3, 0.75f, true,false));
-	for (int i = 0; i < 4; i++)
-		// Jump up right, drop down right, jump up left, drop down left
-		m_animHandler.addAnimation(Animation(0, 3, 0.1f, false,true));
-	for (int i = 0; i < 2; i++)
-		// Walk right, walk left
-		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true,false));
-	
-	// Otherwise player is initialized with wrong hitbox which makes him teleport when spawned
-	m_animHandler.changeAnimation(1);
-	m_player.setTextureRect(m_animHandler.getFrame());
 }
 
-void PlayerObject::Player::_logic(const float elapsedTime)
+void Sprite::input()
 {
+	if ((isItemPressed("moveUp") || isItemPressed("jump")) && !m_hasJumped)
+	{
+		m_moveDirection.y = -1;
+		m_hasJumped = true;
+	}
+
+	if (isItemPressed("moveLeft")) m_moveDirection.x -= 1;
+	if (m_moveDirection.x < -1) m_moveDirection.x = -1;
+	if (isItemPressed("moveRight")) m_moveDirection.x += 1;
+	if (m_moveDirection.x > 1) m_moveDirection.x = 1;
+
+	m_isCrouching = isItemPressed("moveDown");
+}
+
+void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
+{
+	sf::Vector2f movement;
+
 	// All these values could be defined by level, but I won't because I have no intention to
-	float speed{ 32*3 };					// Distance with acceleration 1
+	float speed{ 32 * 3 };					// Distance with acceleration 1
 	float jumpStrength{ 32 * 20 };
-	float maxAccelerate{ 2 };				
+	float maxAccelerate{ 2 };
 	float accelerate{ elapsedTime * 4 };    // How much time to reach that acceleration
 	float decelerate{ elapsedTime * 6 };	// How much times slower in one sec
-	// TODO: level should define this
+											// TODO: level should define this
 	float gravity{ 32 * 8 };				// Drop this many pixels in one sec
-
-	m_animHandler.update(elapsedTime);
-
-	sf::Vector2f movement;
-	sf::Vector2f oldPos{ getPos() };
 
 	// Update accelerations
 	if (m_moveDirection.x == 1)
@@ -115,60 +166,55 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 	if (m_acceleration.x > 0)
 	{
 		movement.x = speed * m_acceleration.x;
-		m_player.move(movement.x * elapsedTime, 0);
+		m_sprite.move(movement.x * elapsedTime, 0);
 
-		m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
-		const float rightDistance{ m_collisionHandler.distanceTillRightCollision() };
+		const float rightDistance{ collisionHandler.distanceTillRightCollision(getHitbox()) };
 		if (rightDistance> 0)
-			m_player.move(-rightDistance, 0);
-    }
-	
+			m_sprite.move(-rightDistance, 0);
+	}
+
 	if (m_acceleration.x < 0)
 	{
 		movement.x = speed * m_acceleration.x;
-		m_player.move(movement.x * elapsedTime,0);
+		m_sprite.move(movement.x * elapsedTime, 0);
 
-		m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
-		const float leftDistance{ m_collisionHandler.distanceTillLeftCollision() };
+		const float leftDistance{ collisionHandler.distanceTillLeftCollision(getHitbox()) };
 		if (leftDistance > 0)
-			m_player.move(leftDistance, 0);
+			m_sprite.move(leftDistance, 0);
 	}
 
 	if (m_acceleration.y < 0)
 	{
 		movement.y = m_acceleration.y; // jumpStrength
-		m_player.move(0, movement.y * elapsedTime);
+		m_sprite.move(0, movement.y * elapsedTime);
 
-		m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
-		const float upperDistance{ m_collisionHandler.distanceTillUpperCollision() };
+		const float upperDistance{ collisionHandler.distanceTillUpperCollision(getHitbox()) };
 		if (upperDistance > 0)
-			m_player.move(0, upperDistance);	
+			m_sprite.move(0, upperDistance);
 	}
-	
+
 	// Gravity
-	m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
-	float bottomDistance{ m_collisionHandler.distanceTillBottomCollision() };
+	float bottomDistance{ collisionHandler.distanceTillBottomCollision(getHitbox()) };
 	if (bottomDistance == 0)
 	{
 		m_acceleration.y += gravity * 2 * elapsedTime;
-		m_player.move(0, gravity * elapsedTime);
+		m_sprite.move(0, gravity * elapsedTime);
 
-		m_collisionHandler.updatePlayerHitbox(m_player.getGlobalBounds());
-		bottomDistance = m_collisionHandler.distanceTillBottomCollision();
+		bottomDistance = collisionHandler.distanceTillBottomCollision(getHitbox());
 	}
 	if (bottomDistance> 0)
 	{
-		m_player.move(0, -bottomDistance);
+		m_sprite.move(0, -bottomDistance);
 		m_hasJumped = false;
 	}
 
 	// Updating accelerations to decelerate
-	if (m_moveDirection.x == 0 )
+	if (m_moveDirection.x == 0)
 	{
 		if (m_acceleration.x > 0)
 		{
 			m_acceleration.x -= decelerate;
-		if (m_acceleration.x < 0)
+			if (m_acceleration.x < 0)
 				m_acceleration.x = 0;
 		}
 		else if (m_acceleration.x < 0)
@@ -179,79 +225,39 @@ void PlayerObject::Player::_logic(const float elapsedTime)
 		}
 	}
 	m_moveDirection.x = m_moveDirection.y = 0;
-
-	sf::Vector2f newPos{ getPos() - oldPos };
-
-	// Brace for some ugly vector checking for animation
-	float offset{ elapsedTime };
-
-	// Horizontal movement
-	if (newPos.x > offset && newPos.y > -offset && newPos.y < offset)
-		m_animHandler.changeAnimation(playerDirection::Right);
-	else if (newPos.x < -offset && newPos.y > -offset && newPos.y < offset)
-		m_animHandler.changeAnimation(playerDirection::Left);
-	
-	// Vertical movement
-	else if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset))
-	{
-		if (newPos.y > offset)
-			m_animHandler.changeAnimation(playerDirection::DropRight);
-		else
-			m_animHandler.changeAnimation(playerDirection::JumpRight);
-	}
-	else if (newPos.x <= -offset && (newPos.y < -offset || newPos.y > offset))
-	{
-		if (newPos.y > offset)
-			m_animHandler.changeAnimation(playerDirection::DropLeft);
-		else
-			m_animHandler.changeAnimation(playerDirection::JumpLeft);
-	}
-
-	// No movement
-	else
-		m_animHandler.changeAnimation(playerDirection::Rest);
 }
 
-void PlayerObject::Player::_input(sf::RenderWindow & window)
+void Sprite::draw(sf::RenderWindow & window)
 {
-	if ((isItemPressed("moveUp") || isItemPressed("jump")) && !m_hasJumped)
-	{
-		m_moveDirection.y = -1;	
-		m_hasJumped = true;
-	}
-	
-	if (isItemPressed("moveLeft")) m_moveDirection.x -= 1;
-	if (m_moveDirection.x < -1) m_moveDirection.x = -1;
-	if (isItemPressed("moveRight")) m_moveDirection.x += 1;
-	if (m_moveDirection.x > 1) m_moveDirection.x = 1;
-
-	m_isCrouching = isItemPressed("moveDown");
+	window.draw(m_sprite);
 }
 
-void PlayerObject::Player::_draw(sf::RenderWindow & window)
+void Sprite::setPos(const sf::Vector2f & pos)
 {
-	m_player.setTextureRect(m_animHandler.getFrame()); // Should this be handled in logic or draw?
-	m_player.setTextureRect(sf::IntRect(m_player.getTextureRect().left + m_player.getTextureRect().width / 4,
-		m_player.getTextureRect().top, m_player.getTextureRect().width / 2, m_player.getTextureRect().height));
-	window.draw(m_player);
+	m_sprite.setPosition(pos);
 }
 
-void PlayerObject::Player::setPos(const sf::Vector2f & pos)
+void Sprite::setTextureRect(const sf::IntRect & textureRect)
 {
-	m_player.setPosition(pos);
+	m_sprite.setTextureRect(textureRect);
 }
 
-sf::FloatRect const PlayerObject::Player::getHitbox() const
+void Sprite::setTexture(const sf::Texture & texture)
 {
-	return m_player.getGlobalBounds();
+	m_sprite.setTexture(texture);
 }
 
-sf::Vector2f const PlayerObject::Player::getPos() const
+const sf::FloatRect Sprite::getHitbox() const
 {
-	return m_player.getPosition();
+	return m_sprite.getGlobalBounds();
 }
 
-CollisionHandler &PlayerObject::Player::getCollisionHandler()
+const sf::IntRect Sprite::getTextureRect() const
 {
-	return m_collisionHandler;
+	return m_sprite.getTextureRect();
+}
+
+const sf::Vector2f Sprite::getPos() const
+{
+	return m_sprite.getPosition();
 }

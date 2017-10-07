@@ -37,7 +37,7 @@ public:
 
 	~CollisionHandler();
 
-	void loadTilemap(std::vector<std::vector<Tile*>>* const tilemap);
+	bool loadTilemap(std::vector<std::vector<Tile*>>* const tilemap);
 	void setTileSize(const sf::Vector2i &tileSize);
 
 	const float distanceTillBottomCollision	(const sf::FloatRect &playerHitbox);

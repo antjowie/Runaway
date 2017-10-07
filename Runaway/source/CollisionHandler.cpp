@@ -17,9 +17,11 @@ CollisionHandler::~CollisionHandler()
 {
 }
 
-void CollisionHandler::loadTilemap(std::vector<std::vector<Tile*>>* const tilemap)
+bool CollisionHandler::loadTilemap(std::vector<std::vector<Tile*>>* const tilemap)
 {
 	m_tilemap = tilemap;
+
+	return m_tilemap != nullptr ? true : false;
 }
 
 void CollisionHandler::loadSurroundingTiles()
