@@ -39,7 +39,7 @@ public:
 
 	bool loadTilemap(std::vector<std::vector<Tile*>>* const tilemap);
 	void setTileSize(const sf::Vector2i &tileSize);
-
+	
 	const float distanceTillBottomCollision	(const sf::FloatRect &playerHitbox);
 	const float distanceTillUpperCollision	(const sf::FloatRect &playerHitbox);
 	const float distanceTillLeftCollision	(const sf::FloatRect &playerHitbox);

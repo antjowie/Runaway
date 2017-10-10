@@ -1,6 +1,7 @@
 #include "PlayerObject.h"
 #include "Config.h"
 #include "DataManager.h"
+#include <iostream>
 
 bool const Sprite::isItemPressed(const std::string itemString) const
 {
@@ -11,19 +12,9 @@ bool const Sprite::isItemPressed(const std::string itemString) const
 	== true ? true : false;
 }
 
-const sf::Vector2i mapWorldToTilemap(const sf::Vector2f &coords, sf::Vector2i &tileSize)
+const bool Sprite::isFloating(CollisionHandler &collisionHandler) const
 {
-	sf::Vector2i tempVec{ coords };
-
-	// Value mapped to int will always be correct. Since int will round down
-	tempVec.x /= tileSize.x;
-	tempVec.y /= tileSize.y;
-	return tempVec;
-}
-
-const sf::Vector2i mapWorldToTilemap(const sf::Vector2f & coords, const int tileWidth, const int tileHeight)
-{
-	return mapWorldToTilemap(coords, sf::Vector2i(tileWidth,tileHeight));
+	return collisionHandler.distanceTillBottomCollision(getHitbox()) == 0;
 }
 
 PlayerObject::PlayerObject(const bool isValid) :
@@ -107,11 +98,9 @@ Sprite::Sprite():
 
 void Sprite::input()
 {
-	if ((isItemPressed("moveUp") || isItemPressed("jump")) && !m_hasJumped)
-	{
+	if ((isItemPressed("moveUp") || isItemPressed("jump")))
 		m_moveDirection.y = -1;
-		m_hasJumped = true;
-	}
+
 
 	if (isItemPressed("moveLeft")) m_moveDirection.x -= 1;
 	if (m_moveDirection.x < -1) m_moveDirection.x = -1;
@@ -128,11 +117,12 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 	// All these values could be defined by level, but I won't because I have no intention to
 	float speed{ 32 * 3 };					// Distance with acceleration 1
 	float jumpStrength{ 32 * 20 };
+	float jumpAccelerate{ 32 * 10 };
 	float maxAccelerate{ 2 };
 	float accelerate{ elapsedTime * 4 };    // How much time to reach that acceleration
 	float decelerate{ elapsedTime * 6 };	// How much times slower in one sec
 											// TODO: level should define this
-	float gravity{ 32 * 8 };				// Drop this many pixels in one sec
+	float gravity{ 32 * 10 };				// Drop this many pixels in one sec
 
 	// Update accelerations
 	if (m_moveDirection.x == 1)
@@ -145,12 +135,18 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 	{
 		if (m_acceleration.x > 0)
 			m_acceleration.x = 0;
-		m_acceleration.x -= accelerate;;
+		m_acceleration.x -= accelerate;
 	}
+
 	if (m_moveDirection.y == -1)
 	{
-		m_moveDirection.y = 0;
-		m_acceleration.y = -jumpStrength;
+		if (m_canJump) 
+		{
+			m_acceleration.y = -jumpStrength;
+			m_canJump = false;
+		}
+		if(m_acceleration.y < 0)
+			m_acceleration.y -= jumpAccelerate * elapsedTime;
 	}
 
 	// Check movement bounds
@@ -158,10 +154,15 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 		m_acceleration.x = maxAccelerate;
 	else if (m_acceleration.x < -maxAccelerate)
 		m_acceleration.x = -maxAccelerate;
+	if (m_acceleration.y > 0)
+		m_acceleration.y = 0;
+		
 
 	// Update position
 	if (m_isCrouching)
-		m_acceleration.x = m_moveDirection.x = 0;
+	{
+
+	}
 
 	if (m_acceleration.x > 0)
 	{
@@ -185,12 +186,15 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 
 	if (m_acceleration.y < 0)
 	{
-		movement.y = m_acceleration.y; // jumpStrength
+		movement.y = m_acceleration.y;
 		m_sprite.move(0, movement.y * elapsedTime);
 
 		const float upperDistance{ collisionHandler.distanceTillUpperCollision(getHitbox()) };
 		if (upperDistance > 0)
+		{
 			m_sprite.move(0, upperDistance);
+			m_acceleration.y = -gravity;
+		}
 	}
 
 	// Gravity
@@ -200,12 +204,13 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 		m_acceleration.y += gravity * 2 * elapsedTime;
 		m_sprite.move(0, gravity * elapsedTime);
 
+		m_canJump = false;
 		bottomDistance = collisionHandler.distanceTillBottomCollision(getHitbox());
 	}
-	if (bottomDistance> 0)
+	if (bottomDistance > 0)
 	{
 		m_sprite.move(0, -bottomDistance);
-		m_hasJumped = false;
+		m_canJump = true;
 	}
 
 	// Updating accelerations to decelerate
@@ -224,6 +229,8 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 				m_acceleration.x = 0;
 		}
 	}
+
+	// Reset directions
 	m_moveDirection.x = m_moveDirection.y = 0;
 }
 

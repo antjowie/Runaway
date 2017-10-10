@@ -3,6 +3,6 @@
 	<keyboard jump="57" moveDown="18" moveLeft="0" moveRight="3" moveUp="22"/>
 	<mouse/>
 	<logic/>
-	<integer frameLimit="60"/>
+	<integer frameLimit="300"/>
 </config>
 

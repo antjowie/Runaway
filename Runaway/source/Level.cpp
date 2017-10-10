@@ -12,6 +12,21 @@ void remove_char(std::string &str, char ch)
 	str.erase(std::remove(str.begin(), str.end(), ch), str.end());
 }
 
+const sf::Vector2i mapWorldToTilemap(const sf::Vector2f &coords, sf::Vector2i &tileSize)
+{
+	sf::Vector2i tempVec{ coords };
+
+	// Value mapped to int will always be correct. Since int will round down
+	tempVec.x /= tileSize.x;
+	tempVec.y /= tileSize.y;
+	return tempVec;
+}
+
+const sf::Vector2i mapWorldToTilemap(const sf::Vector2f & coords, const int tileWidth, const int tileHeight)
+{
+	return mapWorldToTilemap(coords, sf::Vector2i(tileWidth, tileHeight));
+}
+
 bool Level::initMap()
 {
 	std::ifstream file(m_levelMapPath);

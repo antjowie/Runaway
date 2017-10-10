@@ -4,9 +4,6 @@
 #include "CollisionHandler.h"
 #include "Tile.h"
 
-const sf::Vector2i mapWorldToTilemap(const sf::Vector2f &coords, sf::Vector2i &tileSize);
-const sf::Vector2i mapWorldToTilemap(const sf::Vector2f &coords, const int tileWidth, const int tileHeight);
-
 class Sprite
 {
 private:
@@ -14,11 +11,11 @@ private:
 	sf::Vector2i m_moveDirection;
 	sf::Vector2f m_acceleration;
 	bool m_isCrouching{ false };
-	bool m_hasJumped{ false };
-
+	bool m_canJump{ false };
 	// Should this be a normal or member function
 	// No added benefit making it normal function, it's only used for player
 	const bool isItemPressed(const std::string string) const;
+	const bool isFloating(CollisionHandler &collisionHandler) const;
 
 public:
 	Sprite();
@@ -45,7 +42,7 @@ private:
 
 public:
 	CollisionHandler m_collisionHandler; // This one is public so that level can initialize it
-	Sprite m_sprite; // This one is public so that camera can acces it
+	Sprite m_sprite; // This one is public so that camera can access it
 
 	PlayerObject(const bool isValid = false);
 

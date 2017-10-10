@@ -15,6 +15,8 @@
 #include <vector>
 
 void remove_char(std::string &str, char ch);
+const sf::Vector2i mapWorldToTilemap(const sf::Vector2f &coords, sf::Vector2i &tileSize);
+const sf::Vector2i mapWorldToTilemap(const sf::Vector2f &coords, const int tileWidth, const int tileHeight);
 
 class Level
 {

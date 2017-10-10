@@ -1,5 +1,6 @@
 #include "CollisionHandler.h"
 #include "PlayerObject.h"
+#include "Level.h"
 
 bool CollisionHandler::checkLoaded()
 {
