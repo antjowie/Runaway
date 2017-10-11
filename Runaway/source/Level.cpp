@@ -238,32 +238,33 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 	}
 }
 
-const Entity * const Level::entityHit(const sf::FloatRect & hitbox)
-{
-	for (const auto iter : m_entityMap)
-	{
-		if (hitbox.intersects(iter->getHitbox()))
-			return iter->getEntity();
-	}
-	return nullptr;
-}
-
 bool Level::inLevelBounds(const sf::Vector2f & point)
 {
 	return point.y > m_levelHeight;
 }
 
-const std::vector<std::vector<Tile*>> &Level::getTileMap() const
+void Level::setSpawn(const sf::Vector2f & pos)
+{
+	m_spawnX = pos.x;
+	m_spawnY = pos.y;
+}
+
+const std::vector<std::vector<Tile*>> &Level::getTilemap() const
 {
 	return m_tilemap;
 }
 
-const sf::Vector2i Level::getSpawn() const
+const sf::Vector2f Level::getSpawn() const
 {
-	return sf::Vector2i(m_spawnX, m_spawnY);
+	return sf::Vector2f(m_spawnX, m_spawnY);
 }
 
 const std::string & Level::getTitle() const
 {
 	return m_title;
+}
+
+const std::vector<Entity*>& Level::getEntityMap() const
+{
+	return m_entityMap;
 }

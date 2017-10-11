@@ -15,7 +15,7 @@ const EntityAction & Entity::getAction()
 	return m_action;
 }
 
-const Entity * const Entity::getEntity()
+Entity * Entity::getEntity()
 {
 	return this;
 }

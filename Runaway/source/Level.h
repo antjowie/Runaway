@@ -36,7 +36,7 @@ private:
 	int m_levelWidth{ 0 }, m_levelHeight{ 0 };		// Not in tiles
 	int m_tilemapWidth{ 0 }, m_tilemapHeight{ 0 };	// In tiles
 	int m_tileWidth{ 0 }, m_tileHeight{ 0 };		// Size of a tile
-	int m_spawnX{ 0 }, m_spawnY{ 0 };
+	float m_spawnX{ 0 }, m_spawnY{ 0 };
 	const std::string m_title;
 
 	bool initMap();
@@ -52,11 +52,13 @@ public:
 	void update(const float elapsedTime);
 	void draw(sf::RenderWindow &window,const Camera &camera);
 
-	const Entity * const entityHit(const sf::FloatRect &hitbox);
 	bool inLevelBounds(const sf::Vector2f &point);
+
+	void setSpawn(const sf::Vector2f &pos);
 	
 	bool loadLevel(Camera &camera, PlayerObject * const player); // This will load all the files for this level
-	const std::vector<std::vector<Tile*>> &getTileMap() const;
-	const sf::Vector2i getSpawn() const;
+	const std::vector<std::vector<Tile*>> &getTilemap() const;
+	const sf::Vector2f getSpawn() const;
 	const std::string &getTitle() const;
+	const std::vector<Entity*> &getEntityMap() const;
 };

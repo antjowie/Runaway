@@ -27,6 +27,8 @@ protected:
 	sf::Sprite m_sprite;
 
 public:
+	bool m_isActive{ false };
+
 	Entity(const EntityType type, const EntityAction action, const sf::Vector2f &pos);
 
 	virtual void logic(const float elapsedTime) override =0;
@@ -34,8 +36,7 @@ public:
 	virtual void draw(sf::RenderWindow &window)	override =0;
 
 	virtual const EntityAction &getAction();
-	const Entity *const getEntity();
+	Entity * getEntity();
 	const sf::FloatRect getHitbox();
 	const EntityType &getType();
 };
-

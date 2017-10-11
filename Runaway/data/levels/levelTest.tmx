@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="72">
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="75">
  <tileset firstgid="1" source="runawayTileset.tsx"/>
  <layer name="Tile Layer 1" width="100" height="100">
   <data encoding="csv">
@@ -108,5 +108,6 @@
  <objectgroup name="Object Layer 1" offsetx="-0.25" offsety="0">
   <object id="66" name="spawn" x="1536" y="1728"/>
   <object id="69" name="checkpoint" x="1472" y="1728"/>
+  <object id="72" name="checkpoint" x="1632" y="1728"/>
  </objectgroup>
 </map>

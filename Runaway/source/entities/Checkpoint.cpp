@@ -13,8 +13,15 @@ Checkpoint::Checkpoint(const EntityType type, const EntityAction action, const s
 	m_sprite.setTextureRect(m_animHandler.getFrame());
 }
 
+const EntityAction & Checkpoint::getAction()
+{
+	m_isActive = true;
+	return Entity::getAction();
+}
+
 void Checkpoint::logic(const float elapsedTime)
 {
+	if(m_isActive)
 	m_animHandler.update(elapsedTime);
 }
 

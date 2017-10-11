@@ -75,10 +75,32 @@ void GameMenu::update(const float elapsedTime)
 	m_level->update(elapsedTime);
 	m_camera.setView(m_player->m_sprite.getPos());
 	m_camera.update(elapsedTime);
+	// Update entity when entity collision
+	for (const auto &entity : m_level->getEntityMap())
+	{
+		if (entity->getHitbox().intersects(m_player->m_sprite.getHitbox()))
+			switch (entity->getType())
+			{
+			case EntityType::Checkpoint:
+				for (const auto &toggler : m_level->getEntityMap())
+					if (toggler->getType() == EntityType::Checkpoint)
+						toggler->m_isActive = false;
+				entity->m_isActive = true;
+				m_level->setSpawn(entity->getAction().pos);
+				break;
+			case EntityType::Coin:
+				
+				break;
+			}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) m_player->m_isDead = true;
 	if (m_level->inLevelBounds(m_player->m_sprite.getPos()))
 		m_player->m_isDead = true;
 	if (m_player->m_isDead == true)
-		m_isPop = true;
+	{
+		m_player->m_sprite.setPos(m_level->getSpawn());
+		m_player->m_isDead = false;
+	}
 }
 
 void GameMenu::draw(sf::RenderWindow & window)
