@@ -18,7 +18,7 @@ void GameMenu::changeLevel(const GameMenu::levelName level)
 	{
 	case levelName::TestLevel:
 
-		m_level = new Level("Runaway/data/levels/levelTest.tmx", "Test level", 1280/2 , 720/2 , 1.0f, 48 * 32,54 * 32);
+		m_level = new Level("Runaway/data/levels/levelTest.tmx", "Test level", 1280/2 , 720/2 , 1.f);
 		assert(m_level->loadLevel(m_camera,m_player) && "Load level failed");
 
 		break;
@@ -75,6 +75,10 @@ void GameMenu::update(const float elapsedTime)
 	m_level->update(elapsedTime);
 	m_camera.setView(m_player->m_sprite.getPos());
 	m_camera.update(elapsedTime);
+	if (m_level->inLevelBounds(m_player->m_sprite.getPos()))
+		m_player->m_isDead = true;
+	if (m_player->m_isDead == true)
+		m_isPop = true;
 }
 
 void GameMenu::draw(sf::RenderWindow & window)

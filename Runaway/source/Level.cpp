@@ -67,9 +67,8 @@ bool Level::initCamera(Camera & camera)
 	if (m_cameraSize.x <= 0 || m_cameraSize.y <= 0) return false; // Camera size too small
 	if (m_cameraSize.x > m_levelWidth || m_cameraSize.y > m_levelHeight) return false; // Camera size too big
 	camera = Camera::Camera(
-		sf::FloatRect(static_cast<float>(m_spawnX), static_cast<float>(m_spawnY),m_cameraSize.x,m_cameraSize.y), 
-		sf::Vector2f(static_cast<float>(m_levelWidth), static_cast<float>(m_levelHeight)),
-		m_cameraSpeed);
+		sf::FloatRect(static_cast<float>(m_spawnX - m_cameraSize.x/2), static_cast<float>(m_spawnY- m_cameraSize.y/2),m_cameraSize.x,m_cameraSize.y), 
+		sf::Vector2f(static_cast<float>(m_levelWidth), static_cast<float>(m_levelHeight)),m_cameraSpeed);
 
 	return true;
 }
@@ -203,10 +202,9 @@ bool Level::loadEntities(std::vector<char> tilemap)
 
 Level::Level(const std::string &levelMapPath, const std::string &title, 
 	const float cameraWidth, const float camerHeight, 
-	const float cameraSpeed, const int spawnX, const int spawnY):
+	const float cameraSpeed):
 	m_cameraSize(cameraWidth,camerHeight), m_title(title), 
-	m_levelMapPath(levelMapPath), m_cameraSpeed(cameraSpeed), 
-	m_spawnX(spawnX), m_spawnY(spawnY)
+	m_levelMapPath(levelMapPath), m_cameraSpeed(cameraSpeed)
 {
 }
 
@@ -248,6 +246,11 @@ const Entity * const Level::entityHit(const sf::FloatRect & hitbox)
 			return iter->getEntity();
 	}
 	return nullptr;
+}
+
+bool Level::inLevelBounds(const sf::Vector2f & point)
+{
+	return point.y > m_levelHeight;
 }
 
 const std::vector<std::vector<Tile*>> &Level::getTileMap() const

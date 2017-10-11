@@ -47,16 +47,15 @@ private:
 	bool loadEntities(std::vector<char> tilemap);
 
 public:
-	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight, const float cameraSpeed,
-		const int spawnX, const int spawnY);
+	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight, const float cameraSpeed);
 
 	void update(const float elapsedTime);
 	void draw(sf::RenderWindow &window,const Camera &camera);
 
 	const Entity * const entityHit(const sf::FloatRect &hitbox);
+	bool inLevelBounds(const sf::Vector2f &point);
 	
 	bool loadLevel(Camera &camera, PlayerObject * const player); // This will load all the files for this level
-
 	const std::vector<std::vector<Tile*>> &getTileMap() const;
 	const sf::Vector2i getSpawn() const;
 	const std::string &getTitle() const;

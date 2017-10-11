@@ -25,11 +25,11 @@ void Camera::checkBounds()
 	}
 }
 
-Camera::Camera()
+Camera::Camera():
+	m_speed(0),
+	m_view(),
+	m_target(m_view.getCenter())
 {
-	m_speed = 0;
-	m_view = sf::View();
-	m_target = m_view.getCenter();
 }
 
 Camera::Camera(const sf::FloatRect &view, const sf::Vector2f &bounds, const float speed) :
@@ -42,9 +42,8 @@ Camera::Camera(const sf::FloatRect &view, const sf::Vector2f &bounds, const floa
 
 void Camera::setView(sf::Vector2f const &target)
 {
-	
-	m_target = target;
 	m_view.setCenter(target);
+	m_target = m_view.getCenter();
 }
 
 void Camera::setTarget(sf::Vector2f const &target)
@@ -62,7 +61,6 @@ void Camera::update(const float elapsedTime)
 	float x{ m_target.x - m_view.getCenter().x };
 	float y{ m_target.y - m_view.getCenter().y };
 
-
 	if (x * x + y * y <= 1)
 	{
 		setView(m_target);
@@ -70,8 +68,7 @@ void Camera::update(const float elapsedTime)
 	else
 	{
 		float d{ sqrt(x * x + y * y) };
-		float v = d * m_speed *elapsedTime;
-		if (v < 1.0f) v = 1.0f;
+		float v = d * m_speed;
 
 		x *= (v / d); // If our speed decreases by 4 times
 		y *= (v / d); // these will also decrease by 4 times

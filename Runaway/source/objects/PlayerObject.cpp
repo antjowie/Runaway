@@ -74,11 +74,11 @@ void PlayerObject::logic(const float elapsedTime)
 	// No movement
 	else
 		m_animHandler.changeAnimation(playerDirection::Rest);
-
 }
 
 void PlayerObject::input(sf::RenderWindow &window)
 {	
+	if(!m_isDead)
 	m_sprite.input();
 }
 
@@ -170,8 +170,11 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 		m_sprite.move(movement.x * elapsedTime, 0);
 
 		const float rightDistance{ collisionHandler.distanceTillRightCollision(getHitbox()) };
-		if (rightDistance> 0)
+		if (rightDistance > 0)
+		{
 			m_sprite.move(-rightDistance, 0);
+			m_acceleration.x = 0;
+		}
 	}
 
 	if (m_acceleration.x < 0)
@@ -181,7 +184,10 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 
 		const float leftDistance{ collisionHandler.distanceTillLeftCollision(getHitbox()) };
 		if (leftDistance > 0)
+		{
 			m_sprite.move(leftDistance, 0);
+			m_acceleration.x = 0;
+		}
 	}
 
 	if (m_acceleration.y < 0)
@@ -193,7 +199,8 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 		if (upperDistance > 0)
 		{
 			m_sprite.move(0, upperDistance);
-			m_acceleration.y = -gravity;
+			if (m_acceleration.y < 0)
+				m_acceleration.y = -gravity;
 		}
 	}
 

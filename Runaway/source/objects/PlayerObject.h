@@ -41,6 +41,7 @@ private:
 	AnimationHandler m_animHandler;
 
 public:
+	bool m_isDead{ false };
 	CollisionHandler m_collisionHandler; // This one is public so that level can initialize it
 	Sprite m_sprite; // This one is public so that camera can access it
 
