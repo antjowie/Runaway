@@ -72,6 +72,7 @@ void GameMenu::update(const float elapsedTime)
 	if (m_level == nullptr) return;
 
 	// Had to be called after update because this will fix positions when player already has moved
+	m_level->update(elapsedTime);
 	m_camera.setView(m_player->m_sprite.getPos());
 	m_camera.update(elapsedTime);
 }

@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Runaway\source\entities\Entity.cpp" />
     <ClCompile Include="Runaway\source\AnimationHandler.cpp" />
     <ClCompile Include="Runaway\source\CollisionHandler.cpp" />
     <ClCompile Include="Runaway\source\Config.cpp" />
     <ClCompile Include="Runaway\source\Camera.cpp" />
     <ClCompile Include="Runaway\source\DataManager.cpp" />
+    <ClCompile Include="Runaway\source\entities\Checkpoint.cpp" />
     <ClCompile Include="Runaway\source\Level.cpp" />
     <ClCompile Include="Runaway\source\MenuStack.cpp" />
     <ClCompile Include="Runaway\source\menus\GameMenu.cpp" />
@@ -39,11 +41,13 @@
     <ClCompile Include="Runaway\source\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Runaway\source\entities\Entity.h" />
     <ClInclude Include="Runaway\source\AnimationHandler.h" />
     <ClInclude Include="Runaway\source\CollisionHandler.h" />
     <ClInclude Include="Runaway\source\Config.h" />
     <ClInclude Include="Runaway\source\Camera.h" />
     <ClInclude Include="Runaway\source\DataManager.h" />
+    <ClInclude Include="Runaway\source\entities\Checkpoint.h" />
     <ClInclude Include="Runaway\source\Level.h" />
     <ClInclude Include="Runaway\source\MenuStack.h" />
     <ClInclude Include="Runaway\source\menus\GameMenu.h" />
@@ -130,7 +134,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\source\menus;E:\Docs\C++ projects\Runaway\Runaway\source\objects;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source\entities;E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\source\menus;E:\Docs\C++ projects\Runaway\Runaway\source\objects;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -163,7 +167,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\source\menus;E:\Docs\C++ projects\Runaway\Runaway\source\objects;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source\entities;E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\source\menus;E:\Docs\C++ projects\Runaway\Runaway\source\objects;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

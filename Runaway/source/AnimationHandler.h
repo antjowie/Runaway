@@ -16,13 +16,16 @@
 struct Animation
 {
 	// Each Animation object represents a row in the spritesheet
+	// Usually starts at zero
 	unsigned int m_startFrame;
+	// Amount of frames - 1
 	unsigned int m_endFrame;
 
 	float m_duration;
 	bool m_isRepeated;
 	bool m_isTransition;
 
+	// endFrame = amount of frames - 1
 	Animation(const unsigned int startFrame, const unsigned int endFrame, const float duration, const bool isRepeated = true, const bool isTransition = false);
 	int getLength() const;
 };

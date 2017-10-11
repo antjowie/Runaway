@@ -29,10 +29,14 @@ int main()
 	{
 		// Used for animation and consistent movement over all fps values
 		elapsedTime = time.restart().asSeconds();
+		// If user pauses the program
+		if (elapsedTime> 1.f) elapsedTime= 1 / frameLimit;
+
 		elapsedRenderTime += elapsedTime;
 
 		// Failsave
 		if (menuStack.peek() == nullptr ) continue;
+
 
 		// Logic
 		menuStack.peek()->input(window);
