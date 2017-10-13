@@ -1,5 +1,5 @@
 #include "Camera.h"
-
+#include <iostream>
 void Camera::checkBounds()
 {
 	if (m_view.getCenter().x - m_view.getSize().x / 2 < 0)
@@ -32,11 +32,12 @@ Camera::Camera():
 {
 }
 
-Camera::Camera(const sf::FloatRect &view, const sf::Vector2f &bounds, const float speed) :
+Camera::Camera(const sf::FloatRect view, const sf::Vector2f bounds, const float speed) :
 	m_view(view), m_bounds(bounds),m_speed(speed)
 {
 	if (m_speed > 1.0f) m_speed = 1.0f;
 	if (m_speed < 0.0f) m_speed = 0.0f;
+	m_view.setCenter(m_view.getCenter());
 	m_target = m_view.getCenter(); // To prevent undefined error
 }
 
@@ -60,15 +61,16 @@ void Camera::update(const float elapsedTime)
 {
 	float x{ m_target.x - m_view.getCenter().x };
 	float y{ m_target.y - m_view.getCenter().y };
-
+	
 	if (x * x + y * y <= 1)
 	{
 		setView(m_target);
 	}
 	else
+	
 	{
 		float d{ sqrt(x * x + y * y) };
-		float v = d * m_speed;
+		float v = d * m_speed * elapsedTime;
 
 		x *= (v / d); // If our speed decreases by 4 times
 		y *= (v / d); // these will also decrease by 4 times

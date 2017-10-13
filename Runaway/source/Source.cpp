@@ -7,8 +7,6 @@
 #include "MainMenu.h"
 #include "Config.h"
 
-#include <iostream>
-
 int main() 
 {
 	Config::getInstance().loadConfig();
@@ -29,8 +27,9 @@ int main()
 	{
 		// Used for animation and consistent movement over all fps values
 		elapsedTime = time.restart().asSeconds();
+
 		// If user pauses the program
-		if (elapsedTime> 1.f) elapsedTime= 1 / frameLimit;
+		if (elapsedTime > 0.2f)	elapsedTime = 1.f / frameLimit;
 
 		elapsedRenderTime += elapsedTime;
 

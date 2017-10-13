@@ -8,8 +8,9 @@ class Sprite
 {
 private:
 	sf::Sprite m_sprite;
-	sf::Vector2i m_moveDirection;
-	sf::Vector2f m_acceleration;
+	sf::Vector2i m_moveDirection;	// The direction the player walks in
+	sf::Vector2f m_acceleration;	// The acceleration of the player
+
 	bool m_isCrouching{ false };
 	bool m_canJump{ false };
 	// Should this be a normal or member function
@@ -18,11 +19,14 @@ private:
 	const bool isFloating(CollisionHandler &collisionHandler) const;
 
 public:
+
 	Sprite();
 
 	void input();
 	void update(const float elapsedTime, CollisionHandler &collisionHandler);
 	void draw(sf::RenderWindow &window);
+
+	void debugMove(const float elapsedTime);
 
 	void setPos(const sf::Vector2f &pos);
 	void setTextureRect(const sf::IntRect &textureRect);
@@ -31,6 +35,7 @@ public:
 	const sf::FloatRect getHitbox() const;
 	const sf::IntRect getTextureRect() const;
 	const sf::Vector2f getPos() const;
+	const sf::Vector2f getAcceleration() const;
 };
 
 class PlayerObject :

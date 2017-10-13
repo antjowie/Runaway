@@ -86,7 +86,7 @@ void PlayerObject::draw(sf::RenderWindow &window)
 {
 	m_sprite.setTextureRect(m_animHandler.getFrame()); // Should this be handled in logic or draw?
 	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4,
-		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width / 2, m_sprite.getTextureRect().height));
+		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width / 2 - 3, m_sprite.getTextureRect().height));
 	m_sprite.draw(window);
 }
 
@@ -98,9 +98,12 @@ Sprite::Sprite():
 
 void Sprite::input()
 {
+	// Reset directions
+	// So that getMoveDirection returns something useful
+	m_moveDirection.x = m_moveDirection.y = 0;
+
 	if ((isItemPressed("moveUp") || isItemPressed("jump")))
 		m_moveDirection.y = -1;
-
 
 	if (isItemPressed("moveLeft")) m_moveDirection.x -= 1;
 	if (m_moveDirection.x < -1) m_moveDirection.x = -1;
@@ -157,8 +160,37 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 	if (m_acceleration.y > 0)
 		m_acceleration.y = 0;
 		
-
 	// Update position
+	// Gravity
+	float bottomDistance{ collisionHandler.distanceTillBottomCollision(getHitbox()) };
+	if (bottomDistance == 0)
+	{
+		m_acceleration.y += gravity * 2 * elapsedTime;
+		m_sprite.move(0, gravity * elapsedTime);
+
+		m_canJump = false;
+		bottomDistance = collisionHandler.distanceTillBottomCollision(getHitbox());
+	}
+	if (bottomDistance > 0)
+	{
+		m_sprite.move(0, -bottomDistance);
+		m_canJump = true;
+	}
+
+	if (m_acceleration.y < 0)
+	{
+		movement.y = m_acceleration.y;
+		m_sprite.move(0, movement.y * elapsedTime);
+
+		const float upperDistance{ collisionHandler.distanceTillUpperCollision(getHitbox()) };
+		if (upperDistance > 0)
+		{
+			m_sprite.move(0, upperDistance);
+			if (m_acceleration.y < 0)
+				m_acceleration.y = -gravity;
+		}
+	}
+
 	if (m_isCrouching)
 	{
 
@@ -190,36 +222,6 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 		}
 	}
 
-	if (m_acceleration.y < 0)
-	{
-		movement.y = m_acceleration.y;
-		m_sprite.move(0, movement.y * elapsedTime);
-
-		const float upperDistance{ collisionHandler.distanceTillUpperCollision(getHitbox()) };
-		if (upperDistance > 0)
-		{
-			m_sprite.move(0, upperDistance);
-			if (m_acceleration.y < 0)
-				m_acceleration.y = -gravity;
-		}
-	}
-
-	// Gravity
-	float bottomDistance{ collisionHandler.distanceTillBottomCollision(getHitbox()) };
-	if (bottomDistance == 0)
-	{
-		m_acceleration.y += gravity * 2 * elapsedTime;
-		m_sprite.move(0, gravity * elapsedTime);
-
-		m_canJump = false;
-		bottomDistance = collisionHandler.distanceTillBottomCollision(getHitbox());
-	}
-	if (bottomDistance > 0)
-	{
-		m_sprite.move(0, -bottomDistance);
-		m_canJump = true;
-	}
-
 	// Updating accelerations to decelerate
 	if (m_moveDirection.x == 0)
 	{
@@ -236,14 +238,42 @@ void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
 				m_acceleration.x = 0;
 		}
 	}
-
-	// Reset directions
-	m_moveDirection.x = m_moveDirection.y = 0;
 }
 
 void Sprite::draw(sf::RenderWindow & window)
 {
 	window.draw(m_sprite);
+}
+
+void Sprite::debugMove(const float elapsedTime)
+{
+	const float speed{ 32 * 4 };
+	m_canJump = true;
+	if (m_moveDirection.x == 1)
+	{
+		m_acceleration.x = 2;
+		m_sprite.move(m_acceleration.x * elapsedTime * speed,0);
+	}
+	else if (m_moveDirection.x == -1)
+	{
+		m_acceleration.x = -2;
+		m_sprite.move(m_acceleration.x * elapsedTime* speed, 0);
+
+	}
+	else m_acceleration.x = 0;
+	if (m_moveDirection.y == -1)
+	{
+		m_acceleration.y = -2;
+		m_sprite.move(0, m_acceleration.y * elapsedTime* speed);
+
+	}
+	else if (m_isCrouching == true)
+	{
+		m_acceleration.y = 2;
+		m_sprite.move(0, m_acceleration.y * elapsedTime* speed);
+	}
+	else m_acceleration.y = 0;
+	m_moveDirection.x = m_moveDirection.y = 0;
 }
 
 void Sprite::setPos(const sf::Vector2f & pos)
@@ -274,4 +304,9 @@ const sf::IntRect Sprite::getTextureRect() const
 const sf::Vector2f Sprite::getPos() const
 {
 	return m_sprite.getPosition();
+}
+
+const sf::Vector2f Sprite::getAcceleration() const
+{
+	return m_acceleration;
 }

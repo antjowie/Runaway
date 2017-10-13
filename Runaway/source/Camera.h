@@ -18,7 +18,7 @@ private:
 
 public:
 	Camera();
-	Camera(const sf::FloatRect &view, const sf::Vector2f &bounds, const float speed);
+	Camera(const sf::FloatRect view, const sf::Vector2f bounds, const float speed);
 
 	void moveTarget	(sf::Vector2f const	&target);
 	void setTarget	(sf::Vector2f const	&target);

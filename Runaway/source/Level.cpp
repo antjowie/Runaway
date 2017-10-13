@@ -69,7 +69,6 @@ bool Level::initCamera(Camera & camera)
 	camera = Camera::Camera(
 		sf::FloatRect(static_cast<float>(m_spawnX - m_cameraSize.x/2), static_cast<float>(m_spawnY- m_cameraSize.y/2),m_cameraSize.x,m_cameraSize.y), 
 		sf::Vector2f(static_cast<float>(m_levelWidth), static_cast<float>(m_levelHeight)),m_cameraSpeed);
-
 	return true;
 }
 
@@ -169,10 +168,8 @@ bool Level::loadEntities(std::vector<char> tilemap)
 		converter(name, entity->first_attribute("name")->value());
 		if (name == "spawn")
 		{
-			
 			converter(m_spawnX, entity->first_attribute("x")->value());
 			converter(m_spawnY, entity->first_attribute("y")->value());
-		
 		}
 		else
 		{
