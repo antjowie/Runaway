@@ -67,7 +67,6 @@ void Camera::update(const float elapsedTime)
 		setView(m_target);
 	}
 	else
-	
 	{
 		float d{ sqrt(x * x + y * y) };
 		float v = d * m_speed * elapsedTime;

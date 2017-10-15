@@ -13,8 +13,8 @@ private:
 
 	bool m_isCrouching{ false };
 	bool m_canJump{ false };
-	// Should this be a normal or member function
-	// No added benefit making it normal function, it's only used for player
+	bool m_hasJumped{ true };
+
 	const bool isItemPressed(const std::string string) const;
 	const bool isFloating(CollisionHandler &collisionHandler) const;
 
@@ -24,6 +24,8 @@ public:
 
 	void input();
 	void update(const float elapsedTime, CollisionHandler &collisionHandler);
+	void update2(const float elapsedTime, CollisionHandler &collisionHandler);
+	void update3(const float elapsedTime, CollisionHandler &collisionHandler);
 	void draw(sf::RenderWindow &window);
 
 	void debugMove(const float elapsedTime);
@@ -35,7 +37,7 @@ public:
 	const sf::FloatRect getHitbox() const;
 	const sf::IntRect getTextureRect() const;
 	const sf::Vector2f getPos() const;
-	const sf::Vector2f getAcceleration() const;
+	const sf::Vector2i getMoveDirection() const;
 };
 
 class PlayerObject :

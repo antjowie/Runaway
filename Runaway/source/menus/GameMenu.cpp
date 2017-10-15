@@ -73,8 +73,21 @@ void GameMenu::update(const float elapsedTime)
 
 	// Had to be called after update because this will fix positions when player already has moved
 	m_level->update(elapsedTime);
-	m_camera.setTarget(m_player->m_sprite.getPos() + sf::Vector2f(m_player->m_sprite.getAcceleration().x * 150,0));
+	
+	sf::Vector2f  offset{ m_player->m_sprite.getMoveDirection() };
+	if (offset.x > 0)
+		offset.x = m_camera.getView().getSize().x / 2;
+	else if (offset.x <0)
+		offset.x = -m_camera.getView().getSize().x / 2;
+	if (offset.y < 0)
+		offset.y = -m_camera.getView().getSize().y / 2;
+	else if (offset.y > 0)
+	offset.y = m_camera.getView().getSize().y / 2;
+
+	//m_camera.setTarget(m_player->m_sprite.getPos() + offset);
+	m_camera.setView(m_player->m_sprite.getPos());
 	m_camera.update(elapsedTime);
+
 	// Update entity when entity collision
 	for (const auto &entity : m_level->getEntityMap())
 	{
