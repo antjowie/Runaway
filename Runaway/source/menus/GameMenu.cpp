@@ -14,11 +14,12 @@ void GameMenu::changeLevel(const GameMenu::levelName level)
 	m_player = new PlayerObject(true);
 	pushObject(m_player);
 
+	std::string levelPath("Runaway/data/levels/");
 	switch (m_levelId)
 	{
 	case levelName::TestLevel:
 
-		m_level = new Level("Runaway/data/levels/levelTest.tmx", "Test level", 1280/2 , 720/2 , 1.f);
+		m_level = new Level(levelPath + "test/tilemap.tmx", "Test level", 1280/2 , 720/2 , 1.f, "testTileset");
 		assert(m_level->loadLevel(m_camera,m_player) && "Load level failed");
 
 		break;

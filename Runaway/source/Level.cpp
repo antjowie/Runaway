@@ -130,7 +130,7 @@ bool Level::loadTilemap(std::vector<char> tilemap)
 			converter(id, tilemapString[i * m_tilemapHeight + j]);
 
 			// While j represent y, it's value is used to evaluate the x axis.
-			m_tilemap[i][j] = new Tile(id, static_cast<float>(m_tileWidth* j), static_cast<float>(m_tileHeight* i));
+			m_tilemap[i][j] = getTile(id, static_cast<float>(m_tileWidth* j), static_cast<float>(m_tileHeight* i),m_tilesetName);
 		}
 	}
 
@@ -197,11 +197,12 @@ bool Level::loadEntities(std::vector<char> tilemap)
 	return true;
 }
 
-Level::Level(const std::string &levelMapPath, const std::string &title, 
-	const float cameraWidth, const float camerHeight, 
-	const float cameraSpeed):
+Level::Level(const std::string &levelMapPath, const std::string &title,
+	const float cameraWidth, const float camerHeight,
+	const float cameraSpeed, const std::string tilesetName) :
 	m_cameraSize(cameraWidth,camerHeight), m_title(title), 
-	m_levelMapPath(levelMapPath), m_cameraSpeed(cameraSpeed)
+	m_levelMapPath(levelMapPath), m_cameraSpeed(cameraSpeed),
+	m_tilesetName(tilesetName)
 {
 }
 

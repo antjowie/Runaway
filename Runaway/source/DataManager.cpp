@@ -3,16 +3,25 @@
 DataManager::DataManager()
 {
 	std::string dataPath("Runaway/data/");
+	
 	// Load fonts
 	std::string fontPath(dataPath + "fonts/");
 	loadFont("pixel", fontPath + "Pixeled.ttf");
 
 	// Load textures
 	std::string texturePath(dataPath + "textures/");
-	loadTexture("player", texturePath + "playerSpritesheet.png");
+
+	// Load entities
+	std::string entityPath(texturePath + "entities/");
+	loadTexture("player", entityPath + "player/playerSprite.png");
+	loadTexture("checkpoint", entityPath + "checkpoint/checkpointSprite.png");
+	
+	// Load tilesets
+	std::string tilesetPath(texturePath + "tilesets/");
+	loadTexture("testTileset", tilesetPath + "test/testTileset.png");
+	
+	// Load misc
 	loadTexture("mainMenuBackground", texturePath + "mainMenuBackground.png");
-	loadTexture("tileset", texturePath + "runawayTileset.png");
-	loadTexture("checkpoint", texturePath + "checkpoint.png");
 }
 
 DataManager & DataManager::getInstance()
