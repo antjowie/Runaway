@@ -9,7 +9,7 @@ class Sprite
 private:
 	sf::Sprite m_sprite;
 	sf::Vector2i m_moveDirection;	// The direction the player walks in
-	sf::Vector2f m_acceleration;	// The acceleration of the player
+	sf::Vector2f m_velocity;	// The acceleration of the player
 
 	bool m_isCrouching{ false };
 	bool m_canJump{ false };
@@ -24,8 +24,6 @@ public:
 
 	void input();
 	void update(const float elapsedTime, CollisionHandler &collisionHandler);
-	void update2(const float elapsedTime, CollisionHandler &collisionHandler);
-	void update3(const float elapsedTime, CollisionHandler &collisionHandler);
 	void draw(sf::RenderWindow &window);
 
 	void debugMove(const float elapsedTime);

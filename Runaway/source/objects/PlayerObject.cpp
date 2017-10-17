@@ -43,7 +43,7 @@ void PlayerObject::logic(const float elapsedTime)
 	m_animHandler.update(elapsedTime);
 	sf::Vector2f oldPos{ m_sprite.getPos() };
 
-	m_sprite.update2(elapsedTime, m_collisionHandler);
+	m_sprite.update(elapsedTime, m_collisionHandler);
 	sf::Vector2f newPos{ m_sprite.getPos() - oldPos };
 
 	// Brace for some ugly vector checking for animation
@@ -91,7 +91,7 @@ void PlayerObject::draw(sf::RenderWindow &window)
 }
 
 Sprite::Sprite():
-	m_acceleration(0,0),
+	m_velocity(0,0),
 	m_moveDirection(0,0)
 {	
 }
@@ -112,147 +112,21 @@ void Sprite::input()
 	m_isCrouching = isItemPressed("moveDown");
 }
 
-void Sprite::update(const float elapsedTime, CollisionHandler &collisionHandler)
+void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler)
 {
-	sf::Vector2f movement;
+	// TODO: add jump offset
 
-	// All these values could be defined by level, but I won't because I have no intention to
-	float speed{ 32 * 3 };					// Distance with acceleration 1
-	float jumpStrength{ 32 * 20 };			
-	float jumpAccelerate{ 32 * 10 };
-	float maxAccelerate{ 2 };
-	float accelerate{ elapsedTime * 4 };    // How much time to reach that acceleration
-	float decelerate{ elapsedTime * 6 };	// How much times slower in one sec
-											// TODO: level should define this
-	float gravity{ 32 * 10 };				// Drop this many pixels in one sec
-
-	// Update accelerations
-	if (m_moveDirection.x == 1)
-	{
-		if (m_acceleration.x < 0)
-			m_acceleration.x = 0;
-		m_acceleration.x += accelerate;
-	}
-	else if (m_moveDirection.x == -1)
-	{
-		if (m_acceleration.x > 0)
-			m_acceleration.x = 0;
-		m_acceleration.x -= accelerate;
-	}
-
-	if (m_moveDirection.y == -1)
-	{
-		if (m_canJump) 
-		{
-			m_acceleration.y = -jumpStrength;
-			m_canJump = false;
-		}
-		if(m_acceleration.y < 0)
-			m_acceleration.y -= jumpAccelerate * elapsedTime;
-	}
-
-	// Check movement bounds
-	if (m_acceleration.x > maxAccelerate)
-		m_acceleration.x = maxAccelerate;
-	else if (m_acceleration.x < -maxAccelerate)
-		m_acceleration.x = -maxAccelerate;
-	if (m_acceleration.y > 0)
-		m_acceleration.y = 0;
-		
-	// Update position
-	// Gravity
-	float bottomDistance{ collisionHandler.distanceTillBottomCollision(getHitbox()) };
-	if (bottomDistance == 0)
-	{
-		m_acceleration.y += gravity * 2 * elapsedTime;
-		m_sprite.move(0, gravity * elapsedTime);
-
-		m_canJump = false;
-		bottomDistance = collisionHandler.distanceTillBottomCollision(getHitbox());
-	}
-	if (bottomDistance > 0)
-	{
-		m_sprite.move(0, -bottomDistance);
-		m_canJump = true;
-	}
-
-	if (m_acceleration.y < 0)
-	{
-		movement.y = m_acceleration.y;
-		m_sprite.move(0, movement.y * elapsedTime);
-
-		const float upperDistance{ collisionHandler.distanceTillUpperCollision(getHitbox()) };
-		if (upperDistance > 0)
-		{
-			m_sprite.move(0, upperDistance);
-			if (m_acceleration.y < 0)
-				m_acceleration.y = -gravity;
-		}
-	}
-
-	if (m_isCrouching)
-	{
-
-	}
-
-	if (m_acceleration.x > 0)
-	{
-		movement.x = speed * m_acceleration.x;
-		m_sprite.move(movement.x * elapsedTime, 0);
-
-		const float rightDistance{ collisionHandler.distanceTillRightCollision(getHitbox()) };
-		if (rightDistance > 0)
-		{
-			m_sprite.move(-rightDistance, 0);
-			m_acceleration.x = 0;
-		}
-	}
-
-	if (m_acceleration.x < 0)
-	{
-		movement.x = speed * m_acceleration.x;
-		m_sprite.move(movement.x * elapsedTime, 0);
-
-		const float leftDistance{ collisionHandler.distanceTillLeftCollision(getHitbox()) };
-		if (leftDistance > 0)
-		{
-			m_sprite.move(leftDistance, 0);
-			m_acceleration.x = 0;
-		}
-	}
-
-	// Updating accelerations to decelerate
-	if (m_moveDirection.x == 0)
-	{
-		if (m_acceleration.x > 0)
-		{
-			m_acceleration.x -= decelerate;
-			if (m_acceleration.x < 0)
-				m_acceleration.x = 0;
-		}
-		else if (m_acceleration.x < 0)
-		{
-			m_acceleration.x += decelerate;
-			if (m_acceleration.x > 0)
-				m_acceleration.x = 0;
-		}
-	}
-}
-
-void Sprite::update2(const float elapsedTime, CollisionHandler & collisionHandler)
-{
 	const float
 		tileSize{ 32 }, 
-		gravity{ 8* tileSize },					// Blocks to drop in 1 second
-		// To explain the math down here refer to my portfolio website
-		jumpStrength							
-	{ sqrt(2.f * gravity * tileSize * 3.f)},	// Amount of blocks to jump in one second
-		jumpOffset{ 1 * tileSize },				// jumpStrength / jumpOffset = extra jump heigth blocks
-		speed{ 3 * tileSize },					// Blocks to run with accel = 1
-
+		speed{ 3.5  },	// Blocks to run with accel = 1
+		gravity{ 24 },	// Blocks to drop in 1 second
+		
+		oneTileTravel{ 2.f * gravity },
+		jumpStrength{ sqrt(oneTileTravel * 4) },	// Amount of blocks to jump in one second (won't go higher)
+	
 		maxAccel{ 2 },	// Max accel  
-		accel{ 4 },	// accel / maxAccel = time to reach max accel
-		decel{ 4 };	// decel / maxAccel = time to reach 0 accel
+		accel{ 4 },		// accel / maxAccel = time to reach max accel
+		decel{ 4 };		// decel / maxAccel = time to reach 0 accel
 
 	// Jump
 	if (m_moveDirection.y == -1)
@@ -260,207 +134,78 @@ void Sprite::update2(const float elapsedTime, CollisionHandler & collisionHandle
 		if (!m_hasJumped)
 		{
 			m_hasJumped = true;
-			m_acceleration.y = -jumpStrength;
+			m_velocity.y = -jumpStrength * tileSize;
 		}
-		/*
-		else if (m_acceleration.y < 0)
-			m_acceleration.y -= (jumpStrength / jumpOffset) * elapsedTime;
-		*/
 	}
 	
+	// This is placed in the middle because otherwise the desired jump height won't be reached
+	m_sprite.move(0, m_velocity.y * elapsedTime);
 
 	// Gravity
 	if (collisionHandler.distanceTillBottomCollision(getHitbox()) == 0)
 	{
-		m_acceleration.y += gravity * elapsedTime;
+		m_velocity.y += gravity * tileSize*  elapsedTime;
 		m_hasJumped = true;
-	}
+	}	
 
-	m_sprite.move(0, m_acceleration.y * elapsedTime);
-
-	if (m_acceleration.y > 0 && collisionHandler.distanceTillBottomCollision(getHitbox()) != 0)
+	if (m_velocity.y > 0 && collisionHandler.distanceTillBottomCollision(getHitbox()) != 0)
 	{
 		m_sprite.move(0, -collisionHandler.distanceTillBottomCollision(getHitbox()));
-		m_acceleration.y = 0;
+		m_velocity.y = 0;
 		m_hasJumped = false;
 	}
-	else if (m_acceleration.y < 0 && collisionHandler.distanceTillUpperCollision(getHitbox()) != 0)
+	else if (m_velocity.y < 0 && collisionHandler.distanceTillUpperCollision(getHitbox()) != 0)
 	{
 		m_sprite.move(0, collisionHandler.distanceTillUpperCollision(getHitbox()));
-		m_acceleration.y = gravity;
+		m_velocity.y = gravity;
 	}
 
 	// Horizontal movement
 	if (m_moveDirection.x == 1)
 	{
-		if (m_acceleration.x < 0)
-			m_acceleration.x = 0;
-		m_acceleration.x += accel * elapsedTime;
-		if (m_acceleration.x > maxAccel)
-			m_acceleration.x = maxAccel;
+		if (m_velocity.x < 0)
+			m_velocity.x = 0;
+		m_velocity.x += accel * elapsedTime;
+		if (m_velocity.x > maxAccel)
+			m_velocity.x = maxAccel;
 	}
 
 	else if (m_moveDirection.x == -1)
 	{
-		if (m_acceleration.x > 0)
-			m_acceleration.x = 0;
-		m_acceleration.x -= accel * elapsedTime;
-		if (m_acceleration.x < -maxAccel)
-			m_acceleration.x = -maxAccel;
+		if (m_velocity.x > 0)
+			m_velocity.x = 0;
+		m_velocity.x -= accel * elapsedTime;
+		if (m_velocity.x < -maxAccel)
+			m_velocity.x = -maxAccel;
 	}
-	m_sprite.move(m_acceleration.x * speed * elapsedTime,0);
+	m_sprite.move(m_velocity.x * speed * tileSize * elapsedTime,0);
 
 	// Collision resolution
-	if (m_acceleration.x > 0 && collisionHandler.distanceTillRightCollision(getHitbox()) != 0)
+	if (m_velocity.x > 0 && collisionHandler.distanceTillRightCollision(getHitbox()) != 0)
 	{
 		m_sprite.move(-collisionHandler.distanceTillRightCollision(getHitbox()), 0);
-		m_acceleration.x = 0;
+		m_velocity.x = 0;
 	}
-	else if (m_acceleration.x < 0 && collisionHandler.distanceTillLeftCollision(getHitbox()) != 0)
+	else if (m_velocity.x < 0 && collisionHandler.distanceTillLeftCollision(getHitbox()) != 0)
 	{
 		m_sprite.move(collisionHandler.distanceTillLeftCollision(getHitbox()), 0);
-		m_acceleration.x = 0;
+		m_velocity.x = 0;
 	}
 
 	// Decrease accelerations
 	if (m_moveDirection.x == 0)
 	{
-		if (m_acceleration.x > 0)
+		if (m_velocity.x > 0)
 		{
-			m_acceleration.x -= decel * elapsedTime;
-			if (m_acceleration.x < 0)
-				m_acceleration.x = 0;
+			m_velocity.x -= decel * elapsedTime;
+			if (m_velocity.x < 0)
+				m_velocity.x = 0;
 		}
-		else if (m_acceleration.x < 0)
+		else if (m_velocity.x < 0)
 		{
-			m_acceleration.x += decel * elapsedTime;
-			if (m_acceleration.x > 0)
-				m_acceleration.x = 0;
-		}
-	}
-}
-
-void Sprite::update3(const float elapsedTime, CollisionHandler & collisionHandler)
-{
-	const float
-		tileSize	{ 32 },
-		gravity		{ 1 * tileSize },	// Blocks to drop in 1 second
-		jumpStrength{ 2 * tileSize },	// Amount of blocks to jump in one second
-		jumpOffset	{ 1 * tileSize },	// jumpStrength / jumpOffset = extra jump heigth blocks
-		speed		{ 3 * tileSize },	// Blocks to run with accel = 1
-		
-		maxAccel	{ 2 },	// Max accel  
-		accel		{ 4 },	// accel / maxAccel = time to reach max accel
-		decel		{ 4 };	// decel / maxAccel = time to reach 0 accel
-
-	// Update accelerations
-	// Horizontal
-	if (m_moveDirection.x == 1)
-	{
-		if (m_acceleration.x < 0)
-			m_acceleration.x = 0;
-		m_acceleration.x += accel * elapsedTime;
-		if (m_acceleration.x > maxAccel)
-			m_acceleration.x = maxAccel;
-	}
-	else if (m_moveDirection.x == -1)
-	{
-		if (m_acceleration.x > 0)
-			m_acceleration.x = 0;
-		m_acceleration.x -= accel * elapsedTime;
-		if (m_acceleration.x < -maxAccel)
-			m_acceleration.x = -maxAccel;
-	}
-
-	// Jump
-	if (m_moveDirection.y == -1)
-	{
-		if (m_canJump)
-		{
-			m_acceleration.y = -jumpStrength;
-			m_canJump = false;
-		}
-		/*
-		else if (m_acceleration.y < 0)
-			m_acceleration.y -= (jumpStrength / jumpOffset) * elapsedTime;
-		*/
-	}
-
-	// Update position
-	// The reason why we call this one first, is because this way gravity will only
-	// affect the value when accel reaches under 0. This should fix the bug
-	// regarding the player having an 'boost' effect when touching the edge of a tile.
-	m_sprite.move(0, m_acceleration.y * elapsedTime);
-
-	// Check jump collision
-	if (m_acceleration.y < 0) 
-	{
-		if (collisionHandler.distanceTillUpperCollision(getHitbox()) > 0)
-		{
-			m_sprite.move(0, collisionHandler.distanceTillUpperCollision(getHitbox()));
-			if (m_acceleration.y < 0)
-				m_acceleration.y = gravity;
-		}
-	}
-	
-	// Update gravity value
-	if (collisionHandler.distanceTillBottomCollision(getHitbox()) == 0) 
-	{
-		m_acceleration.y += gravity * elapsedTime;
-		m_canJump = false;
-	}
-	
-	// Check lower collision
-	if (collisionHandler.distanceTillBottomCollision(getHitbox()) > 0) 
-	{
-		m_sprite.move(0, -collisionHandler.distanceTillBottomCollision(getHitbox()));
-		m_acceleration.y = 0;
-		m_canJump = true;
-	}
-
-	if (m_isCrouching)
-	{
-		// TODO
-	}
-
-	if (m_acceleration.x > 0)
-	{
-		m_sprite.move(m_acceleration.x * speed * elapsedTime, 0);
-
-		const float rightDistance{ collisionHandler.distanceTillRightCollision(getHitbox()) };
-		if (rightDistance > 0)
-		{
-			m_sprite.move(-rightDistance, 0);
-			m_acceleration.x = 0;
-		}
-	}
-
-	if (m_acceleration.x < 0)
-	{
-		m_sprite.move(m_acceleration.x * speed * elapsedTime, 0);
-
-		const float leftDistance{ collisionHandler.distanceTillLeftCollision(getHitbox()) };
-		if (leftDistance > 0)
-		{
-			m_sprite.move(leftDistance, 0);
-			m_acceleration.x = 0;
-		}
-	}
-
-	// Decelerate
-	if (m_moveDirection.x == 0)
-	{
-		if (m_acceleration.x > 0)
-		{
-			m_acceleration.x -= decel * elapsedTime;
-			if (m_acceleration.x < 0)
-				m_acceleration.x = 0;
-		}
-		else if (m_acceleration.x < 0)
-		{
-			m_acceleration.x += decel * elapsedTime;
-			if (m_acceleration.x > 0)
-				m_acceleration.x = 0;
+			m_velocity.x += decel * elapsedTime;
+			if (m_velocity.x > 0)
+				m_velocity.x = 0;
 		}
 	}
 }
@@ -476,28 +221,28 @@ void Sprite::debugMove(const float elapsedTime)
 	m_canJump = true;
 	if (m_moveDirection.x == 1)
 	{
-		m_acceleration.x = 2;
-		m_sprite.move(m_acceleration.x * elapsedTime * speed,0);
+		m_velocity.x = 2;
+		m_sprite.move(m_velocity.x * elapsedTime * speed,0);
 	}
 	else if (m_moveDirection.x == -1)
 	{
-		m_acceleration.x = -2;
-		m_sprite.move(m_acceleration.x * elapsedTime* speed, 0);
+		m_velocity.x = -2;
+		m_sprite.move(m_velocity.x * elapsedTime* speed, 0);
 
 	}
-	else m_acceleration.x = 0;
+	else m_velocity.x = 0;
 	if (m_moveDirection.y == -1)
 	{
-		m_acceleration.y = -2;
-		m_sprite.move(0, m_acceleration.y * elapsedTime* speed);
+		m_velocity.y = -2;
+		m_sprite.move(0, m_velocity.y * elapsedTime* speed);
 
 	}
 	else if (m_isCrouching == true)
 	{
-		m_acceleration.y = 2;
-		m_sprite.move(0, m_acceleration.y * elapsedTime* speed);
+		m_velocity.y = 2;
+		m_sprite.move(0, m_velocity.y * elapsedTime* speed);
 	}
-	else m_acceleration.y = 0;
+	else m_velocity.y = 0;
 	m_moveDirection.x = m_moveDirection.y = 0;
 }
 
@@ -534,7 +279,7 @@ const sf::Vector2f Sprite::getPos() const
 const sf::Vector2i Sprite::getMoveDirection() const
 {
 	sf::Vector2i moveDirection{ m_moveDirection };
-	if (m_acceleration.y < 0)
+	if (m_velocity.y < 0)
 		moveDirection.y = 1;
 	if (m_isCrouching)
 		moveDirection.y = -1;
