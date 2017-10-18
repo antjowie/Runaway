@@ -62,6 +62,18 @@ void GameMenu::input(sf::RenderWindow & window)
 		case sf::Event::KeyPressed:
 			if (event.key.code == sf::Keyboard::Key::Escape) m_isPop = true;
 			break;
+
+		case sf::Event::MouseButtonPressed:
+			// Temporary placed right here
+			for (const auto &iter : m_level->getEntityMap())
+			{
+				if (iter->getType() == EntityType::Switch && iter->getHitbox().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y),m_camera.getView())))
+				{
+					iter->m_isActive = iter->m_isActive ? false : true;
+					m_level->toggleGate(iter->getAction().value);
+				}
+			}
+			break;
 		}
 	}
 	if (m_level == nullptr) return;
@@ -102,9 +114,10 @@ void GameMenu::update(const float elapsedTime)
 				entity->m_isActive = true;
 				m_level->setSpawn(entity->getAction().pos);
 				break;
+			
 			case EntityType::Coin:
 				
-				break;
+				break;				
 			}
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) m_player->m_isDead = true;

@@ -8,7 +8,8 @@
 enum class EntityType
 {
 	Coin,
-	Checkpoint
+	Checkpoint,
+	Switch
 };
 
 union EntityAction{
@@ -36,7 +37,7 @@ public:
 	virtual void draw(sf::RenderWindow &window)	override =0;
 
 	virtual const EntityAction &getAction();
-	Entity * getEntity();
+	//Entity * getEntity();
 	const sf::FloatRect getHitbox();
 	const EntityType &getType();
 };

@@ -7,6 +7,7 @@
 
 #pragma once
 #include "Level.h"
+#include "Gate.h"
 #include "Tile.h"
 #include "Camera.h"
 #include "PlayerObject.h"
@@ -28,6 +29,7 @@ class Level
 private:
 	std::vector<std::vector<Tile*>> m_tilemap;
 	std::vector<Entity*> m_entityMap;
+	std::vector<Gate> m_gateMap;
 	
 	const sf::Vector2f m_cameraSize;
 	const std::string m_levelMapPath;
@@ -47,18 +49,22 @@ private:
 
 	bool loadTilemap(std::vector<char> tilemap);
 	bool loadEntities(std::vector<char> tilemap);
+	bool loadGates(std::vector<char> tilemap);
 
 public:
 	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight, const float cameraSpeed, const std::string tilesetName);
+	~Level();
 
 	void update(const float elapsedTime);
 	void draw(sf::RenderWindow &window,const Camera &camera);
 
 	bool inLevelBounds(const sf::Vector2f &point);
 
+	void toggleGate(const int id);
 	void setSpawn(const sf::Vector2f &pos);
 	
 	bool loadLevel(Camera &camera, PlayerObject * const player); // This will load all the files for this level
+	
 	const sf::Vector2f getSpawn() const;
 	const std::string &getTitle() const;
 	const std::vector<std::vector<Tile*>> &getTilemap() const;

@@ -84,10 +84,19 @@
     <ClCompile Include="Runaway\source\tiles\GroundTile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Runaway\source\tiles\DoorTile.cpp">
+    <ClCompile Include="Runaway\source\tiles\AirTile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Runaway\source\tiles\AirTile.cpp">
+    <ClCompile Include="Runaway\source\tiles\GateTile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Runaway\source\Gate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Runaway\source\tiles\InvalidTile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Runaway\source\entities\Switch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -164,13 +173,22 @@
     <ClInclude Include="Runaway\source\tiles\GroundTile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Runaway\source\tiles\DoorTile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Runaway\source\tiles\AirTile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Runaway\source\tiles\TileHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runaway\source\tiles\GateTile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runaway\source\Gate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runaway\source\tiles\InvalidTile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runaway\source\entities\Switch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

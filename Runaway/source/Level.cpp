@@ -1,6 +1,7 @@
 #include "Level.h"
 #include "rapidxml.hpp"
 #include "Checkpoint.h"
+#include "Switch.h"
 
 #include <fstream>
 #include <sstream>
@@ -59,6 +60,7 @@ bool Level::initMap()
 	// Try to parse the buffer
 	if (!loadTilemap(buffer)) return false;
 	if (!loadEntities(buffer)) return false;
+	if (!loadGates(buffer))return false;
 	return true;
 }
 
@@ -98,7 +100,7 @@ bool Level::loadTilemap(std::vector<char> tilemap)
 	}
 
 	// Initiate iterator to the xml file
-	node = map.first_node("map");
+	node = map.first_node("map"); // ->first_node("tileset");
 
 	// Convert values
 	converter(m_tilemapWidth,std::string(node->first_attribute("width")->value()));
@@ -154,10 +156,10 @@ bool Level::loadEntities(std::vector<char> tilemap)
 	}
 
 	// Access root
-	node = doc.first_node("map")->first_node();
+	node = doc.first_node("map")->first_node("objectgroup");
 
 	// Access entitygroup
-	while (std::string(node->name()) != "objectgroup")
+	while (std::string(node->first_attribute("name")->value()) != "meta")
 		node = node->next_sibling();
 
 	// Get all the attributes from all entity
@@ -181,7 +183,7 @@ bool Level::loadEntities(std::vector<char> tilemap)
 				converter(spawn.y, entity->first_attribute("y")->value());
 				EntityAction action;
 				action.pos = spawn;
-				m_entityMap.push_back(new Checkpoint(EntityType{ EntityType::Checkpoint }, action , action.pos));
+				m_entityMap.push_back(new Checkpoint(action , action.pos));
 			}
 			else if (name == "coin")
 			{
@@ -190,10 +192,94 @@ bool Level::loadEntities(std::vector<char> tilemap)
 				sf::Vector2f spawn;
 				converter(spawn.x, entity->first_attribute("x")->value());
 				converter(spawn.y, entity->first_attribute("y")->value());
-				//m_entityMap.push_back(new Coin(EntityType{ EntityType::Coin }, entityAction, spawn));
+				//m_entityMap.push_back(new Coin(entityAction, spawn));
 			}
 		}
 	}
+	return true;
+}
+
+bool Level::loadGates(std::vector<char> tilemap)
+{
+	struct GateNode
+	{
+		sf::FloatRect m_pos;
+		float m_speed;
+		int m_id;
+	};
+
+	rapidxml::xml_document<> xmlDoc;
+	rapidxml::xml_node<> *xmlNode;
+	std::vector<GateNode> gateNodes;
+
+	try
+	{
+		xmlDoc.parse<0>(&tilemap[0]);
+	}
+	catch (const rapidxml::parse_error)
+	{
+		return false;
+	}
+
+	// Find objectgroup
+	xmlNode=  xmlDoc.first_node("map")->first_node("objectgroup");
+
+	// Iterate till objectgroup gateNetwork
+	while (std::string(xmlNode->first_attribute("name")->value()) != "gateNetwork")
+		xmlNode = xmlNode->next_sibling();
+
+	// Load all values for gateNetwork
+	for (rapidxml::xml_node<> *gate{ xmlNode->first_node() }; gate; gate = gate->next_sibling())
+	{
+		rapidxml::xml_node<> *prop = gate->first_node("properties")->first_node("property");
+
+		if (std::string(gate->first_attribute("name")->value()) == "switch")
+		{
+			EntityAction action;
+			sf::Vector2f pos;
+			converter(pos.x, gate->first_attribute("x")->value());
+			converter(pos.y, gate->first_attribute("y")->value());
+
+
+			converter(action.value, prop->first_attribute("value")->value());
+			
+			m_entityMap.push_back(new Switch(action,pos));
+		}
+		else
+		{
+			GateNode gateNode;
+			converter(gateNode.m_pos.left,	gate->first_attribute("x")		->value());
+			converter(gateNode.m_pos.top,	gate->first_attribute("y")		->value());
+			converter(gateNode.m_pos.width, gate->first_attribute("width")	->value());
+			converter(gateNode.m_pos.height,gate->first_attribute("height")	->value());
+
+			while (prop)
+			{
+				if(std::string(prop->first_attribute("name")->value()) == "id")
+					converter(gateNode.m_id, prop->first_attribute("value")->value());
+				else if (std::string(prop->first_attribute("name")->value()) == "speed")
+					converter(gateNode.m_speed, prop->first_attribute("value")->value());
+				prop = prop->next_sibling();
+			}
+			gateNodes.push_back(gateNode);
+		}
+		
+	}
+
+	// Link gate tiles to their gate
+ 	for (const auto &iter : gateNodes)
+	{
+		Gate gate(iter.m_id,iter.m_speed);
+		for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), iter.m_pos.width, iter.m_pos.height)
+			; m_tilemap[pos.y][pos.x]->getType() == tileType::Gate; pos.y--)
+		{
+			GateTile * tile = static_cast<GateTile*>(m_tilemap[pos.y][pos.x]);
+			gate.addTile(tile);
+
+		}
+		m_gateMap.push_back(std::move(gate));
+	}
+
 	return true;
 }
 
@@ -204,6 +290,19 @@ Level::Level(const std::string &levelMapPath, const std::string &title,
 	m_levelMapPath(levelMapPath), m_cameraSpeed(cameraSpeed),
 	m_tilesetName(tilesetName)
 {
+}
+
+Level::~Level()
+{
+	// Does this even work?
+	for (auto &iter : m_tilemap)
+		for (auto &deleter : iter)
+			delete deleter;
+	m_tilemap.clear();
+
+	for (auto &deleter : m_entityMap)
+		delete deleter;
+	m_entityMap.clear();
 }
 
 bool Level::loadLevel(Camera & camera, PlayerObject * const player)
@@ -219,6 +318,10 @@ void Level::update(const float elapsedTime)
 	for (const auto &iter : m_entityMap)
 	{
 		iter->logic(elapsedTime);
+	}
+	for (auto &iter : m_gateMap)
+	{
+		iter.update(elapsedTime);
 	}
 }
 
@@ -239,6 +342,13 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 bool Level::inLevelBounds(const sf::Vector2f & point)
 {
 	return point.y > m_levelHeight;
+}
+
+void Level::toggleGate(const int id)
+{
+	for (auto &iter : m_gateMap)
+		if (iter.m_id == id)
+			iter.m_isOpen = iter.m_isOpen ? false : true;
 }
 
 void Level::setSpawn(const sf::Vector2f & pos)

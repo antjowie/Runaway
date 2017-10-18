@@ -8,7 +8,7 @@ private:
 	AnimationHandler m_animHandler;
 public:
 
-	Checkpoint(const EntityType type, const EntityAction action, const sf::Vector2f &pos);
+	Checkpoint(const EntityAction action, const sf::Vector2f &pos);
 	
 	virtual const EntityAction &getAction() final;
 

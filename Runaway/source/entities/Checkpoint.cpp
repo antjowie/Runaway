@@ -1,8 +1,8 @@
 #include "Checkpoint.h"
 #include "DataManager.h"
 
-Checkpoint::Checkpoint(const EntityType type, const EntityAction action, const sf::Vector2f &pos):
-	Entity(type,action,pos),
+Checkpoint::Checkpoint(const EntityAction action, const sf::Vector2f &pos):
+	Entity(EntityType::Checkpoint,action,pos),
 	m_animHandler(32,32)
 {
 	m_sprite.setTexture(DataManager::getInstance().getTexture("checkpoint"));

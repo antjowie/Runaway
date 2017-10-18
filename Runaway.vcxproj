@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Runaway\source\tiles\InvalidTile.cpp" />
+    <ClCompile Include="Runaway\source\Gate.cpp" />
     <ClCompile Include="Runaway\source\tiles\AirTile.cpp" />
-    <ClCompile Include="Runaway\source\tiles\DoorTile.cpp" />
+    <ClCompile Include="Runaway\source\tiles\GateTile.cpp" />
     <ClCompile Include="Runaway\source\tiles\GroundTile.cpp" />
     <ClCompile Include="Runaway\source\tiles\GroundTopTile.cpp" />
     <ClCompile Include="Runaway\source\tiles\LightTile.cpp" />
@@ -44,10 +46,13 @@
     <ClCompile Include="Runaway\source\objects\TextObject.cpp" />
     <ClCompile Include="Runaway\source\Source.cpp" />
     <ClCompile Include="Runaway\source\tiles\Tile.cpp" />
+    <ClCompile Include="Runaway\source\entities\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Runaway\source\tiles\InvalidTile.h" />
+    <ClInclude Include="Runaway\source\Gate.h" />
     <ClInclude Include="Runaway\source\tiles\AirTile.h" />
-    <ClInclude Include="Runaway\source\tiles\DoorTile.h" />
+    <ClInclude Include="Runaway\source\tiles\GateTile.h" />
     <ClInclude Include="Runaway\source\tiles\GroundTile.h" />
     <ClInclude Include="Runaway\source\tiles\GroundTopTile.h" />
     <ClInclude Include="Runaway\source\tiles\LightTile.h" />
@@ -73,6 +78,7 @@
     <ClInclude Include="Runaway\source\rapidxml_print.hpp" />
     <ClInclude Include="Runaway\source\tiles\Tile.h" />
     <ClInclude Include="Runaway\source\tiles\TileHeader.h" />
+    <ClInclude Include="Runaway\source\entities\Switch.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D5464878-3556-4076-A1C9-0987B34DB6EA}</ProjectGuid>

@@ -70,7 +70,7 @@ AnimationHandler::AnimationHandler(const sf::Vector2i & frameSize):
 	m_elapsed(0),
 	m_currentAnim(-1)
 {
-	m_frameSize.left = m_frameSize.top = 1;
+	m_frameSize.left = m_frameSize.top = 0;
 	m_frameSize.width = frameSize.x;
 	m_frameSize.height = frameSize.y;
 }

@@ -14,11 +14,12 @@ const EntityAction & Entity::getAction()
 {
 	return m_action;
 }
-
+/*
 Entity * Entity::getEntity()
 {
 	return this;
 }
+*/
 
 const sf::FloatRect Entity::getHitbox()
 {

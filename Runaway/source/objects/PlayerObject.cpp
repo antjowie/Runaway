@@ -44,6 +44,7 @@ void PlayerObject::logic(const float elapsedTime)
 	sf::Vector2f oldPos{ m_sprite.getPos() };
 
 	m_sprite.update(elapsedTime, m_collisionHandler);
+	//m_sprite.debugMove(elapsedTime);
 	sf::Vector2f newPos{ m_sprite.getPos() - oldPos };
 
 	// Brace for some ugly vector checking for animation
