@@ -2,7 +2,7 @@
 #include "DataManager.h"
 
 GateTile::GateTile(const float x, const float y, const std::string tilesetName):
-	Tile(tileType::Gate, x,y,tilesetName,false),m_animHandler(32,32)
+	Tile(TileType::Gate, x,y,tilesetName,true),m_animHandler(32,32)
 {
 	m_sprite.setTexture(DataManager::getInstance().getTexture("gate"));
 	m_animHandler.addAnimation(Animation(0, 0, 1));
@@ -17,9 +17,9 @@ void GateTile::move(const float x, const float y)
 	m_sprite.move(x, y);
 }
 
-void GateTile::setSolid(const bool setSolid)
+void GateTile::setTextureRect(const int textureRect)
 {
-	m_solid = setSolid;
+	m_textureRect = textureRect;
 }
 
 void GateTile::update(const float elapsedTime)
@@ -36,7 +36,7 @@ void GateTile::draw(sf::RenderWindow & window)
 	sf::IntRect correct{ m_animHandler.getFrame() };
 	if (m_isOpen)	// Not sure but apperantly a bug when scaling the game
 		correct.top += 1;
-
+	correct.left += correct.width * m_textureRect;
 	m_sprite.setTextureRect(correct);
 
 	window.draw(m_sprite);

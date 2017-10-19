@@ -47,6 +47,18 @@ void PlayerObject::logic(const float elapsedTime)
 	//m_sprite.debugMove(elapsedTime);
 	sf::Vector2f newPos{ m_sprite.getPos() - oldPos };
 
+	// If player decides to stand till on a gate
+	
+	if (m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) != 0)
+	{
+		m_sprite.setPos(sf::Vector2f(m_sprite.getPos().x,m_sprite.getPos().y-m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox())));
+		if (m_collisionHandler.distanceTillUpperCollision(m_sprite.getHitbox()) != 0)
+			m_isDead = true;
+	}
+	
+	
+
+
 	// Brace for some ugly vector checking for animation
 	float offset{ elapsedTime };
 
@@ -87,7 +99,7 @@ void PlayerObject::draw(sf::RenderWindow &window)
 {
 	m_sprite.setTextureRect(m_animHandler.getFrame()); // Should this be handled in logic or draw?
 	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4,
-		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width / 2 - 3, m_sprite.getTextureRect().height));
+		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width -32+14, m_sprite.getTextureRect().height));
 	m_sprite.draw(window);
 }
 

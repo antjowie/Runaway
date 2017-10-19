@@ -140,5 +140,5 @@ void GameMenu::draw(sf::RenderWindow & window)
 	}
 	window.setView(m_camera.getView());
 	m_level->draw(window,m_camera);
-	m_player->draw(window); // Else player will be drawn behind all the tiles
+	//m_player->draw(window); // Else player will be drawn behind all the tiles
 }

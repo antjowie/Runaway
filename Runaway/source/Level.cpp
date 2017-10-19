@@ -270,8 +270,8 @@ bool Level::loadGates(std::vector<char> tilemap)
  	for (const auto &iter : gateNodes)
 	{
 		Gate gate(iter.m_id,iter.m_speed);
-		for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), iter.m_pos.width, iter.m_pos.height)
-			; m_tilemap[pos.y][pos.x]->getType() == tileType::Gate; pos.y--)
+		for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
+			; m_tilemap[pos.y][pos.x]->getType() == TileType::Gate; pos.y--)
 		{
 			GateTile * tile = static_cast<GateTile*>(m_tilemap[pos.y][pos.x]);
 			gate.addTile(tile);
@@ -279,6 +279,10 @@ bool Level::loadGates(std::vector<char> tilemap)
 		}
 		m_gateMap.push_back(std::move(gate));
 	}
+
+	// Update gateTile texture
+	for (auto &iter : m_gateMap)
+		iter.updateTextureRect();
 
 	return true;
 }
@@ -329,8 +333,15 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 {
 	sf::IntRect tileBounds = camera.getTileBounds(m_tileWidth, m_tileHeight);
 
+	// So that gate wont be rendered above tiles
+	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
+		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
+			if(m_tilemap[i][j]->getType() == TileType::Gate)
+				m_tilemap[i][j]->draw(window);
+
 	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
 		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
+			if (m_tilemap[i][j]->getType() != TileType::Gate)
 			m_tilemap[i][j]->draw(window);
 
 	for (const auto &iter : m_entityMap)

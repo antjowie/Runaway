@@ -45,7 +45,7 @@ int main()
 		if (elapsedRenderTime > (1 / frameLimit))
 		{
 			elapsedRenderTime = fmod(elapsedRenderTime,(1 / frameLimit));
-			window.clear(sf::Color::Black);
+			window.clear(sf::Color(16, 90, 135));
 			menuStack.peek()->draw(window);
 			window.display();
 		}
