@@ -30,19 +30,19 @@ void CollisionHandler::loadSurroundingTiles()
 	if (!checkLoaded()) return;
 
 	
-	sf::Vector2i tilemapPlayerCoords{ mapWorldToTilemap(sf::Vector2f(m_playerHitbox.left,m_playerHitbox.top),m_tileWidth,m_tileHeight) };
+	sf::Vector2i tilemapPlayerCoords{ mapWorldToTilemap(sf::Vector2f(m_playerHitbox.left,m_playerHitbox.top),m_tileHeight,m_tileWidth) };
 	const int offset{ 3 };
 
 	m_surroundingTiles.clear();
-	for (int horizontal = tilemapPlayerCoords.x - offset; horizontal <= tilemapPlayerCoords.x + offset; horizontal++)
+	for (int j= tilemapPlayerCoords.y - offset; j<= tilemapPlayerCoords.y + offset; j++)
 	{
-		for (int vertical = tilemapPlayerCoords.y - offset; vertical <= tilemapPlayerCoords.y + offset; vertical++)
+		for (int i = tilemapPlayerCoords.x - offset; i<= tilemapPlayerCoords.x + offset; i++)
 		{
-			if ((unsigned int)horizontal < m_tilemap->size() && (unsigned int)vertical < (*m_tilemap)[horizontal].size())
+			if ((unsigned int)j < m_tilemap->size() && (unsigned int)i< (*m_tilemap)[j].size())
 			{
 				// Order shouldn't matter. If we do map this vector to tilemap vector. Our function calls would do 6 comparisons less each
 				// Our first vector is y, the subsequent vectors are x.
-				m_surroundingTiles.push_back((*m_tilemap)[vertical][horizontal]);
+				m_surroundingTiles.push_back((*m_tilemap)[j][i]);
 			}
 		}
 	}

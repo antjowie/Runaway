@@ -68,36 +68,34 @@ void Gate::update(const float elapsedTime)
 		iter->update(elapsedTime);
 
 	// Update pos
-
 	const unsigned int middle{ m_tiles.size() / 2 };
+	const float offset{ 1/m_speed * (middle + 1) * m_originalTiles[0].getHitbox().height};
 
 	if (m_isOpen)
 	{
 		// Lower bottom row
 		for (unsigned int i = 0; i < middle; i++)
 		{
-			m_tiles[i]->move(0, 32 * elapsedTime);
+			m_tiles[i]->move(0, offset * elapsedTime);
 			if (m_tiles[i]->getHitbox().top > m_originalTiles[i].getHitbox().top + m_originalTiles[i].getHitbox().height * middle)
 				m_tiles[i]->move(0, -(m_tiles[i]->getHitbox().top - (m_originalTiles[i].getHitbox().top + m_originalTiles[i].getHitbox().height * middle)));
 		}
 
 		// Rise upper row
-		
 		for (unsigned int i = middle; i < m_tiles.size(); i++)
 		{
-			m_tiles[i]->move(0, -32 * elapsedTime);
+			m_tiles[i]->move(0, -offset * elapsedTime);
 			if (m_tiles[i]->getHitbox().top < m_originalTiles[i].getHitbox().top - m_originalTiles[i].getHitbox().height * (m_tiles.size() - middle))
 				m_tiles[i]->move(0, abs(m_tiles[i]->getHitbox().top - (m_originalTiles[i].getHitbox().top - m_originalTiles[i].getHitbox().height * (m_tiles.size() - middle))));
-		}
-		
-		
+		}	
 	}
+
 	else
 	{
 		// Rise lower row
 		for (unsigned int i = 0; i < middle; i++)
 		{
-			m_tiles[i]->move(0, -32 * elapsedTime);
+			m_tiles[i]->move(0, -offset * elapsedTime);
 			if (m_tiles[i]->getHitbox().top < m_originalTiles[i].getHitbox().top)
 				m_tiles[i]->move(0, abs(m_tiles[i]->getHitbox().top - m_originalTiles[i].getHitbox().top));
 		}
@@ -105,7 +103,7 @@ void Gate::update(const float elapsedTime)
 		// Lower upper row
 		for (unsigned int i = middle; i < m_tiles.size(); i++)
 		{
-			m_tiles[i]->move(0, 32 * elapsedTime);
+			m_tiles[i]->move(0, offset * elapsedTime);
 			if (m_tiles[i]->getHitbox().top > m_originalTiles[i].getHitbox().top)
 				m_tiles[i]->move(0, -(m_tiles[i]->getHitbox().top - m_originalTiles[i].getHitbox().top));
 		}

@@ -1,7 +1,6 @@
 #include "PlayerObject.h"
 #include "Config.h"
 #include "DataManager.h"
-#include <iostream>
 
 bool const Sprite::isItemPressed(const std::string itemString) const
 {
@@ -43,12 +42,7 @@ void PlayerObject::logic(const float elapsedTime)
 	m_animHandler.update(elapsedTime);
 	sf::Vector2f oldPos{ m_sprite.getPos() };
 
-	m_sprite.update(elapsedTime, m_collisionHandler);
-	//m_sprite.debugMove(elapsedTime);
-	sf::Vector2f newPos{ m_sprite.getPos() - oldPos };
-
 	// If player decides to stand till on a gate
-	
 	if (m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) != 0)
 	{
 		m_sprite.setPos(sf::Vector2f(m_sprite.getPos().x,m_sprite.getPos().y-m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox())));
@@ -56,9 +50,10 @@ void PlayerObject::logic(const float elapsedTime)
 			m_isDead = true;
 	}
 	
+	m_sprite.update(elapsedTime, m_collisionHandler);
+	//m_sprite.debugMove(elapsedTime);
+	sf::Vector2f newPos{ m_sprite.getPos() - oldPos };
 	
-
-
 	// Brace for some ugly vector checking for animation
 	float offset{ elapsedTime };
 

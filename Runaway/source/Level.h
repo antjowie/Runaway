@@ -32,7 +32,7 @@ private:
 	std::vector<Gate> m_gateMap;
 	
 	const sf::Vector2f m_cameraSize;
-	const std::string m_levelMapPath;
+	const std::string m_levelPath;
 
 	float m_cameraSpeed{ 0 };
 	int m_levelWidth{ 0 }, m_levelHeight{ 0 };		// Not in tiles
@@ -63,7 +63,7 @@ public:
 	void toggleGate(const int id);
 	void setSpawn(const sf::Vector2f &pos);
 	
-	bool loadLevel(Camera &camera, PlayerObject * const player); // This will load all the files for this level
+	bool loadLevel(Camera &camera, PlayerObject * const player,sf::Sprite &background); // This will load all the files for this level
 	
 	const sf::Vector2f getSpawn() const;
 	const std::string &getTitle() const;

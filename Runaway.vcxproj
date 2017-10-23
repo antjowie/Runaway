@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Runaway\source\GameBackground.cpp" />
     <ClCompile Include="Runaway\source\tiles\InvalidTile.cpp" />
     <ClCompile Include="Runaway\source\Gate.cpp" />
     <ClCompile Include="Runaway\source\tiles\AirTile.cpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="Runaway\source\entities\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Runaway\source\GameBackground.h" />
     <ClInclude Include="Runaway\source\tiles\InvalidTile.h" />
     <ClInclude Include="Runaway\source\Gate.h" />
     <ClInclude Include="Runaway\source\tiles\AirTile.h" />

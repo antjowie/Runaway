@@ -2,6 +2,7 @@
 #include "rapidxml.hpp"
 #include "Checkpoint.h"
 #include "Switch.h"
+#include "DataManager.h"
 
 #include <fstream>
 #include <sstream>
@@ -47,7 +48,7 @@ void converter(T &converted, const char &toConvert)
 
 bool Level::initMap()
 {
-	std::ifstream file(m_levelMapPath);
+	std::ifstream file(m_levelPath + "tilemap.tmx");
 
 	// Check if xml file can be opened
 	if (!file.is_open()) return false; 
@@ -108,7 +109,6 @@ bool Level::loadTilemap(std::vector<char> tilemap)
 	converter(m_tileWidth, node->first_attribute("tilewidth")->value());
 	converter(m_tileHeight, node->first_attribute("tileheight")->value());
 
-
 	// Get the map from the file
 	std::string tilemapString;
 
@@ -122,17 +122,18 @@ bool Level::loadTilemap(std::vector<char> tilemap)
 
 	// Load the map into the vector
 	m_tilemap.clear();
-	m_tilemap.resize(m_tilemapWidth);
+	m_tilemap.resize(m_tilemapHeight);
 
-	for (int i = 0; i < m_tilemapWidth; i++)
+	// Because the tiled editor edits tiles from left to right, we have to use j as first value
+	for (int j = 0; j < m_tilemapHeight; j++)
 	{
-		m_tilemap[i].resize(m_tilemapHeight);
-		for (int j = 0, id = 0; j < m_tilemapHeight; j++)
+		m_tilemap[j].resize(m_tilemapWidth);
+		for (int i = 0, id = 0; i < m_tilemapWidth; i++)
 		{
-			converter(id, tilemapString[i * m_tilemapHeight + j]);
+			converter(id, tilemapString[j * m_tilemapWidth + i]);
 
 			// While j represent y, it's value is used to evaluate the x axis.
-			m_tilemap[i][j] = getTile(id, static_cast<float>(m_tileWidth* j), static_cast<float>(m_tileHeight* i),m_tilesetName);
+			m_tilemap[j][i] = getTile(id, static_cast<float>(m_tileWidth* i), static_cast<float>(m_tileHeight* j),m_tilesetName);
 		}
 	}
 
@@ -157,10 +158,14 @@ bool Level::loadEntities(std::vector<char> tilemap)
 
 	// Access root
 	node = doc.first_node("map")->first_node("objectgroup");
+	if (!node) return true;
 
 	// Access entitygroup
 	while (std::string(node->first_attribute("name")->value()) != "meta")
+	{
+		if (!node->next_sibling()) return true;
 		node = node->next_sibling();
+	}
 
 	// Get all the attributes from all entity
 	std::string name;
@@ -223,10 +228,14 @@ bool Level::loadGates(std::vector<char> tilemap)
 
 	// Find objectgroup
 	xmlNode=  xmlDoc.first_node("map")->first_node("objectgroup");
+	if (!xmlNode) return true;
 
 	// Iterate till objectgroup gateNetwork
 	while (std::string(xmlNode->first_attribute("name")->value()) != "gateNetwork")
+	{
+		if (!xmlNode->next_sibling()) return true;
 		xmlNode = xmlNode->next_sibling();
+	}
 
 	// Load all values for gateNetwork
 	for (rapidxml::xml_node<> *gate{ xmlNode->first_node() }; gate; gate = gate->next_sibling())
@@ -271,7 +280,7 @@ bool Level::loadGates(std::vector<char> tilemap)
 	{
 		Gate gate(iter.m_id,iter.m_speed);
 		for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
-			; m_tilemap[pos.y][pos.x]->getType() == TileType::Gate; pos.y--)
+			; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getType() == TileType::Gate; pos.y--)
 		{
 			GateTile * tile = static_cast<GateTile*>(m_tilemap[pos.y][pos.x]);
 			gate.addTile(tile);
@@ -287,11 +296,11 @@ bool Level::loadGates(std::vector<char> tilemap)
 	return true;
 }
 
-Level::Level(const std::string &levelMapPath, const std::string &title,
+Level::Level(const std::string &levelPath, const std::string &title,
 	const float cameraWidth, const float camerHeight,
 	const float cameraSpeed, const std::string tilesetName) :
 	m_cameraSize(cameraWidth,camerHeight), m_title(title), 
-	m_levelMapPath(levelMapPath), m_cameraSpeed(cameraSpeed),
+	m_levelPath(levelPath), m_cameraSpeed(cameraSpeed),
 	m_tilesetName(tilesetName)
 {
 }
@@ -309,7 +318,7 @@ Level::~Level()
 	m_entityMap.clear();
 }
 
-bool Level::loadLevel(Camera & camera, PlayerObject * const player)
+bool Level::loadLevel(Camera & camera, PlayerObject * const player, sf::Sprite &background)
 {
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
@@ -332,22 +341,23 @@ void Level::update(const float elapsedTime)
 void Level::draw(sf::RenderWindow & window, const Camera &camera)
 {
 	sf::IntRect tileBounds = camera.getTileBounds(m_tileWidth, m_tileHeight);
-
+	
 	// So that gate wont be rendered above tiles
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
 			if(m_tilemap[i][j]->getType() == TileType::Gate)
 				m_tilemap[i][j]->draw(window);
 
-	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
-		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
-			if (m_tilemap[i][j]->getType() != TileType::Gate)
-			m_tilemap[i][j]->draw(window);
-
 	for (const auto &iter : m_entityMap)
 	{
 		iter->draw(window);
 	}
+	
+
+	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
+		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
+			if (m_tilemap[i][j]->getType() != TileType::Gate)
+			m_tilemap[i][j]->draw(window);
 }
 
 bool Level::inLevelBounds(const sf::Vector2f & point)

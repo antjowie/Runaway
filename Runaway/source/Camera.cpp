@@ -1,5 +1,6 @@
 #include "Camera.h"
-#include <iostream>
+
+
 void Camera::checkBounds()
 {
 	if (m_view.getCenter().x - m_view.getSize().x / 2 < 0)
@@ -90,6 +91,7 @@ sf::IntRect const Camera::getTileBounds(const int tileX, const int tileY) const
 	sf::Vector2i upperLeft(static_cast<int>(upperLeftX), static_cast<int>(upperLeftY));
 	upperLeft.x /= tileX;
 	upperLeft.y /= tileY;
+	
 
 	// Get the width and height in tile coordinates.
 	// The logic behind +2 goes as follows.
