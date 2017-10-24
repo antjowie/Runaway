@@ -108,4 +108,20 @@ void Gate::update(const float elapsedTime)
 				m_tiles[i]->move(0, -(m_tiles[i]->getHitbox().top - m_originalTiles[i].getHitbox().top));
 		}
 	}
+	
+	// Update tile visability
+	// Lower row
+	for (unsigned int i = 0; i < middle; i++)
+	{
+		bool invisible{ m_tiles[i]->getHitbox().top >= m_originalTiles.front().getHitbox().top + m_originalTiles.front().getHitbox().height };
+		m_tiles[i]->setSolid(!invisible);
+	}
+	
+	// Upper row
+	for (unsigned int i = middle; i < m_tiles.size(); i++)
+	{
+		bool invisible{ m_tiles[i]->getHitbox().top <= m_originalTiles.back().getHitbox().top - m_originalTiles.back().getHitbox().height };
+		m_tiles[i]->setSolid(!invisible);
+	}
+	
 }
