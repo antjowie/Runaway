@@ -339,7 +339,7 @@ bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackgrou
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
-	background = GameBackground(m_levelPath,10);
+	background = GameBackground(m_levelPath,4);
 	return true;
 }
 

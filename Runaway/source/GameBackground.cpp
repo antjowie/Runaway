@@ -18,11 +18,9 @@ GameBackground::GameBackground()
 {
 }
 
-void GameBackground::update( float elapsedTime)
+void GameBackground::update(const float elapsedTime)
 {
-	elapsedTime /= m_colorChangeRate;
-	
-	m_alpha -= 255 * elapsedTime;
+	m_alpha -= 255.f / m_colorChangeRate * elapsedTime;
 	if (m_alpha < 0)
 		m_alpha = 0;
 

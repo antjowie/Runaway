@@ -7,7 +7,7 @@ private:
 	sf::Sprite m_foreground;
 	sf::RectangleShape m_background;
 	sf::RectangleShape m_deadBackground;
-	int m_alpha{ 0 };
+	float m_alpha{ 0 };
 
 	sf::Vector2f m_target;
 	float m_colorChangeRate;
@@ -16,7 +16,7 @@ public:
 	GameBackground(const std::string &levelPath, const float colorChangeRate = 1.f);
 	GameBackground();
 
-	void update(float elapsedTime);
+	void update(const float elapsedTime);
 	void draw(sf::RenderWindow &window);
 
 	// 0-255
