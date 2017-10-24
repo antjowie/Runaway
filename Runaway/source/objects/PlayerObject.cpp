@@ -226,7 +226,6 @@ void Sprite::draw(sf::RenderWindow & window)
 void Sprite::debugMove(const float elapsedTime)
 {
 	const float speed{ 32 * 4 };
-	m_canJump = true;
 	if (m_moveDirection.x == 1)
 	{
 		m_velocity.x = 2;

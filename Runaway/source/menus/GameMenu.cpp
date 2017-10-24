@@ -121,13 +121,21 @@ void GameMenu::update(const float elapsedTime)
 				break;				
 			}
 	}
+	
+	// Update background state
+	m_background.update(elapsedTime);
+
+	// Change player alive state
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) m_player->m_isDead = true;
 	if (m_level->inLevelBounds(m_player->m_sprite.getPos()))
 		m_player->m_isDead = true;
-	if (m_player->m_isDead == true)
+	
+	// Check player alive state
+	if (m_player->m_isDead)
 	{
 		m_player->m_sprite.setPos(m_level->getSpawn());
 		m_player->m_isDead = false;
+		m_background.setAlpha();
 	}
 }
 
@@ -135,7 +143,7 @@ void GameMenu::draw(sf::RenderWindow & window)
 {
 	window.setView(m_camera.getView());
 	
-	window.draw(m_background);
+	m_background.draw(window);
 	m_level->draw(window,m_camera);
 	Menu::draw(window);
 }

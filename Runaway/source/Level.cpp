@@ -69,7 +69,7 @@ bool Level::initCamera(Camera & camera)
 {
 	if (m_cameraSize.x <= 0 || m_cameraSize.y <= 0) return false; // Camera size too small
 	if (m_cameraSize.x > m_levelWidth || m_cameraSize.y > m_levelHeight) return false; // Camera size too big
-	camera = Camera::Camera(
+	camera = Camera(
 		sf::FloatRect(static_cast<float>(m_spawnX - m_cameraSize.x/2), static_cast<float>(m_spawnY- m_cameraSize.y/2),m_cameraSize.x,m_cameraSize.y), 
 		sf::Vector2f(static_cast<float>(m_levelWidth), static_cast<float>(m_levelHeight)),m_cameraSpeed);
 	return true;
@@ -334,11 +334,12 @@ Level::~Level()
 	m_entityMap.clear();
 }
 
-bool Level::loadLevel(Camera & camera, PlayerObject * const player, sf::Sprite &background)
+bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background)
 {
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
+	background = GameBackground(m_levelPath,10);
 	return true;
 }
 

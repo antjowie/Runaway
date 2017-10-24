@@ -20,7 +20,7 @@ private:
 		That
 	};
 
-	sf::Sprite m_background;
+	GameBackground m_background;
 	PlayerObject *m_player; // I have 2 pointers toward player, one in the m_objects and one here, to access the unique functions
 	Camera m_camera;
 	levelName m_levelId{ levelName::Blank };

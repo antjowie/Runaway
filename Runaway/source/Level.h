@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "PlayerObject.h"
 #include "Entity.h"
+#include "GameBackground.h"
 
 #include <SFML\Graphics.hpp>
 #include <vector>
@@ -63,7 +64,7 @@ public:
 	void toggleGate(const int id);
 	void setSpawn(const sf::Vector2f &pos);
 	
-	bool loadLevel(Camera &camera, PlayerObject * const player,sf::Sprite &background); // This will load all the files for this level
+	bool loadLevel(Camera &camera, PlayerObject * const player,GameBackground &background); // This will load all the files for this level
 	
 	const sf::Vector2f getSpawn() const;
 	const std::string &getTitle() const;

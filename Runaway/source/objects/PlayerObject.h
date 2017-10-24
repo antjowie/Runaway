@@ -12,7 +12,6 @@ private:
 	sf::Vector2f m_velocity;	// The acceleration of the player
 
 	bool m_isCrouching{ false };
-	bool m_canJump{ false };
 	bool m_hasJumped{ true };
 
 	const bool isItemPressed(const std::string string) const;
