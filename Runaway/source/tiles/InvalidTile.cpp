@@ -2,8 +2,8 @@
 
 
 
-InvalidTile::InvalidTile(const float x, const float y, const std::string tilesetName):
-	Tile(TileType::Invalid, x,y,tilesetName)
+InvalidTile::InvalidTile(const float x, const float y):
+	Tile(TileType::Invalid, x,y)
 {
 	m_sprite.setTextureRect(sf::IntRect(32 * 3, 0, 32, 32));
 }

@@ -31,7 +31,7 @@ private:
 	std::vector<Entity*> m_entityMap;
 	std::vector<Gate> m_gateMap;
 	
-	const sf::Vector2f m_cameraSize;
+	sf::Vector2f m_cameraSize;
 	const std::string m_levelPath;
 
 	float m_cameraSpeed{ 0 };
@@ -52,7 +52,7 @@ private:
 	bool loadGates(std::vector<char> tilemap);
 
 public:
-	Level(const std::string &levelMapPath,const std::string &title, const float cameraWidth, const float camerHeight, const float cameraSpeed, const std::string tilesetName);
+	Level(const std::string &levelMapPath,const std::string &title, const float cameraSpeed, const std::string tilesetName);
 	~Level();
 
 	void update(const float elapsedTime);

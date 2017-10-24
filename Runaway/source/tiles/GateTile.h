@@ -12,7 +12,7 @@ private:
 public:
 	bool m_isOpen{ false };
 
-	GateTile(const float x, const float y, const std::string tilesetName);
+	GateTile(const float x, const float y);
 	
 	void move(const float x, const float y);
 	void setTextureRect(const int textureRect);

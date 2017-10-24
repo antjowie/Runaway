@@ -2,8 +2,8 @@
 
 
 
-GroundTile::GroundTile(const float x, const float y, const std::string tilesetName):
-	Tile(TileType::Block, x,y,tilesetName)
+GroundTile::GroundTile(const float x, const float y):
+	Tile(TileType::Block, x,y)
 {
 	m_sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 }

@@ -17,7 +17,7 @@ protected:
 	sf::Sprite m_sprite;
 
 public:
-	Tile(const TileType type, const float x, const float y, const std::string tilesetName, const bool isSolid = true);
+	Tile(const TileType type, const float x, const float y, const bool isSolid = true);
 	
 	virtual void update();
 	virtual void draw(sf::RenderWindow& window);
@@ -27,4 +27,4 @@ public:
 	const bool isSolid() const;
 };
 
-Tile * const getTile(const int id, const float x, const float y, const std::string tilesetName);
+Tile * const getTile(const int id, const float x, const float y);

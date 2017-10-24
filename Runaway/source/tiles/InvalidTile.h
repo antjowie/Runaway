@@ -4,6 +4,6 @@ class InvalidTile :
 	public Tile
 {
 public:
-	InvalidTile(const float x, const float y,const std::string tilesetName);
+	InvalidTile(const float x, const float y);
 };
 

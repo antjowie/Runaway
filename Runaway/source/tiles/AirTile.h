@@ -4,6 +4,6 @@ class AirTile :
 	public Tile
 {
 public:
-	AirTile(const float x, const float y, const std::string tilesetName);
+	AirTile(const float x, const float y);
 };
 

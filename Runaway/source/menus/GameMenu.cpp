@@ -17,11 +17,11 @@ void GameMenu::changeLevel(const GameMenu::levelName level)
 	switch (m_levelId)
 	{
 	case levelName::Test:
-		m_level = new Level(levelPath + "test/", "Test level", 1280*2 , 720*2 , 1.f, "testTileset");
+		m_level = new Level(levelPath + "test/", "Test level", 1.f, "test");
 		break;
 
 	case levelName::That:
-		m_level = new Level(levelPath + "that/", "That level", 1280 * 2, 720 * 2, 1.f, "testTileset");
+		m_level = new Level(levelPath + "that/", "That level", 1.f, "test");
 		break;
 
 	default:

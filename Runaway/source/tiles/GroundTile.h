@@ -5,6 +5,6 @@ class GroundTile:
 	public Tile
 {
 public:
-	GroundTile(const float x, const float y, const std::string tilesetName);
+	GroundTile(const float x, const float y);
 };
 

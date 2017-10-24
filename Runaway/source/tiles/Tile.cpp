@@ -3,10 +3,10 @@
 #include "DataManager.h"
 #include <cassert>
 
-Tile::Tile(const TileType type, const float x, const float y, const std::string tilesetName, const bool isSolid):
+Tile::Tile(const TileType type, const float x, const float y, const bool isSolid):
 	m_TileType(type), m_solid(isSolid)
 {
-	m_sprite.setTexture(DataManager::getInstance().getTexture(tilesetName));
+	m_sprite.setTexture(DataManager::getInstance().getTexture("tileset"));
 	m_sprite.setPosition(x, y);
 }
 
@@ -34,21 +34,21 @@ const TileType Tile::getType() const
 	return m_TileType;
 }
 
-Tile * const getTile(const int id, const float x, const float y, const std::string tilesetName)
+Tile * const getTile(const int id, const float x, const float y)
 {
 	switch (static_cast<TileType>(id))
 	{
 	case TileType::Air:
-		return new AirTile(x, y,tilesetName);
+		return new AirTile(x, y);
 	case TileType::Block:
-		return new GroundTile(x, y, tilesetName);
+		return new GroundTile(x, y);
 	case TileType::Top:
-		return new GroundTopTile(x, y, tilesetName);
+		return new GroundTopTile(x, y);
 	case TileType::Light:
-		return new LightTile(x, y, tilesetName);
+		return new LightTile(x, y);
 	case TileType::Gate:
-		return new GateTile(x, y, tilesetName);
+		return new GateTile(x, y);
 	default:
-		return new InvalidTile(x, y, tilesetName);
+		return new InvalidTile(x, y);
 	}
 }

@@ -100,21 +100,20 @@ bool Level::loadTilemap(std::vector<char> tilemap)
 		return false;
 	}
 
+	
 	// Initiate iterator to the xml file
-	node = map.first_node("map"); // ->first_node("tileset");
-
-	// Convert values
-	converter(m_tilemapWidth,std::string(node->first_attribute("width")->value()));
-	converter(m_tilemapHeight, node->first_attribute("height")->value());
+	node = map.first_node("map");
 	converter(m_tileWidth, node->first_attribute("tilewidth")->value());
 	converter(m_tileHeight, node->first_attribute("tileheight")->value());
+	
+	node = node->first_node("layer");
+	converter(m_tilemapWidth,  node->first_attribute("width")->value());
+	converter(m_tilemapHeight, node->first_attribute("height")->value());
 
 	// Get the map from the file
 	std::string tilemapString;
-
-	for (rapidxml::xml_node<> *iter = node->first_node(); iter; iter = iter->next_sibling())
-		if (std::string(iter->name()) == "layer")
-			tilemapString = iter->first_node("data")->value();
+	
+	tilemapString = node->first_node("data")->value();
 
 	// Format the tilemapString
 	remove_char(tilemapString, ',');
@@ -133,12 +132,30 @@ bool Level::loadTilemap(std::vector<char> tilemap)
 			converter(id, tilemapString[j * m_tilemapWidth + i]);
 
 			// While j represent y, it's value is used to evaluate the x axis.
-			m_tilemap[j][i] = getTile(id, static_cast<float>(m_tileWidth* i), static_cast<float>(m_tileHeight* j),m_tilesetName);
+			m_tilemap[j][i] = getTile(id, static_cast<float>(m_tileWidth* i), static_cast<float>(m_tileHeight* j));
 		}
 	}
 
 	m_levelWidth = m_tilemapWidth * m_tileWidth;
 	m_levelHeight = m_tilemapHeight * m_tileHeight;
+
+	// Load camera properties
+	for (rapidxml::xml_node<>* iter = node->first_node("properties")->first_node("property"); iter; iter = iter->next_sibling())
+	{
+	if (std::string(iter->first_attribute("name")->value()) == "cameraWidth")
+		converter(m_cameraSize.x, iter->first_attribute("value")->value());
+	else if (std::string(iter->first_attribute("name")->value()) == "cameraHeight")
+		converter(m_cameraSize.y, iter->first_attribute("value")->value());
+	}
+	
+	m_cameraSize.x *= m_tileWidth;
+	m_cameraSize.y *= m_tileHeight;
+
+	// Calculate aspect ratios if desired (assumes 16:9)
+	if (m_cameraSize.x == 0)
+		m_cameraSize.x = 1920.f / 1080.f * m_cameraSize.y;
+	else if (m_cameraSize.y == 0)
+		m_cameraSize.y = 1080.f / 1920.f * m_cameraSize.x;
 
 	return true;
 }
@@ -296,13 +313,12 @@ bool Level::loadGates(std::vector<char> tilemap)
 	return true;
 }
 
-Level::Level(const std::string &levelPath, const std::string &title,
-	const float cameraWidth, const float camerHeight,
-	const float cameraSpeed, const std::string tilesetName) :
-	m_cameraSize(cameraWidth,camerHeight), m_title(title), 
-	m_levelPath(levelPath), m_cameraSpeed(cameraSpeed),
-	m_tilesetName(tilesetName)
+Level::Level(const std::string &levelPath, const std::string &title, const float cameraSpeed, const std::string tilesetName): 
+	m_title(title), m_levelPath(levelPath), m_cameraSpeed(cameraSpeed), m_tilesetName(tilesetName)
 {
+	std::string tilesetPath("Runaway/data/textures/tilesets/" + tilesetName);
+	DataManager::getInstance().loadTexture("tileset", tilesetPath + "/tileset.png");
+	DataManager::getInstance().loadTexture("gate", tilesetPath + "/gateSprite.png");
 }
 
 Level::~Level()

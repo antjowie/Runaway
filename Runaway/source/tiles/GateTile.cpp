@@ -1,8 +1,8 @@
 #include "GateTile.h"
 #include "DataManager.h"
 
-GateTile::GateTile(const float x, const float y, const std::string tilesetName):
-	Tile(TileType::Gate, x,y,tilesetName,true),m_animHandler(32,32)
+GateTile::GateTile(const float x, const float y):
+	Tile(TileType::Gate, x,y,true),m_animHandler(32,32)
 {
 	m_sprite.setTexture(DataManager::getInstance().getTexture("gate"));
 	m_animHandler.addAnimation(Animation(0, 0, 1));
