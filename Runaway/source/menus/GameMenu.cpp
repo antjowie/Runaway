@@ -137,7 +137,6 @@ void GameMenu::update(const float elapsedTime)
 		m_player->m_sprite.setPos(m_level->getSpawn());
 		m_player->m_isDead = false;
 
-		m_background.setPos(m_camera.getView().getCenter());
 		m_background.setAlpha();
 	}
 }

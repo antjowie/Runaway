@@ -26,7 +26,7 @@ void GateTile::setSolid(const bool isSolid)
 {
 	m_solid = isSolid;
 	sf::Color transparent{ m_sprite.getColor() };
-	transparent.a = m_solid ? 225: 0;
+	transparent.a = m_solid ? 255: 0;
 	m_sprite.setColor(transparent);
 }
 

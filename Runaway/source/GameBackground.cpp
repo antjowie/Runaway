@@ -58,6 +58,7 @@ void GameBackground::setPos(const sf::Vector2f & target)
 {
 	m_originalPos = target;
 	m_foreground.setPosition(target);
+
 }
 
 void GameBackground::setBackgroundSize(const sf::Vector2f & size)

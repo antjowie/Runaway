@@ -1,7 +1,7 @@
 #include "PlayerObject.h"
 #include "Config.h"
 #include "DataManager.h"
-#include <iostream>
+
 bool const Sprite::isItemPressed(const std::string itemString) const
 {
 	// This looks totally odd
