@@ -1,7 +1,7 @@
 #include "PlayerObject.h"
 #include "Config.h"
 #include "DataManager.h"
-
+#include <iostream>
 bool const Sprite::isItemPressed(const std::string itemString) const
 {
 	// This looks totally odd
@@ -109,7 +109,7 @@ void Sprite::input()
 	// Reset directions
 	m_moveDirection.x = m_moveDirection.y = 0;
 
-	if ((isItemPressed("moveUp") || isItemPressed("jump")))
+	if ((isItemPressed("moveUp") || isItemPressed("jump"))&& m_canJump)
 		m_moveDirection.y = -1;
 
 	if (isItemPressed("moveLeft")) m_moveDirection.x -= 1;
@@ -142,6 +142,7 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 		if (!m_hasJumped)
 		{
 			m_hasJumped = true;
+			m_canJump = false;
 			m_velocity.y = -jumpStrength * tileSize;
 		}
 	}
@@ -155,11 +156,12 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 		m_velocity.y += gravity * tileSize*  elapsedTime;
 		m_hasJumped = true;
 	}	
-
 	if (m_velocity.y > 0 && collisionHandler.distanceTillBottomCollision(getHitbox()) != 0)
 	{
 		m_sprite.move(0, -collisionHandler.distanceTillBottomCollision(getHitbox()));
 		m_velocity.y = 0;
+		if (!isItemPressed("jump")&& !isItemPressed("moveUp"))
+			m_canJump = true;
 		m_hasJumped = false;
 	}
 	else if (m_velocity.y < 0 && collisionHandler.distanceTillUpperCollision(getHitbox()) != 0)

@@ -13,6 +13,7 @@ private:
 
 	bool m_isCrouching{ false };
 	bool m_hasJumped{ true };
+	bool m_canJump{ false };
 
 	const bool isItemPressed(const std::string string) const;
 	const bool isFloating(CollisionHandler &collisionHandler) const;
