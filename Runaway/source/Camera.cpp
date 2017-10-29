@@ -38,7 +38,7 @@ Camera::Camera(const sf::FloatRect view, const sf::Vector2f bounds, const float 
 {
 	if (m_speed > 1.0f) m_speed = 1.0f;
 	if (m_speed < 0.0f) m_speed = 0.0f;
-	m_view.setCenter(m_view.getCenter());
+	m_view.setCenter(view.left, view.top);
 	m_target = m_view.getCenter(); // To prevent undefined error
 }
 

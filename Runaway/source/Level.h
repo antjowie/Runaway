@@ -47,6 +47,7 @@ private:
 	bool initMap();
 	bool initCamera(Camera &camera);
 	bool initPlayer(PlayerObject *const player);
+	bool initBackground(const Camera &camera, GameBackground &background);
 
 	bool loadTilemap(std::vector<char> tilemap);
 	bool loadEntities(std::vector<char> tilemap);

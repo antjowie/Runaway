@@ -124,6 +124,7 @@ void GameMenu::update(const float elapsedTime)
 	
 	// Update background state
 	m_background.update(elapsedTime);
+	m_background.setTarget(m_camera.getView().getCenter());
 
 	// Change player alive state
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) m_player->m_isDead = true;
@@ -135,6 +136,8 @@ void GameMenu::update(const float elapsedTime)
 	{
 		m_player->m_sprite.setPos(m_level->getSpawn());
 		m_player->m_isDead = false;
+
+		m_background.setPos(m_camera.getView().getCenter());
 		m_background.setAlpha();
 	}
 }

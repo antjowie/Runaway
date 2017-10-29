@@ -17,11 +17,6 @@ DataManager::DataManager()
 	loadTexture("checkpoint", entityPath + "checkpoint/checkpointSprite.png");
 	loadTexture("switch", entityPath + "switch/switchSprite.png");
 
-	// Load tilesets
-	std::string tilesetPath(texturePath + "tilesets/");
-	loadTexture("gate", tilesetPath + "test/gateSprite.png");
-	loadTexture("testTileset", tilesetPath + "test/testTileset.png");
-
 	// Load misc
 	loadTexture("mainMenuBackground", texturePath + "mainMenuBackground.png");
 }

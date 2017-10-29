@@ -9,6 +9,7 @@ private:
 	sf::RectangleShape m_deadBackground;
 	float m_alpha{ 0 };
 
+	sf::Vector2f m_originalPos;
 	sf::Vector2f m_target;
 	float m_colorChangeRate;
 
@@ -22,4 +23,6 @@ public:
 	// 0-255
 	void setAlpha(const sf::Uint8 &alpha = 255);
 	void setTarget(const sf::Vector2f &target);
+	void setPos(const sf::Vector2f &target);
+	void setBackgroundSize(const sf::Vector2f &size);
 };

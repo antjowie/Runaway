@@ -70,8 +70,9 @@ bool Level::initCamera(Camera & camera)
 	if (m_cameraSize.x <= 0 || m_cameraSize.y <= 0) return false; // Camera size too small
 	if (m_cameraSize.x > m_levelWidth || m_cameraSize.y > m_levelHeight) return false; // Camera size too big
 	camera = Camera(
-		sf::FloatRect(static_cast<float>(m_spawnX - m_cameraSize.x/2), static_cast<float>(m_spawnY- m_cameraSize.y/2),m_cameraSize.x,m_cameraSize.y), 
+		sf::FloatRect(m_spawnX, m_spawnY,m_cameraSize.x,m_cameraSize.y), 
 		sf::Vector2f(static_cast<float>(m_levelWidth), static_cast<float>(m_levelHeight)),m_cameraSpeed);
+	camera.update(0); // This will correct the bounds
 	return true;
 }
 
@@ -83,6 +84,14 @@ bool Level::initPlayer(PlayerObject * const player)
 	// Collision
 	player->m_collisionHandler.setTileSize(sf::Vector2i(m_tileWidth, m_tileHeight));
 	if (!player->m_collisionHandler.loadTilemap(&m_tilemap)) return false;
+	return true;
+}
+
+bool Level::initBackground(const Camera &camera, GameBackground & background)
+{
+	background = GameBackground(m_levelPath, 4);
+	background.setPos(camera.getView().getCenter());
+	background.setBackgroundSize(sf::Vector2f(m_levelWidth, m_levelHeight));
 	return true;
 }
 
@@ -339,7 +348,7 @@ bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackgrou
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
-	background = GameBackground(m_levelPath,4);
+	if (!initBackground(camera, background)) return false;
 	return true;
 }
 
