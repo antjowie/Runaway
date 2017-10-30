@@ -23,6 +23,5 @@ public:
 	// 0-255
 	void setAlpha(const sf::Uint8 &alpha = 255);
 	void setTarget(const sf::Vector2f &target);
-	void setPos(const sf::Vector2f &target);
-	void setBackgroundSize(const sf::Vector2f &size);
+	void init(const sf::Vector2f &size);
 };

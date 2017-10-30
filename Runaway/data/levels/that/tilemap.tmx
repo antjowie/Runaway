@@ -121,7 +121,7 @@
  </objectgroup>
  <objectgroup name="meta">
   <object id="1" name="spawn" x="3296" y="768" width="32" height="32"/>
-  <object id="19" name="checkpoint" x="3296" y="768" width="32" height="32"/>
-  <object id="22" name="checkpoint" x="3392" y="64" width="32" height="32"/>
+  <object id="19" name="checkpoint" x="3392" y="64" width="32" height="32"/>
+  <object id="22" name="checkpoint" x="3296" y="768" width="32" height="32"/>
  </objectgroup>
 </map>

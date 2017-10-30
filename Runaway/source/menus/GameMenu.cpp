@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-void GameMenu::changeLevel(const GameMenu::levelName level)
+void GameMenu::changeLevel(const GameMenu::LevelName level)
 {
 	if (m_levelId == level) return;
 	m_levelId = level;
@@ -16,11 +16,11 @@ void GameMenu::changeLevel(const GameMenu::levelName level)
 	std::string levelPath("Runaway/data/levels/");
 	switch (m_levelId)
 	{
-	case levelName::Test:
+	case LevelName::Test:
 		m_level = new Level(levelPath + "test/", "Test level", 1.f, "test");
 		break;
 
-	case levelName::That:
+	case LevelName::That:
 		m_level = new Level(levelPath + "that/", "That level", 1.f, "test");
 		break;
 
@@ -36,9 +36,7 @@ void GameMenu::changeLevel(const GameMenu::levelName level)
 GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
-	// I should start learning smart pointers, shouldn't I? (Wasn't it not called unique_ptr?)
-	//m_player = new PlayerObject(true);
-	changeLevel(levelName::That);
+	changeLevel(LevelName::That);
 }
 
 GameMenu::~GameMenu()

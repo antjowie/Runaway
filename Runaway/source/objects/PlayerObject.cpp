@@ -59,29 +59,29 @@ void PlayerObject::logic(const float elapsedTime)
 
 	// Horizontal movement
 	if (newPos.x > offset && newPos.y > -offset && newPos.y < offset)
-		m_animHandler.changeAnimation(playerDirection::Right);
+		m_animHandler.changeAnimation(PlayerDirection::Right);
 	else if (newPos.x < -offset && newPos.y > -offset && newPos.y < offset)
-		m_animHandler.changeAnimation(playerDirection::Left);
+		m_animHandler.changeAnimation(PlayerDirection::Left);
 
 	// Vertical movement
 	else if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset))
 	{
 		if (newPos.y > offset)
-			m_animHandler.changeAnimation(playerDirection::DropRight);
+			m_animHandler.changeAnimation(PlayerDirection::DropRight);
 		else
-			m_animHandler.changeAnimation(playerDirection::JumpRight);
+			m_animHandler.changeAnimation(PlayerDirection::JumpRight);
 	}
 	else if (newPos.x <= -offset && (newPos.y < -offset || newPos.y > offset))
 	{
 		if (newPos.y > offset)
-			m_animHandler.changeAnimation(playerDirection::DropLeft);
+			m_animHandler.changeAnimation(PlayerDirection::DropLeft);
 		else
-			m_animHandler.changeAnimation(playerDirection::JumpLeft);
+			m_animHandler.changeAnimation(PlayerDirection::JumpLeft);
 	}
 
 	// No movement
 	else
-		m_animHandler.changeAnimation(playerDirection::Rest);
+		m_animHandler.changeAnimation(PlayerDirection::Rest);
 }
 
 void PlayerObject::input(sf::RenderWindow &window)

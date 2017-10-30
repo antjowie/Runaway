@@ -14,7 +14,7 @@ class GameMenu :
 	public Menu
 {
 private:
-	enum class levelName {
+	enum class LevelName {
 		Blank,
 		Test,
 		That
@@ -23,10 +23,10 @@ private:
 	GameBackground m_background;
 	PlayerObject *m_player; // I have 2 pointers toward player, one in the m_objects and one here, to access the unique functions
 	Camera m_camera;
-	levelName m_levelId{ levelName::Blank };
+	LevelName m_levelId{ LevelName::Blank };
 	Level *m_level; 
 
-    void changeLevel(const levelName level);
+    void changeLevel(const LevelName level);
 
 public:
 	GameMenu(MenuStack* const menuStack);

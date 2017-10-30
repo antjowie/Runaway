@@ -42,7 +42,7 @@ class PlayerObject :
 	public Object
 {
 private:
-	enum playerDirection{Rest,JumpRight,DropRight,JumpLeft,DropLeft,Right,Left};
+	enum PlayerDirection{Rest,JumpRight,DropRight,JumpLeft,DropLeft,Right,Left};
 	AnimationHandler m_animHandler;
 
 public:

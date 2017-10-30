@@ -38,7 +38,7 @@ void GameBackground::update(const float elapsedTime)
 
 void GameBackground::draw(sf::RenderWindow & window)
 {
-	//std::cout << m_foreground.getPosition().y << '\n';
+	//std::cout << m_foreground.getPosition().x << '\n';
 	window.draw(m_background);
 	window.draw(m_deadBackground);
 	window.draw(m_foreground);
@@ -54,20 +54,16 @@ void GameBackground::setTarget(const sf::Vector2f & target)
 	m_target = target;
 }
 
-void GameBackground::setPos(const sf::Vector2f & target)
-{
-	m_originalPos = target;
-	m_foreground.setPosition(target);
-
-}
-
-void GameBackground::setBackgroundSize(const sf::Vector2f & size)
+void GameBackground::init(const sf::Vector2f & size)
 {
 	
 	m_foreground.setTextureRect(sf::IntRect{ 0,0,static_cast<int>(size.x),static_cast<int>(size.y) });
 	m_foreground.setOrigin(m_foreground.getLocalBounds().width / 2, m_foreground.getLocalBounds().height / 2);
 
-	m_background.setSize(size);
+	m_foreground.setPosition(size.x/2,size.y/2);
+	m_originalPos = m_foreground.getPosition();
+	m_target = m_foreground.getPosition();
 
+	m_background.setSize(size);
 	m_deadBackground.setSize(size);
 }

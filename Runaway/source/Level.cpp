@@ -87,11 +87,10 @@ bool Level::initPlayer(PlayerObject * const player)
 	return true;
 }
 
-bool Level::initBackground(const Camera &camera, GameBackground & background)
+bool Level::initBackground(GameBackground & background)
 {
 	background = GameBackground(m_levelPath, 4);
-	background.setPos(camera.getView().getCenter());
-	background.setBackgroundSize(sf::Vector2f(m_levelWidth, m_levelHeight));
+	background.init(sf::Vector2f(m_levelWidth, m_levelHeight));
 	return true;
 }
 
@@ -349,7 +348,7 @@ bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackgrou
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
-	if (!initBackground(camera, background)) return false;
+	if (!initBackground(background)) return false;
 	return true;
 }
 
