@@ -63,7 +63,8 @@ void Config::loadDefaultConfig()
 	m_config.emplace("moveDown",	sf::Keyboard::Key::S);
 	m_config.emplace("moveRight",	sf::Keyboard::Key::D);
 
-	m_config.emplace("jump",		sf::Keyboard::Key::Space);
+	m_config.emplace("jump", sf::Keyboard::Key::Space);
+	m_config.emplace("dash", sf::Keyboard::Key::LShift);
 
 	m_config.emplace("frameLimit",	60);
 }
@@ -134,6 +135,7 @@ void Config::checkConfig()
 	if (!m_config.count("moveRight")) corrupt = true;
 
 	if (!m_config.count("jump")) corrupt = true;
+	if (!m_config.count("dash")) corrupt = true;
 
 	if (!m_config.count("frameLimit")) corrupt = true;
 

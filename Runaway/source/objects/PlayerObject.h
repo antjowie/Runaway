@@ -11,9 +11,13 @@ private:
 	sf::Vector2i m_moveDirection;	// The direction the player walks in
 	sf::Vector2f m_velocity;	// The acceleration of the player
 
-	bool m_isCrouching{ false };
 	bool m_hasJumped{ true };
 	bool m_canJump{ false };
+
+	bool m_hitDash{ false };
+	float m_dashCooldown{ 0 };
+
+	bool m_isCrouching{ false };
 
 	const bool isItemPressed(const std::string string) const;
 	const bool isFloating(CollisionHandler &collisionHandler) const;

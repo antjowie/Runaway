@@ -1,6 +1,7 @@
 #include "PlayerObject.h"
 #include "Config.h"
 #include "DataManager.h"
+#include <iostream>
 
 bool const Sprite::isItemPressed(const std::string itemString) const
 {
@@ -112,6 +113,9 @@ void Sprite::input()
 	if ((isItemPressed("moveUp") || isItemPressed("jump"))&& m_canJump)
 		m_moveDirection.y = -1;
 
+	if ((isItemPressed("dash") && (m_dashCooldown == 0)))
+		m_hitDash = true;
+
 	if (isItemPressed("moveLeft")) m_moveDirection.x -= 1;
 	if (m_moveDirection.x < -1) m_moveDirection.x = -1;
 	if (isItemPressed("moveRight")) m_moveDirection.x += 1;
@@ -125,16 +129,19 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 	// TODO: add jump offset
 
 	const float
-		tileSize{ 32 }, 
-		speed{ 3.5  },	// Blocks to run with accel = 1
+		tileSize{ 32 },
+		speed{ 3.5 },	// Blocks to run with accel = 1
 		gravity{ 24 },	// Blocks to drop in 1 second
-		
+
 		oneTileTravel{ 2.f * gravity },
-		jumpStrength{ sqrt(oneTileTravel * 4) },	// Amount of blocks to jump in one second (won't go higher)
-	
+		jumpStrength{ sqrt(oneTileTravel * 4.5f) },	// Amount of blocks to jump in one second (won't go higher)
+
 		maxAccel{ 2 },	// Max accel  
 		accel{ 4 },		// accel / maxAccel = time to reach max accel
-		decel{ 4 };		// decel / maxAccel = time to reach 0 accel
+		decel{ 4 },		// decel / maxAccel = time to reach 0 accel
+
+		dashCooldown{ 4 },
+		dashStrength{ 3 };	// Should be blocks to dash but is arbitrary at the moment (value isn't precise)
 
 	// Jump
 	if (m_moveDirection.y == -1)
@@ -175,31 +182,49 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 	{
 		if (m_velocity.x < 0)
 			m_velocity.x = 0;
-		m_velocity.x += accel * elapsedTime;
 		if (m_velocity.x > maxAccel)
-			m_velocity.x = maxAccel;
+			m_velocity.x -= decel * elapsedTime;
+		else
+		m_velocity.x += accel * elapsedTime;
 	}
 
 	else if (m_moveDirection.x == -1)
 	{
 		if (m_velocity.x > 0)
 			m_velocity.x = 0;
-		m_velocity.x -= accel * elapsedTime;
 		if (m_velocity.x < -maxAccel)
-			m_velocity.x = -maxAccel;
+			m_velocity.x += decel * elapsedTime;
+		else
+		m_velocity.x -= accel * elapsedTime;
 	}
+
+	if (m_hitDash && m_moveDirection.x != 0)
+	{
+		m_hitDash = false;
+		if (m_moveDirection.x > 0)
+			m_velocity.x += dashStrength;
+		else if (m_moveDirection.x < 0)
+			m_velocity.x -= dashStrength;
+		m_dashCooldown = dashCooldown;
+	}
+
 	m_sprite.move(m_velocity.x * speed * tileSize * elapsedTime,0);
 
-	// Collision resolution
-	if (m_velocity.x > 0 && collisionHandler.distanceTillRightCollision(getHitbox()) != 0)
+	for (int i{ 0 }; i < 1; i++)
 	{
-		m_sprite.move(-collisionHandler.distanceTillRightCollision(getHitbox()), 0);
-		m_velocity.x = 0;
-	}
-	else if (m_velocity.x < 0 && collisionHandler.distanceTillLeftCollision(getHitbox()) != 0)
-	{
-		m_sprite.move(collisionHandler.distanceTillLeftCollision(getHitbox()), 0);
-		m_velocity.x = 0;
+		// Collision resolution
+		if (m_velocity.x > 0 && collisionHandler.distanceTillRightCollision(getHitbox()) != 0)
+		{
+			m_sprite.move(-collisionHandler.distanceTillRightCollision(getHitbox()), 0);
+			m_velocity.x = 0;
+		}
+		else if (m_velocity.x < 0 && collisionHandler.distanceTillLeftCollision(getHitbox()) != 0)
+		{
+			m_sprite.move(collisionHandler.distanceTillLeftCollision(getHitbox()), 0);
+			m_velocity.x = 0;
+		}
+
+		// Check before and after dash
 	}
 
 	// Decrease accelerations
@@ -218,6 +243,11 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 				m_velocity.x = 0;
 		}
 	}
+
+	// Decrease dash cooldown
+	m_dashCooldown -= elapsedTime;
+	if (m_dashCooldown < 0)
+		m_dashCooldown = 0;
 }
 
 void Sprite::draw(sf::RenderWindow & window)
