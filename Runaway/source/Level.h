@@ -29,6 +29,7 @@ class Level
 {
 private:
 	std::vector<std::vector<Tile*>> m_tilemap;
+	std::vector<std::vector<Tile*>> m_background;
 	std::vector<Entity*> m_entityMap;
 	std::vector<Gate> m_gateMap;
 	
@@ -49,7 +50,8 @@ private:
 	bool initPlayer(PlayerObject *const player);
 	bool initBackground(GameBackground &background);
 
-	bool loadTilemap(std::vector<char> tilemap);
+	void loadTilemap(std::vector<std::vector<Tile*>> &tilemap, const std::string tilemapString);
+	bool loadTileLayer(std::vector<char> tilemap);
 	bool loadEntities(std::vector<char> tilemap);
 	bool loadGates(std::vector<char> tilemap);
 

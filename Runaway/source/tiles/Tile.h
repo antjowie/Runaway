@@ -22,6 +22,10 @@ public:
 	virtual void update();
 	virtual void draw(sf::RenderWindow& window);
 
+	void setSolid(const bool isSolid = true);
+	// 255 = initial brightness, 0 = black
+	void setBrightness(const sf::Uint8 &brigthness = 255);
+
 	const sf::FloatRect getHitbox() const;
 	const TileType getType() const;
 	const bool isSolid() const;

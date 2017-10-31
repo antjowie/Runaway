@@ -19,6 +19,16 @@ void Tile::draw(sf::RenderWindow &window)
 	window.draw(m_sprite);
 }
 
+void Tile::setSolid(const bool isSolid)
+{
+	m_solid = isSolid;
+}
+
+void Tile::setBrightness(const sf::Uint8 & brightness)
+{
+	m_sprite.setColor(sf::Color(brightness, brightness, brightness));
+}
+
 const sf::FloatRect Tile::getHitbox() const
 {
 	return m_sprite.getGlobalBounds();

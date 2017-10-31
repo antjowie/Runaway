@@ -59,7 +59,7 @@ bool Level::initMap()
 	file.close();
 
 	// Try to parse the buffer
-	if (!loadTilemap(buffer)) return false;
+	if (!loadTileLayer(buffer)) return false;
 	if (!loadEntities(buffer)) return false;
 	if (!loadGates(buffer))return false;
 	return true;
@@ -94,7 +94,28 @@ bool Level::initBackground(GameBackground & background)
 	return true;
 }
 
-bool Level::loadTilemap(std::vector<char> tilemap)
+void Level::loadTilemap(std::vector<std::vector<Tile*>>& tilemap, const std::string tilemapString)
+{
+	// Load the map into the vector
+	tilemap.clear();
+	tilemap.resize(m_tilemapHeight);
+
+	// Because the tiled editor edits tiles from left to right, we have to use j as first value
+	for (int j = 0; j < m_tilemapHeight; j++)
+	{
+		tilemap[j].resize(m_tilemapWidth);
+		for (int i = 0, id = 0; i < m_tilemapWidth; i++)
+		{
+			converter(id, tilemapString[j * m_tilemapWidth + i]);
+
+			// While j represent y, it's value is used to evaluate the x axis.
+			tilemap[j][i] = getTile(id, static_cast<float>(m_tileWidth* i), static_cast<float>(m_tileHeight* j));
+		}
+	}
+
+}
+
+bool Level::loadTileLayer(std::vector<char> tilemap)
 {
 	rapidxml::xml_document<> map;
 	rapidxml::xml_node<> *node;
@@ -137,29 +158,31 @@ bool Level::loadTilemap(std::vector<char> tilemap)
 	converter(m_tilemapWidth,  node->first_attribute("width")->value());
 	converter(m_tilemapHeight, node->first_attribute("height")->value());
 
-	// Get the map from the file
-	std::string tilemapString;
-	
-	tilemapString = node->first_node("data")->value();
-
-	// Format the tilemapString
-	remove_char(tilemapString, ',');
-	remove_char(tilemapString, '\n');
-
-	// Load the map into the vector
-	m_tilemap.clear();
-	m_tilemap.resize(m_tilemapHeight);
-
-	// Because the tiled editor edits tiles from left to right, we have to use j as first value
-	for (int j = 0; j < m_tilemapHeight; j++)
+	for (rapidxml::xml_node<> * tilemap = node; tilemap; tilemap= tilemap->next_sibling())
 	{
-		m_tilemap[j].resize(m_tilemapWidth);
-		for (int i = 0, id = 0; i < m_tilemapWidth; i++)
-		{
-			converter(id, tilemapString[j * m_tilemapWidth + i]);
+		if (std::string(tilemap->name()) != "layer") continue;
+		// Get the map from the file
+		std::string tilemapString;
+	
+		tilemapString = tilemap->first_node("data")->value();
 
-			// While j represent y, it's value is used to evaluate the x axis.
-			m_tilemap[j][i] = getTile(id, static_cast<float>(m_tileWidth* i), static_cast<float>(m_tileHeight* j));
+		// Format the tilemapString
+		remove_char(tilemapString, ',');
+		remove_char(tilemapString, '\n');
+
+		if (std::string(tilemap->first_attribute("name")->value()) == "main")
+		{
+			loadTilemap(m_tilemap, tilemapString);
+		}
+		else if (std::string(tilemap->first_attribute("name")->value()) == "background")
+		{
+			loadTilemap(m_background, tilemapString);
+			for (const auto &i : m_background)
+				for (const auto &j : i)
+				{
+					j->setSolid(false);
+					j->setBrightness(100); // Could use some fine tweaking
+				}
 		}
 	}
 
@@ -367,12 +390,15 @@ void Level::update(const float elapsedTime)
 void Level::draw(sf::RenderWindow & window, const Camera &camera)
 {
 	sf::IntRect tileBounds = camera.getTileBounds(m_tileWidth, m_tileHeight);
-	
+
 	// So that gate wont be rendered above tiles
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
+		{
+			m_background[i][j]->draw(window);
 			if(m_tilemap[i][j]->getType() == TileType::Gate)
 				m_tilemap[i][j]->draw(window);
+		}
 
 	for (const auto &iter : m_entityMap)
 	{
