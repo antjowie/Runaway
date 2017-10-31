@@ -391,20 +391,21 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 {
 	sf::IntRect tileBounds = camera.getTileBounds(m_tileWidth, m_tileHeight);
 
+	// This has to be double because else background will overwrite tile
+	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
+		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
+			m_background[i][j]->draw(window);
+
 	// So that gate wont be rendered above tiles
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
-		{
-			m_background[i][j]->draw(window);
 			if(m_tilemap[i][j]->getType() == TileType::Gate)
 				m_tilemap[i][j]->draw(window);
-		}
 
 	for (const auto &iter : m_entityMap)
 	{
 		iter->draw(window);
 	}
-	
 
 	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
 		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
