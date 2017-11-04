@@ -12,11 +12,6 @@ bool const Sprite::isItemPressed(const std::string itemString) const
 	== true ? true : false;
 }
 
-const bool Sprite::isFloating(CollisionHandler &collisionHandler) const
-{
-	return collisionHandler.distanceTillBottomCollision(getHitbox()) == 0;
-}
-
 PlayerObject::PlayerObject(const bool isValid) :
 	Object(isValid),
 	m_animHandler(32 , 32)
@@ -59,26 +54,36 @@ void PlayerObject::logic(const float elapsedTime)
 	float offset{ elapsedTime };
 
 	// Horizontal movement
+	/*
 	if (newPos.x > offset && newPos.y > -offset && newPos.y < offset)
 		m_animHandler.changeAnimation(PlayerDirection::Right);
 	else if (newPos.x < -offset && newPos.y > -offset && newPos.y < offset)
 		m_animHandler.changeAnimation(PlayerDirection::Left);
+	*/
 
 	// Vertical movement
-	else if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset))
+	std::cout << std::boolalpha << m_sprite.m_hasJumped << '\n';
+	if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset) && m_sprite.m_hasJumped)
 	{
 		if (newPos.y > offset)
 			m_animHandler.changeAnimation(PlayerDirection::DropRight);
 		else
 			m_animHandler.changeAnimation(PlayerDirection::JumpRight);
 	}
-	else if (newPos.x <= -offset && (newPos.y < -offset || newPos.y > offset))
+	else if (newPos.x <= -offset && (newPos.y < -offset || newPos.y > offset) && m_sprite.m_hasJumped)
 	{
 		if (newPos.y > offset)
 			m_animHandler.changeAnimation(PlayerDirection::DropLeft);
 		else
 			m_animHandler.changeAnimation(PlayerDirection::JumpLeft);
 	}
+
+	// Horizontal movement
+	else if (newPos.x > offset)
+		m_animHandler.changeAnimation(PlayerDirection::Right);
+	else if (newPos.x < -offset )
+		m_animHandler.changeAnimation(PlayerDirection::Left);
+
 
 	// No movement
 	else
@@ -161,16 +166,25 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 	if (collisionHandler.distanceTillBottomCollision(getHitbox()) == 0)
 	{
 		m_velocity.y += gravity * tileSize*  elapsedTime;
-		m_hasJumped = true;
+		sf::FloatRect tempRect{ getHitbox() };
+		tempRect.top += 1;
+		if (collisionHandler.distanceTillBottomCollision(tempRect) != 0)
+			m_hasJumped = false;
+		else
+			m_hasJumped = true;
 	}	
+	
+	// If bottom is in block
 	if (m_velocity.y > 0 && collisionHandler.distanceTillBottomCollision(getHitbox()) != 0)
 	{
 		m_sprite.move(0, -collisionHandler.distanceTillBottomCollision(getHitbox()));
 		m_velocity.y = 0;
-		if (!isItemPressed("jump")&& !isItemPressed("moveUp"))
+		if (!isItemPressed("jump") && !isItemPressed("moveUp"))
 			m_canJump = true;
 		m_hasJumped = false;
 	}
+	
+	// If head hits top
 	else if (m_velocity.y < 0 && collisionHandler.distanceTillUpperCollision(getHitbox()) != 0)
 	{
 		m_sprite.move(0, collisionHandler.distanceTillUpperCollision(getHitbox()));

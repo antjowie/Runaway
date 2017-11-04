@@ -9,8 +9,9 @@ void GameMenu::changeLevel(const GameMenu::LevelName level)
 	m_levelId = level;
 
 	clearObject(); // Should delete player
+	delete m_player;
 	m_player = new PlayerObject(true);
-	pushObject(m_player);
+	//pushObject(m_player);
 	delete m_level;
 
 	std::string levelPath("Runaway/data/levels/");
@@ -48,6 +49,7 @@ GameMenu::~GameMenu()
 void GameMenu::input(sf::RenderWindow & window)
 {
 	Menu::input(window);
+	m_player->input(window);
 	sf::Event event;
 
 	while (window.pollEvent(event))
@@ -75,7 +77,6 @@ void GameMenu::input(sf::RenderWindow & window)
 			break;
 		}
 	}
-	if (m_level == nullptr) return;
 }
 
 void GameMenu::update(const float elapsedTime)
@@ -85,6 +86,7 @@ void GameMenu::update(const float elapsedTime)
 
 	// Had to be called after update because this will fix positions when player already has moved
 	m_level->update(elapsedTime);
+	m_player->logic(elapsedTime);
 	
 	sf::Vector2f  offset{ m_player->m_sprite.getMoveDirection() };
 	if (offset.x > 0)
@@ -141,9 +143,10 @@ void GameMenu::update(const float elapsedTime)
 
 void GameMenu::draw(sf::RenderWindow & window)
 {
+	Menu::draw(window);
 	window.setView(m_camera.getView());
 	
 	m_background.draw(window);
 	m_level->draw(window,m_camera);
-	Menu::draw(window);
+	m_player->draw(window);
 }
