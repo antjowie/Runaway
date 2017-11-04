@@ -53,16 +53,16 @@ void GameBackground::update(const float elapsedTime)
 	}
 	else
 	{
-		m_overlayAlpha += 255.f / m_colorChangeRate * elapsedTime;
-		if (m_overlayAlpha  > 0)
-			m_overlayAlpha = 0;
-
 		if (m_deadAlpha == 0)
 		{
-		m_darkAlpha -= 255.f / m_colorChangeRate * elapsedTime;
-		if (m_darkAlpha < 0)
-			m_darkAlpha = 0;
+			m_darkAlpha -= 255.f / m_colorChangeRate * elapsedTime;
+			if (m_darkAlpha < 0)
+				m_darkAlpha = 0;
 		}
+	
+		m_overlayAlpha -= 255.f / m_colorChangeRate * elapsedTime;
+		if (m_overlayAlpha < 0)
+			m_overlayAlpha = 0;
 	}
 
 	tempAlpha = m_darkBackground.getFillColor();
