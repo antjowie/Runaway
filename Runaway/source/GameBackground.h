@@ -7,7 +7,11 @@ private:
 	sf::Sprite m_foreground;
 	sf::RectangleShape m_background;
 	sf::RectangleShape m_deadBackground;
-	float m_alpha{ 0 };
+	sf::RectangleShape m_darkBackground;
+	sf::RectangleShape m_darkOverlay;
+	float m_deadAlpha{ 0 };
+	float m_darkAlpha{ 0 };
+	bool m_inDarkZone{ false };
 
 	sf::Vector2f m_originalPos;
 	sf::Vector2f m_target;
@@ -19,9 +23,10 @@ public:
 
 	void update(const float elapsedTime);
 	void draw(sf::RenderWindow &window);
+	void drawOverlay(sf::RenderWindow & window);
 
-	// 0-255
-	void setAlpha(const sf::Uint8 &alpha = 255);
+	void died();
+	void setDarkZone(const bool isInDarkZone);
 	void setTarget(const sf::Vector2f &target);
 	void init(const sf::Vector2f &size);
 };

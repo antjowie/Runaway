@@ -188,6 +188,7 @@ bool Level::loadTileLayer(std::vector<char> tilemap)
 	// Load other tilemap stuff
 	if (!loadEntities(map)) return false;
 	if (!loadGates(map)) return false;
+	if (!loadDarkZones(map)) return false;
 
 	return true;
 }
@@ -326,6 +327,30 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 	return true;
 }
 
+bool Level::loadDarkZones(const rapidxml::xml_document<>& doc)
+{
+	rapidxml::xml_node<> * area = doc.first_node("map")->first_node();
+	for (;area; area = area->next_sibling())
+		if (std::string(area->name()) == "objectgroup" && std::string(area->first_attribute("name")->value()) == "area")
+			break;
+
+	if (!area) return true;
+
+	for (area = area->first_node("object"); area; area = area->next_sibling())
+	{
+		sf::FloatRect darkzone;
+	
+		converter(darkzone.left, area->first_attribute("x")->value());
+		converter(darkzone.top,	area->first_attribute("y")->value());
+		converter(darkzone.width, area->first_attribute("width")->value());
+		converter(darkzone.height, area->first_attribute("height")->value());
+	
+		m_darkZones.push_back(darkzone);
+	}
+
+	return true;
+}
+
 Level::Level(const std::string &levelPath, const std::string &title, const float cameraSpeed, const std::string tilesetName): 
 	m_title(title), m_levelPath(levelPath), m_cameraSpeed(cameraSpeed), m_tilesetName(tilesetName)
 {
@@ -392,6 +417,15 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
 			if (m_tilemap[i][j]->getType() != TileType::Gate)
 			m_tilemap[i][j]->draw(window);
+
+	for (auto iter : m_darkZones) 
+	{
+		sf::RectangleShape temp;
+		temp.setSize(sf::Vector2f(iter.width, iter.height));
+		temp.setPosition(iter.left, iter.top);
+		temp.setFillColor(sf::Color::Red);
+		window.draw(temp);
+	}
 }
 
 bool Level::inLevelBounds(const sf::Vector2f & point)
@@ -399,8 +433,11 @@ bool Level::inLevelBounds(const sf::Vector2f & point)
 	return point.y > m_levelHeight;
 }
 
-bool Level::inDarkZone(sf::IntRect & hitbox)
+bool Level::inDarkZone(sf::FloatRect hitbox)
 {
+	for (auto iter : m_darkZones)
+		if (iter.intersects(hitbox))
+			return true;
 	return false;
 }
 

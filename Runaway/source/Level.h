@@ -33,7 +33,7 @@ private:
 	std::vector<std::vector<Tile*>> m_background;
 	std::vector<Entity*> m_entityMap;
 	std::vector<Gate> m_gateMap;
-	std::vector<sf::IntRect> m_darkZones;
+	std::vector<sf::FloatRect> m_darkZones;
 	
 	sf::Vector2f m_cameraSize;
 	const std::string m_levelPath;
@@ -58,6 +58,7 @@ private:
 	
 	bool loadEntities(const rapidxml::xml_document<> &doc);
 	bool loadGates(const rapidxml::xml_document<> &xmlDox);
+	bool loadDarkZones(const rapidxml::xml_document<> &doc);
 
 public:
 	Level(const std::string &levelMapPath,const std::string &title, const float cameraSpeed, const std::string tilesetName);
@@ -67,7 +68,7 @@ public:
 	void draw(sf::RenderWindow &window,const Camera &camera);
 
 	bool inLevelBounds(const sf::Vector2f &point);
-	bool inDarkZone(sf::IntRect &hitbox);
+	bool inDarkZone(sf::FloatRect hitbox);
 
 	void toggleGate(const int id);
 	void setSpawn(const sf::Vector2f &pos);

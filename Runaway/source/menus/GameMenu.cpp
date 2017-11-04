@@ -125,6 +125,7 @@ void GameMenu::update(const float elapsedTime)
 	// Update background state
 	m_background.update(elapsedTime);
 	m_background.setTarget(m_camera.getView().getCenter());
+	m_background.setDarkZone(m_level->inDarkZone(m_player->m_sprite.getHitbox()));
 
 	// Change player alive state
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) m_player->m_isDead = true;
@@ -137,7 +138,7 @@ void GameMenu::update(const float elapsedTime)
 		m_player->m_sprite.setPos(m_level->getSpawn());
 		m_player->m_isDead = false;
 
-		m_background.setAlpha();
+		m_background.died();
 	}
 }
 
@@ -149,4 +150,5 @@ void GameMenu::draw(sf::RenderWindow & window)
 	m_background.draw(window);
 	m_level->draw(window,m_camera);
 	m_player->draw(window);
+	m_background.drawOverlay(window);
 }

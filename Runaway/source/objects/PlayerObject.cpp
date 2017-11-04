@@ -53,16 +53,7 @@ void PlayerObject::logic(const float elapsedTime)
 	// Brace for some ugly vector checking for animation
 	float offset{ elapsedTime };
 
-	// Horizontal movement
-	/*
-	if (newPos.x > offset && newPos.y > -offset && newPos.y < offset)
-		m_animHandler.changeAnimation(PlayerDirection::Right);
-	else if (newPos.x < -offset && newPos.y > -offset && newPos.y < offset)
-		m_animHandler.changeAnimation(PlayerDirection::Left);
-	*/
-
 	// Vertical movement
-	std::cout << std::boolalpha << m_sprite.m_hasJumped << '\n';
 	if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset) && m_sprite.m_hasJumped)
 	{
 		if (newPos.y > offset)
