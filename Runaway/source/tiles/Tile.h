@@ -20,7 +20,7 @@ public:
 	Tile(const TileType type, const float x, const float y, const bool isSolid = true);
 	
 	virtual void update();
-	virtual void draw(sf::RenderWindow& window);
+	virtual void draw(sf::RenderWindow& window) const;
 
 	void setSolid(const bool isSolid = true);
 	// 255 = initial brightness, 0 = black

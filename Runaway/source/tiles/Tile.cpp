@@ -14,7 +14,7 @@ void Tile::update()
 {
 }
 
-void Tile::draw(sf::RenderWindow &window)
+void Tile::draw(sf::RenderWindow &window) const
 {
 	window.draw(m_sprite);
 }

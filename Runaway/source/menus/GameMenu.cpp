@@ -8,11 +8,12 @@ void GameMenu::changeLevel(const GameMenu::LevelName level)
 	if (m_levelId == level) return;
 	m_levelId = level;
 
-	clearObject(); // Should delete player
+	clearObject();
 	delete m_player;
-	m_player = new PlayerObject(true);
-	//pushObject(m_player);
 	delete m_level;
+
+	m_player = new PlayerObject(true);
+	m_lightObjects.addShape(&m_player->m_sprite.getSprite());
 
 	std::string levelPath("Runaway/data/levels/");
 	switch (m_levelId)
@@ -30,7 +31,7 @@ void GameMenu::changeLevel(const GameMenu::LevelName level)
 		break;
 	}
 	
-	assert(m_level->loadLevel(m_camera,m_player,m_background) && "Load level failed");
+	assert(m_level->loadLevel(m_camera,m_player,m_background,m_lightObjects) && "Load level failed");
 	changeTitle("Runaway - " + m_level->getTitle());
 }
 
@@ -151,4 +152,5 @@ void GameMenu::draw(sf::RenderWindow & window)
 	m_level->draw(window,m_camera);
 	m_player->draw(window);
 	m_background.drawOverlay(window);
+	m_lightObjects.draw(window);
 }

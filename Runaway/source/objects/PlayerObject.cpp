@@ -75,7 +75,6 @@ void PlayerObject::logic(const float elapsedTime)
 	else if (newPos.x < -offset )
 		m_animHandler.changeAnimation(PlayerDirection::Left);
 
-
 	// No movement
 	else
 		m_animHandler.changeAnimation(PlayerDirection::Rest);
@@ -328,4 +327,9 @@ const sf::Vector2i Sprite::getMoveDirection() const
 	if (m_isCrouching)
 		moveDirection.y = -1;
 	return moveDirection;
+}
+
+const sf::Sprite & Sprite::getSprite() const
+{
+	return m_sprite;
 }

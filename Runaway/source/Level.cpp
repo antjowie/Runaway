@@ -91,6 +91,15 @@ bool Level::initBackground(GameBackground & background)
 	return true;
 }
 
+bool Level::initLightObject(LightObject & lightObject)
+{
+	for (const auto &i : m_tilemap)
+		for (const auto &j : i)
+			if (j->getType() == TileType::Light || j->getType() == TileType::Gate)
+				lightObject.addTile(j);
+	return true;
+}
+
 void Level::loadTilemap(std::vector<std::vector<Tile*>>& tilemap, const std::string tilemapString)
 {
 	// Load the map into the vector
@@ -372,12 +381,13 @@ Level::~Level()
 	m_entityMap.clear();
 }
 
-bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background)
+bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background, LightObject &lightObject)
 {
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
 	if (!initBackground(background)) return false;
+	if (!initLightObject(lightObject)) return false;
 	return true;
 }
 

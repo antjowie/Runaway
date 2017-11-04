@@ -11,6 +11,7 @@ private:
 	sf::RectangleShape m_darkOverlay;
 	float m_deadAlpha{ 0 };
 	float m_darkAlpha{ 0 };
+	float m_overlayAlpha{ 0 };
 	bool m_inDarkZone{ false };
 
 	sf::Vector2f m_originalPos;

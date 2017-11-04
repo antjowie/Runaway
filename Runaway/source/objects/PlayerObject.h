@@ -41,6 +41,7 @@ public:
 	const sf::IntRect getTextureRect() const;
 	const sf::Vector2f getPos() const;
 	const sf::Vector2i getMoveDirection() const;
+	const sf::Sprite &getSprite() const; // For the ligth object class
 };
 
 class PlayerObject :
