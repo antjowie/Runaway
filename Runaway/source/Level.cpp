@@ -1,5 +1,4 @@
 #include "Level.h"
-#include "rapidxml.hpp"
 #include "Checkpoint.h"
 #include "Switch.h"
 #include "DataManager.h"
@@ -58,10 +57,8 @@ bool Level::initMap()
 	buffer.push_back('\0');
 	file.close();
 
-	// Try to parse the buffer
+	// Load all files
 	if (!loadTileLayer(buffer)) return false;
-	if (!loadEntities(buffer)) return false;
-	if (!loadGates(buffer))return false;
 	return true;
 }
 
@@ -129,7 +126,6 @@ bool Level::loadTileLayer(std::vector<char> tilemap)
 		return false;
 	}
 
-	
 	// Initiate iterator to the xml file
 	node = map.first_node("map");
 	converter(m_tileWidth, node->first_attribute("tilewidth")->value());
@@ -189,21 +185,16 @@ bool Level::loadTileLayer(std::vector<char> tilemap)
 	m_levelWidth = m_tilemapWidth * m_tileWidth;
 	m_levelHeight = m_tilemapHeight * m_tileHeight;
 
+	// Load other tilemap stuff
+	if (!loadEntities(map)) return false;
+	if (!loadGates(map)) return false;
+
 	return true;
 }
 
-bool Level::loadEntities(std::vector<char> tilemap)
+bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 {
-	rapidxml::xml_document<> doc;
 	rapidxml::xml_node<> *node;
-
-	try {
-		doc.parse<0>(&tilemap[0]);
-	}
-	catch (rapidxml::parse_error)
-	{
-		return false;
-	}
 
 	// Access root
 	node = doc.first_node("map")->first_node("objectgroup");
@@ -253,7 +244,7 @@ bool Level::loadEntities(std::vector<char> tilemap)
 	return true;
 }
 
-bool Level::loadGates(std::vector<char> tilemap)
+bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 {
 	struct GateNode
 	{
@@ -262,21 +253,11 @@ bool Level::loadGates(std::vector<char> tilemap)
 		int m_id;
 	};
 
-	rapidxml::xml_document<> xmlDoc;
 	rapidxml::xml_node<> *xmlNode;
 	std::vector<GateNode> gateNodes;
 
-	try
-	{
-		xmlDoc.parse<0>(&tilemap[0]);
-	}
-	catch (const rapidxml::parse_error)
-	{
-		return false;
-	}
-
 	// Find objectgroup
-	xmlNode=  xmlDoc.first_node("map")->first_node("objectgroup");
+	xmlNode = xmlDoc.first_node("map")->first_node("objectgroup");
 	if (!xmlNode) return true;
 
 	// Iterate till objectgroup gateNetwork
@@ -416,6 +397,11 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 bool Level::inLevelBounds(const sf::Vector2f & point)
 {
 	return point.y > m_levelHeight;
+}
+
+bool Level::inDarkZone(sf::IntRect & hitbox)
+{
+	return false;
 }
 
 void Level::toggleGate(const int id)

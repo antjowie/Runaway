@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "PlayerObject.h"
 #include "Entity.h"
+#include "rapidxml.hpp"
 #include "GameBackground.h"
 
 #include <SFML\Graphics.hpp>
@@ -32,6 +33,7 @@ private:
 	std::vector<std::vector<Tile*>> m_background;
 	std::vector<Entity*> m_entityMap;
 	std::vector<Gate> m_gateMap;
+	std::vector<sf::IntRect> m_darkZones;
 	
 	sf::Vector2f m_cameraSize;
 	const std::string m_levelPath;
@@ -50,10 +52,12 @@ private:
 	bool initPlayer(PlayerObject *const player);
 	bool initBackground(GameBackground &background);
 
-	void loadTilemap(std::vector<std::vector<Tile*>> &tilemap, const std::string tilemapString);
+	
 	bool loadTileLayer(std::vector<char> tilemap);
-	bool loadEntities(std::vector<char> tilemap);
-	bool loadGates(std::vector<char> tilemap);
+	void loadTilemap(std::vector<std::vector<Tile*>> &tilemap, const std::string tilemapString);
+	
+	bool loadEntities(const rapidxml::xml_document<> &doc);
+	bool loadGates(const rapidxml::xml_document<> &xmlDox);
 
 public:
 	Level(const std::string &levelMapPath,const std::string &title, const float cameraSpeed, const std::string tilesetName);
@@ -63,6 +67,7 @@ public:
 	void draw(sf::RenderWindow &window,const Camera &camera);
 
 	bool inLevelBounds(const sf::Vector2f &point);
+	bool inDarkZone(sf::IntRect &hitbox);
 
 	void toggleGate(const int id);
 	void setSpawn(const sf::Vector2f &pos);
