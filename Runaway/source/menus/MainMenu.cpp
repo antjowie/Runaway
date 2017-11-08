@@ -26,15 +26,15 @@ MainMenu::MainMenu(MenuStack *const menuStack) :
 	{
 		const int offset{ i++ * 100 };
 		
-		iter->m_text.setOriginToLeftMiddle();
-		iter->m_text.setText(sf::Vector2f(100, 430 + static_cast<float>(offset)));
-		iter->m_textButtonBody.setBody(sf::IntRect(0, 400 + offset, 1280, 60));
+		iter->setOriginToLeftMiddle();
+		iter->setPos(sf::Vector2f(100, 430 + static_cast<float>(offset)));
+		iter->setBody(sf::IntRect(0, 400 + offset, 1280, 60));
 	}
 
 	// Title
 	TextObject *title = new TextObject("RUNAWAY",true);
-	title->m_text.setText(sf::Vector2f(100, 175));
-	title->m_text.setTextSize(100);
+	title->setPos(sf::Vector2f(100, 175));
+	title->setTextSize(100);
 	tempVec.push_back(title);
 
 	pushObject(tempVec);
@@ -52,7 +52,7 @@ void MainMenu::input(sf::RenderWindow & window)
 {
 	// Update objects
 	Menu::input(window);
-	for (auto iter : m_buttons)
+	for (const auto &iter : m_buttons)
 		if (iter->isValid()) iter->input(window);
 
 	// Run standard event loop
@@ -65,7 +65,7 @@ void MainMenu::input(sf::RenderWindow & window)
 		case sf::Event::MouseButtonPressed:
 			for (auto iter : m_buttons)
 			{
-				switch (iter->m_textButtonBody.getFunction())
+				switch (iter->getFunction())
 				{
 				case Function::Play:
 					m_menuStack->push(new GameMenu(m_menuStack));
@@ -99,7 +99,7 @@ void MainMenu::input(sf::RenderWindow & window)
 void MainMenu::update(const float elapsedTime)
 {
 	Menu::update(elapsedTime);
-	for (auto iter : m_buttons)
+	for (const auto &iter : m_buttons)
 		if (iter->isValid()) iter->logic(elapsedTime);
 }
 
@@ -107,6 +107,7 @@ void MainMenu::draw(sf::RenderWindow & window)
 {
 	window.setView(window.getDefaultView()); // If returning from the gameMenu, restores camera positions
 	Menu::draw(window);
-	for (auto iter : m_buttons)
-		if (iter->isValid()) iter->draw(window);
+	for (const auto &iter : m_buttons)
+		if (iter->isValid())
+			window.draw(*iter);
 }

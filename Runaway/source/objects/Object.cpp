@@ -5,6 +5,14 @@ Object::Object(bool isValid):
 {
 }
 
+void Object::logic(const float elapsedTime)
+{
+}
+
+void Object::input(sf::RenderWindow & window)
+{
+}
+
 bool const Object::isValid() const
 {
 	return m_isValid;

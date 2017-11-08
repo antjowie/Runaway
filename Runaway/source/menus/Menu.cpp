@@ -19,7 +19,7 @@ Menu::~Menu()
 
 void Menu::input(sf::RenderWindow & window)
 {
-	for (auto iter : m_objects)
+	for (const auto &iter : m_objects)
 	{
 		if (iter->isValid())
 		{
@@ -30,7 +30,7 @@ void Menu::input(sf::RenderWindow & window)
 
 void Menu::update(const float elapsedTime)
 {
-	for (auto iter : m_objects)
+	for (const auto &iter : m_objects)
 	{
 		if (iter->isValid()) 
 		{
@@ -41,11 +41,11 @@ void Menu::update(const float elapsedTime)
 
 void Menu::draw(sf::RenderWindow & window)
 {
-	for (auto iter : m_objects)
+	for (const auto &iter : m_objects)
 	{
 		if (iter->isValid()) 
 		{
-			iter->draw(window);
+			window.draw(*iter);
 		}
 	}
 

@@ -11,23 +11,9 @@ class BackgroundObject :
 	public Object
 {
 private:
-	class Background
-	{
-	private:
-		sf::Sprite m_background;
-
-	public:
-		Background(const std::string& texture);
-
-		void _draw(sf::RenderWindow &window);
-	};
+	sf::Sprite m_background;
+	void virtual draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 public:
-	Background m_background;
-
 	BackgroundObject(const std::string &texture, bool isValid = false);
-
-	virtual void draw(sf::RenderWindow &window);
-	virtual void logic(const float elapsedTime);
-	virtual void input(sf::RenderWindow& window);
 };

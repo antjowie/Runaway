@@ -102,9 +102,6 @@
     <ClCompile Include="Runaway\source\GameBackground.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Runaway\source\LightObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Runaway\source\Camera.h">
@@ -198,9 +195,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Runaway\source\GameBackground.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Runaway\source\LightObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

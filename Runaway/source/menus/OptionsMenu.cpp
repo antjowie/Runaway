@@ -14,14 +14,14 @@ OptionsMenu::OptionsMenu(MenuStack * const menuStack):
 	tempVec.push_back(new BackgroundObject("mainMenuBackground", true));
 
 	TextObject *tempText = new TextObject("THE OPTION MENU IS WORK IN PROGRESS", true);
-	tempText->m_text.setText(sf::Vector2f(180, 300));
+	tempText->setPos(sf::Vector2f(180, 300));
 	tempVec.push_back(tempText);
 
 	// Initialize buttons
 	m_buttons.push_back(new TextButtonObject("BACK", Function::Back, true));
-	m_buttons[0]->m_text.setOriginToLeftMiddle();
-	m_buttons[0]->m_text.setText(sf::Vector2f(100, 630));
-	m_buttons[0]->m_textButtonBody.setBody(sf::IntRect(0, 600, 1280, 60));
+	m_buttons[0]->setOriginToLeftMiddle();
+	m_buttons[0]->setPos(sf::Vector2f(100, 630));
+	m_buttons[0]->setBody(sf::IntRect(0, 600, 1280, 60));
 
 	pushObject(tempVec);
 }
@@ -52,7 +52,7 @@ void OptionsMenu::input(sf::RenderWindow & window)
 			case sf::Event::MouseButtonPressed:
 				for (auto iter : m_buttons)
 				{
-					switch (iter->m_textButtonBody.getFunction())
+					switch (iter->getFunction())
 					{
 					case Function::Back:
 						m_isPop = true;
@@ -74,6 +74,7 @@ void OptionsMenu::update(const float elapsedTime)
 void OptionsMenu::draw(sf::RenderWindow & window)
 {
 	Menu::draw(window);
-	for (auto iter : m_buttons)
-		if (iter->isValid()) iter->draw(window);
+	for (const auto &iter : m_buttons)
+		if (iter->isValid()) 
+			window.draw(*iter);
 }

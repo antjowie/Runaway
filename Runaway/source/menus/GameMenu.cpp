@@ -13,7 +13,6 @@ void GameMenu::changeLevel(const GameMenu::LevelName level)
 	delete m_level;
 
 	m_player = new PlayerObject(true);
-	m_lightObjects.addShape(&m_player->m_sprite.getSprite());
 
 	std::string levelPath("Runaway/data/levels/");
 	switch (m_levelId)
@@ -31,7 +30,7 @@ void GameMenu::changeLevel(const GameMenu::LevelName level)
 		break;
 	}
 	
-	assert(m_level->loadLevel(m_camera,m_player,m_background,m_lightObjects) && "Load level failed");
+	assert(m_level->loadLevel(m_camera,m_player,m_background) && "Load level failed");
 	changeTitle("Runaway - " + m_level->getTitle());
 }
 
@@ -39,6 +38,8 @@ GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
 	changeLevel(LevelName::That);
+	m_darkOverlayTex.create(200 * 32, 50 * 32);
+	m_darkOverlay.setPosition(0, 0);
 }
 
 GameMenu::~GameMenu()
@@ -148,9 +149,19 @@ void GameMenu::draw(sf::RenderWindow & window)
 	Menu::draw(window);
 	window.setView(m_camera.getView());
 	
-	m_background.draw(window);
+	window.draw(m_background);
+
+	/*
+	m_darkOverlayTex.clear(sf::Color::Transparent);
+	//m_darkOverlayTex.draw(m_background.getDarkOverlay());
+	m_level->draw(m_darkOverlayTex,m_camera);
+	m_darkOverlayTex.display();
+	m_darkOverlay.setTexture(m_darkOverlayTex.getTexture());
+	*/
 	m_level->draw(window,m_camera);
-	m_player->draw(window);
-	m_background.drawOverlay(window);
-	m_lightObjects.draw(window);
+	
+
+	//window.draw(m_darkOverlay,sf::BlendMultiply);
+	window.draw(*m_player);
+	window.draw(m_background.getDarkOverlay());
 }

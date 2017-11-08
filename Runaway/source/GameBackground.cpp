@@ -1,6 +1,15 @@
 #include "GameBackground.h"
 #include "DataManager.h"
 #include <iostream>
+
+void GameBackground::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(m_background);
+	target.draw(m_darkBackground);
+	target.draw(m_deadBackground);
+	target.draw(m_foreground);
+}
+
 GameBackground::GameBackground(const std::string &levelPath, const float colorChangeRate):
 	m_colorChangeRate(colorChangeRate)
 {
@@ -74,19 +83,6 @@ void GameBackground::update(const float elapsedTime)
 	m_darkOverlay.setFillColor(tempAlpha);
 }
 
-void GameBackground::draw(sf::RenderWindow & window)
-{
-	window.draw(m_background);
-	window.draw(m_darkBackground);
-	window.draw(m_deadBackground);
-	window.draw(m_foreground);
-}
-
-void GameBackground::drawOverlay(sf::RenderWindow & window)
-{
-	window.draw(m_darkOverlay);
-}
-
 void GameBackground::died()
 {
 	m_deadAlpha = 255;
@@ -117,4 +113,9 @@ void GameBackground::init(const sf::Vector2f & size)
 	m_deadBackground.setSize(size);
 	m_darkBackground.setSize(size);
 	m_darkOverlay.setSize(size);
+}
+
+const sf::RectangleShape & GameBackground::getDarkOverlay() const
+{
+	return m_darkOverlay;
 }

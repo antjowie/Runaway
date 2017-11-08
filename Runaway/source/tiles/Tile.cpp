@@ -3,6 +3,11 @@
 #include "DataManager.h"
 #include <cassert>
 
+void Tile::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(m_sprite, states);
+}
+
 Tile::Tile(const TileType type, const float x, const float y, const bool isSolid):
 	m_TileType(type), m_solid(isSolid)
 {
@@ -12,11 +17,6 @@ Tile::Tile(const TileType type, const float x, const float y, const bool isSolid
 
 void Tile::update()
 {
-}
-
-void Tile::draw(sf::RenderWindow &window) const
-{
-	window.draw(m_sprite);
 }
 
 void Tile::setSolid(const bool isSolid)

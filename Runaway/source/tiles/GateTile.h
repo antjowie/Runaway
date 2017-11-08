@@ -7,7 +7,7 @@ class GateTile :
 {
 private:
 	AnimationHandler m_animHandler;
-	int m_textureRect{ 0 };
+	int m_textureType{ 0 };
 
 public:
 	bool m_isOpen{ false };
@@ -15,10 +15,8 @@ public:
 	GateTile(const float x, const float y);
 	
 	void move(const float x, const float y);
-	void setTextureRect(const int textureRect);
+	void setTextureType(const unsigned int textureType);
 	void setSolid(const bool isSolid);
 
 	virtual void update(const float elapsedTime) final;
-	virtual void draw(sf::RenderWindow &window) final;
 };
-

@@ -19,9 +19,11 @@ union EntityAction{
 	EntityAction();
 };
 
-class Entity :
-	public Object
+class Entity : public sf::Drawable
 {
+private:
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states)const override;
+	
 protected:
 	EntityType m_type;
 	EntityAction m_action;
@@ -32,12 +34,10 @@ public:
 
 	Entity(const EntityType type, const EntityAction action, const sf::Vector2f &pos);
 
-	virtual void logic(const float elapsedTime) override =0;
-	virtual void input(sf::RenderWindow& window) override =0;
-	virtual void draw(sf::RenderWindow &window)	override =0;
+	virtual void logic(const float elapsedTime);
+	virtual void input(sf::RenderWindow& window);
 
 	virtual const EntityAction &getAction();
-	//Entity * getEntity();
 	const sf::FloatRect getHitbox();
 	const EntityType &getType();
 };

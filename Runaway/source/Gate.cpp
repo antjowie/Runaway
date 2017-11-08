@@ -39,8 +39,8 @@ void Gate::updateTextureRect()
 {
 	unsigned int middle{ m_tiles.size() / 2 -1};
 
-	m_tiles[middle++]->setTextureRect(2);
-	m_tiles[middle]->setTextureRect(1);
+	m_tiles[middle++]->setTextureType(2);
+	m_tiles[middle]->setTextureType(1);
 
 }
 

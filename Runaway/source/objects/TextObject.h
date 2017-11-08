@@ -10,30 +10,20 @@ class TextObject :
 	public Object
 {
 private:
-	class Text {
-	private:
-		sf::Text m_text;
+	sf::Text m_text;
 
-
-	public:
-		void _draw(sf::RenderWindow &window);
-		
-		void setFont(const sf::Font &font);
-		void setText(const sf::Vector2f &pos);
-		void setTextSize(const unsigned int newTextSize);
-		void setString(const std::string &text);
-		void setOriginToLeftMiddle();	// Odd name but sets the origin to the middle of the left edge
-
-		sf::Vector2f const &getText() const;
-	};
+protected:
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 public:
-	Text m_text;
-
 	TextObject(const bool isValid = false);
-	TextObject(const std::string &text, const bool isValid = false);
+	TextObject(const std::string &string, const bool isValid = false);
 
-	virtual void draw(sf::RenderWindow &window);
-	virtual void logic(const float elapsedTime);
-	virtual void input(sf::RenderWindow& window);
+	void setFont(const sf::Font &font);
+	void setPos(const sf::Vector2f &pos);
+	void setTextSize(const unsigned int newTextSize);
+	void setString(const std::string &text);
+	void setOriginToLeftMiddle();	// Odd name but sets the origin to the middle of the left edge
+
+	sf::Vector2f const &getPos() const;
 };

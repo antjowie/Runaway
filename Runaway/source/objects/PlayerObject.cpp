@@ -78,6 +78,11 @@ void PlayerObject::logic(const float elapsedTime)
 	// No movement
 	else
 		m_animHandler.changeAnimation(PlayerDirection::Rest);
+
+	// Update animation
+	m_sprite.setTextureRect(m_animHandler.getFrame());
+	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4,
+		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width - 32 + 14, m_sprite.getTextureRect().height));
 }
 
 void PlayerObject::input(sf::RenderWindow &window)
@@ -86,12 +91,10 @@ void PlayerObject::input(sf::RenderWindow &window)
 	m_sprite.input();
 }
 
-void PlayerObject::draw(sf::RenderWindow &window)
+void PlayerObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	m_sprite.setTextureRect(m_animHandler.getFrame()); // Should this be handled in logic or draw?
-	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4,
-		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width -32+14, m_sprite.getTextureRect().height));
-	m_sprite.draw(window);
+	states.blendMode == sf::BlendNone; // Overwrites everything
+	target.draw(m_sprite,states);
 }
 
 Sprite::Sprite():
@@ -254,9 +257,9 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 		m_dashCooldown = 0;
 }
 
-void Sprite::draw(sf::RenderWindow & window)
+void Sprite::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-	window.draw(m_sprite);
+	target.draw(m_sprite, states);
 }
 
 void Sprite::debugMove(const float elapsedTime)
@@ -327,9 +330,4 @@ const sf::Vector2i Sprite::getMoveDirection() const
 	if (m_isCrouching)
 		moveDirection.y = -1;
 	return moveDirection;
-}
-
-const sf::Sprite & Sprite::getSprite() const
-{
-	return m_sprite;
 }

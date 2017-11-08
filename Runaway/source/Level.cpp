@@ -91,15 +91,6 @@ bool Level::initBackground(GameBackground & background)
 	return true;
 }
 
-bool Level::initLightObject(LightObject & lightObject)
-{
-	for (const auto &i : m_tilemap)
-		for (const auto &j : i)
-			if (j->getType() == TileType::Light || j->getType() == TileType::Gate)
-				lightObject.addTile(j);
-	return true;
-}
-
 void Level::loadTilemap(std::vector<std::vector<Tile*>>& tilemap, const std::string tilemapString)
 {
 	// Load the map into the vector
@@ -381,13 +372,12 @@ Level::~Level()
 	m_entityMap.clear();
 }
 
-bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background, LightObject &lightObject)
+bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background)
 {
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
 	if (!initBackground(background)) return false;
-	if (!initLightObject(lightObject)) return false;
 	return true;
 }
 
@@ -403,30 +393,24 @@ void Level::update(const float elapsedTime)
 	}
 }
 
-void Level::draw(sf::RenderWindow & window, const Camera &camera)
+void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 {
 	sf::IntRect tileBounds = camera.getTileBounds(m_tileWidth, m_tileHeight);
-
-	// This has to be double because else background will overwrite tile
-	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
-		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
-			m_background[i][j]->draw(window);
+	
 
 	// So that gate wont be rendered above tiles
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
 			if(m_tilemap[i][j]->getType() == TileType::Gate)
-				m_tilemap[i][j]->draw(window);
-
+				target.draw(*m_tilemap[i][j]);
+	
 	for (const auto &iter : m_entityMap)
-	{
-		iter->draw(window);
-	}
+		target.draw(*iter);
 
 	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
 		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
 			if (m_tilemap[i][j]->getType() != TileType::Gate)
-			m_tilemap[i][j]->draw(window);
+				target.draw(*m_tilemap[i][j]);
 
 	for (auto iter : m_darkZones) 
 	{
@@ -434,7 +418,7 @@ void Level::draw(sf::RenderWindow & window, const Camera &camera)
 		temp.setSize(sf::Vector2f(iter.width, iter.height));
 		temp.setPosition(iter.left, iter.top);
 		temp.setFillColor(sf::Color::Red);
-		window.draw(temp);
+		target.draw(temp,sf::BlendMultiply);
 	}
 }
 

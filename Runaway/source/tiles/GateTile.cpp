@@ -17,9 +17,9 @@ void GateTile::move(const float x, const float y)
 	m_sprite.move(x, y);
 }
 
-void GateTile::setTextureRect(const int textureRect)
+void GateTile::setTextureType(const unsigned int textureType)
 {
-	m_textureRect = textureRect;
+	m_textureType = textureType;
 }
 
 void GateTile::setSolid(const bool isSolid)
@@ -37,15 +37,11 @@ void GateTile::update(const float elapsedTime)
 		m_animHandler.changeAnimation(0);
 	else
 		m_animHandler.changeAnimation(1);
-}
 
-void GateTile::draw(sf::RenderWindow & window)
-{
+	
 	sf::IntRect correct{ m_animHandler.getFrame() };
 	if (m_isOpen)	// Not sure but apperantly a bug when scaling the game
 		correct.top += 1;
-	correct.left += correct.width * m_textureRect;
+	correct.left += correct.width * m_textureType;
 	m_sprite.setTextureRect(correct);
-
-	window.draw(m_sprite);
 }

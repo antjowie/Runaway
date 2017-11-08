@@ -14,7 +14,6 @@
 #include "Entity.h"
 #include "rapidxml.hpp"
 #include "GameBackground.h"
-#include "LightObject.h"
 
 #include <SFML\Graphics.hpp>
 #include <vector>
@@ -52,7 +51,6 @@ private:
 	bool initCamera(Camera &camera);
 	bool initPlayer(PlayerObject *const player);
 	bool initBackground(GameBackground &background);
-	bool initLightObject(LightObject &lightObject);
 	
 	bool loadTileLayer(std::vector<char> tilemap);
 	void loadTilemap(std::vector<std::vector<Tile*>> &tilemap, const std::string tilemapString);
@@ -66,7 +64,7 @@ public:
 	~Level();
 
 	void update(const float elapsedTime);
-	void draw(sf::RenderWindow &window,const Camera &camera);
+	void draw(sf::RenderTarget &window,const Camera &camera) const;
 
 	bool inLevelBounds(const sf::Vector2f &point);
 	bool inDarkZone(sf::FloatRect hitbox);
@@ -74,7 +72,7 @@ public:
 	void toggleGate(const int id);
 	void setSpawn(const sf::Vector2f &pos);
 	
-	bool loadLevel(Camera &camera, PlayerObject * const player,GameBackground &background, LightObject &lightObject); // This will load all the files for this level
+	bool loadLevel(Camera &camera, PlayerObject * const player,GameBackground &background); // This will load all the files for this level
 	
 	const sf::Vector2f getSpawn() const;
 	const std::string &getTitle() const;

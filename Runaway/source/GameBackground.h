@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 
-class GameBackground
+class GameBackground : public sf::Drawable
 {
 private:
 	sf::Sprite m_foreground;
@@ -18,16 +18,18 @@ private:
 	sf::Vector2f m_target;
 	float m_colorChangeRate;
 
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
+
 public:
 	GameBackground(const std::string &levelPath, const float colorChangeRate = 1.f);
 	GameBackground();
 
 	void update(const float elapsedTime);
-	void draw(sf::RenderWindow &window);
-	void drawOverlay(sf::RenderWindow & window);
 
 	void died();
 	void setDarkZone(const bool isInDarkZone);
 	void setTarget(const sf::Vector2f &target);
 	void init(const sf::Vector2f &size);
+
+	const sf::RectangleShape &getDarkOverlay() const;
 };

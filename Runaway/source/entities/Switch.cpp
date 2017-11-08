@@ -21,18 +21,16 @@ void Switch::logic(const float elapsedTime)
 		m_animHandler.changeAnimation(0);
 	else
 		m_animHandler.changeAnimation(1);
-}
 
-void Switch::input(sf::RenderWindow & window)
-{
-}
-
-void Switch::draw(sf::RenderWindow & window)
-{
+	// Fix texture positioning (not tuned yet)
 	sf::IntRect corrected{ m_animHandler.getFrame() };
 
 	corrected.left += 2;
 	corrected.width -= 4;
 	m_sprite.setTextureRect(corrected);
-	window.draw(m_sprite);
+}
+
+void Switch::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+	target.draw(m_sprite,states);
 }

@@ -23,17 +23,10 @@ void Checkpoint::logic(const float elapsedTime)
 {
 	if(m_isActive)
 	m_animHandler.update(elapsedTime);
-}
 
-void Checkpoint::input(sf::RenderWindow & window)
-{
-}
 
-void Checkpoint::draw(sf::RenderWindow & window)
-{
-	sf::IntRect correctedHitbox{ m_animHandler.getFrame()};
-	
 	// These are directly taken from the file
+	sf::IntRect correctedHitbox{ m_animHandler.getFrame() };
 
 	correctedHitbox.left += 9;
 	correctedHitbox.top = 3;
@@ -41,6 +34,9 @@ void Checkpoint::draw(sf::RenderWindow & window)
 	correctedHitbox.height = 26;
 
 	m_sprite.setTextureRect(correctedHitbox);
-	
-	window.draw(m_sprite);
+}
+
+void Checkpoint::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+	target.draw(m_sprite,states);
 }

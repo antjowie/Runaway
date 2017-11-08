@@ -1,6 +1,11 @@
 #include "TextObject.h"
 #include "DataManager.h"
 
+void TextObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(m_text,states);
+}
+
 TextObject::TextObject(const bool isValid):
 	Object(isValid)
 {
@@ -13,50 +18,32 @@ TextObject::TextObject(const std::string &text, const bool isValid) :
 	m_text.setString(text);
 }
 
-void TextObject::draw(sf::RenderWindow & window)
-{
-	m_text._draw(window);
-}
-
-void TextObject::logic(const float elapsedTime)
-{
-}
-
-void TextObject::input(sf::RenderWindow & window)
-{
-}
-
-void TextObject::Text::setFont(const sf::Font & font)
+void TextObject::setFont(const sf::Font & font)
 {
 	m_text.setFont(font);
 }
 
-void TextObject::Text::setText(const sf::Vector2f &pos)
+void TextObject::setPos(const sf::Vector2f &pos)
 {
 	m_text.setPosition(pos);
 }
 
-void TextObject::Text::setTextSize(const unsigned int newTextSize)
+void TextObject::setTextSize(const unsigned int newTextSize)
 {
 	m_text.setCharacterSize(newTextSize);
 }
 
-sf::Vector2f const &TextObject::Text::getText() const
+sf::Vector2f const &TextObject::getPos() const
 {
 	return m_text.getPosition();
 }
 
-void TextObject::Text::_draw(sf::RenderWindow & window)
-{
-	window.draw(m_text);
-}
-
-void TextObject::Text::setString(const std::string &text)
+void TextObject::setString(const std::string &text)
 {
 	m_text.setString(text);
 }
 
-void TextObject::Text::setOriginToLeftMiddle()
+void TextObject::setOriginToLeftMiddle()
 {
 	m_text.setOrigin(0, m_text.getLocalBounds().top + m_text.getLocalBounds().height / 2);
 }

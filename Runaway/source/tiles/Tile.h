@@ -7,10 +7,11 @@
 
 enum class TileType{ Air, Block, Top, Light, Gate, Invalid}; // Has to be same order as in Tiled
 
-class Tile
+class Tile : public sf::Drawable
 {
 private:
 	TileType m_TileType;
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 protected:
 	bool m_solid = true;
@@ -20,7 +21,6 @@ public:
 	Tile(const TileType type, const float x, const float y, const bool isSolid = true);
 	
 	virtual void update();
-	virtual void draw(sf::RenderWindow& window) const;
 
 	void setSolid(const bool isSolid = true);
 	// 255 = initial brightness, 0 = black

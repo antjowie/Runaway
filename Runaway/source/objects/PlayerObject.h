@@ -4,7 +4,7 @@
 #include "CollisionHandler.h"
 #include "Tile.h"
 
-class Sprite
+class Sprite: public sf::Drawable
 {
 private:
 	sf::Sprite m_sprite;
@@ -19,6 +19,7 @@ private:
 	bool m_canJump{ false };
 
 	const bool isItemPressed(const std::string string) const;
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 
 public:
 	bool m_hasJumped{ true };	// This value is public for the animation class
@@ -29,7 +30,6 @@ public:
 
 	void input();
 	void update(const float elapsedTime, CollisionHandler &collisionHandler);
-	void draw(sf::RenderWindow &window);
 
 	void debugMove(const float elapsedTime);
 
@@ -41,7 +41,6 @@ public:
 	const sf::IntRect getTextureRect() const;
 	const sf::Vector2f getPos() const;
 	const sf::Vector2i getMoveDirection() const;
-	const sf::Sprite &getSprite() const; // For the ligth object class
 };
 
 class PlayerObject :
@@ -50,6 +49,7 @@ class PlayerObject :
 private:
 	enum PlayerDirection{Rest,JumpRight,DropRight,JumpLeft,DropLeft,Right,Left};
 	AnimationHandler m_animHandler;
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 
 public:
 	bool m_isDead{ false };
@@ -60,5 +60,4 @@ public:
 
 	virtual void logic(const float elapsedTime);
 	virtual void input(sf::RenderWindow &window);
-	virtual void draw(sf::RenderWindow &window);
 };
