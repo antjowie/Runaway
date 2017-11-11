@@ -36,7 +36,6 @@ int main()
 		// Failsave
 		if (menuStack.peek() == nullptr ) continue;
 
-
 		// Logic
 		menuStack.peek()->input(window);
 		menuStack.peek()->update(elapsedTime);

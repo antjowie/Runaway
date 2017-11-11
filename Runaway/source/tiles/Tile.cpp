@@ -8,9 +8,12 @@ void Tile::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	target.draw(m_sprite, states);
 }
 
-Tile::Tile(const TileType type, const float x, const float y, const bool isSolid):
-	m_TileType(type), m_solid(isSolid)
+Tile::Tile(const TileType type, const float x, const float y, const float lightRadius, const bool isSolid)
 {
+	m_meta.m_tileType = type;
+	m_meta.m_solid = isSolid;
+	m_meta.m_light = lightRadius;
+
 	m_sprite.setTexture(DataManager::getInstance().getTexture("tileset"));
 	m_sprite.setPosition(x, y);
 }
@@ -21,7 +24,7 @@ void Tile::update()
 
 void Tile::setSolid(const bool isSolid)
 {
-	m_solid = isSolid;
+	m_meta.m_solid = isSolid;
 }
 
 void Tile::setBrightness(const sf::Uint8 & brightness)
@@ -34,14 +37,9 @@ const sf::FloatRect Tile::getHitbox() const
 	return m_sprite.getGlobalBounds();
 }
 
-const bool Tile::isSolid() const
+const TileMeta & Tile::getTileMeta() const
 {
-	return m_solid;
-}
-
-const TileType Tile::getType() const
-{
-	return m_TileType;
+	return m_meta;
 }
 
 Tile * const getTile(const int id, const float x, const float y)

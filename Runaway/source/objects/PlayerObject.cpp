@@ -38,12 +38,36 @@ void PlayerObject::logic(const float elapsedTime)
 	m_animHandler.update(elapsedTime);
 	sf::Vector2f oldPos{ m_sprite.getPos() };
 
+	// Some weird bug going on
 	// If player decides to stand till on a gate
 	if (m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) != 0)
 	{
-		m_sprite.setPos(sf::Vector2f(m_sprite.getPos().x,m_sprite.getPos().y-m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox())));
-		if (m_collisionHandler.distanceTillUpperCollision(m_sprite.getHitbox()) != 0)
+		/*
+		float t{ m_sprite.getPos().y };
+		std::cout << m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) << '\n' << t << '\n';
+		std::cout << t-m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) << '\n';
+		*/
+		//m_sprite.setPos(sf::Vector2f(m_sprite.getPos().x, m_sprite.getPos().y - m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox())));
+		std::cout << -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()) << '\n';
+		float movement{ -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()) };
+		float b{ m_sprite.m_sprite.getGlobalBounds().top };
+		m_sprite.m_sprite.move(0, movement);
+		float a{ m_sprite.m_sprite.getGlobalBounds().top};
+		std::cout << movement << '\n';
+		std::cout << b-a << '\n';
+		std::cout << -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()) << '\n';
+		/*
+
+		float b{ m_sprite.getPos().y };
+		std::cout << b << '\n';
+		std::cout << m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) << '\n' << t - b << '\n';
+		*/
+		if (m_collisionHandler.distanceTillUpperCollision(m_sprite.getHitbox()) != 0 )
+		{
+			m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox());
 			m_isDead = true;
+		}
+	std::cout << '\n';
 	}
 	
 	m_sprite.update(elapsedTime, m_collisionHandler);
@@ -83,6 +107,9 @@ void PlayerObject::logic(const float elapsedTime)
 	m_sprite.setTextureRect(m_animHandler.getFrame());
 	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4,
 		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width - 32 + 14, m_sprite.getTextureRect().height));
+
+	// Fix player origin
+	m_sprite.fixOrigin();
 }
 
 void PlayerObject::input(sf::RenderWindow &window)
@@ -305,6 +332,11 @@ void Sprite::setTextureRect(const sf::IntRect & textureRect)
 void Sprite::setTexture(const sf::Texture & texture)
 {
 	m_sprite.setTexture(texture);
+}
+
+void Sprite::fixOrigin()
+{
+	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2, m_sprite.getGlobalBounds().height / 2);
 }
 
 const sf::FloatRect Sprite::getHitbox() const

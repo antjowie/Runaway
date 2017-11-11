@@ -2,6 +2,11 @@
 
 
 
+void AirTile::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	// Makes it so that air tiles aren't drawn
+}
+
 AirTile::AirTile(const float x, const float y):
 	Tile(TileType::Air, x,y,false)
 {

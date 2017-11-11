@@ -91,6 +91,37 @@ bool Level::initBackground(GameBackground & background)
 	return true;
 }
 
+bool Level::initLight(Light & light)
+{
+	light.setFadeTime(2);
+	light.setSize(m_levelWidth, m_levelHeight);
+	light.setBrightness(255);
+
+	// Add static light tiles
+	for(int i = 0; i < m_tilemapHeight; ++i)
+		for (int j = 0; j < m_tilemapWidth; ++j)
+		{
+			if (m_background[i][j]->getTileMeta().m_light != 0)
+				light.addTile(m_background[i][j]);
+			if (m_tilemap[i][j]->getTileMeta().m_tileType == TileType::Light)
+				light.addTile(m_tilemap[i][j]);
+		}
+
+	// Add gates
+	for (const auto &iter : m_gateMap)
+	{
+		for (const auto &gateTile : iter.getOriginalTiles())
+		{
+			// To cast child to parent
+			const GateTile * pGate = &gateTile;
+			const Tile * pTile = pGate;
+			light.addTile(pTile);
+		}
+
+	}
+	return true;
+}
+
 void Level::loadTilemap(std::vector<std::vector<Tile*>>& tilemap, const std::string tilemapString)
 {
 	// Load the map into the vector
@@ -311,7 +342,7 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 	{
 		Gate gate(iter.m_id,iter.m_speed);
 		for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
-			; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getType() == TileType::Gate; pos.y--)
+			; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getTileMeta().m_tileType == TileType::Gate; pos.y--)
 		{
 			GateTile * tile = static_cast<GateTile*>(m_tilemap[pos.y][pos.x]);
 			gate.addTile(tile);
@@ -372,12 +403,13 @@ Level::~Level()
 	m_entityMap.clear();
 }
 
-bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background)
+bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background, Light &light)
 {
 	if (!initMap()) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
 	if (!initBackground(background)) return false;
+	if (!initLight(light)) return false;
 	return true;
 }
 
@@ -396,29 +428,33 @@ void Level::update(const float elapsedTime)
 void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 {
 	sf::IntRect tileBounds = camera.getTileBounds(m_tileWidth, m_tileHeight);
-	
+
+	// Draw background tiles
+	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
+		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
+				target.draw(*m_background[i][j]);
 
 	// So that gate wont be rendered above tiles
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
-			if(m_tilemap[i][j]->getType() == TileType::Gate)
+			if (m_tilemap[i][j]->getTileMeta().m_tileType == TileType::Gate)
 				target.draw(*m_tilemap[i][j]);
-	
+
 	for (const auto &iter : m_entityMap)
 		target.draw(*iter);
 
-	for(int i = tileBounds.top;i < tileBounds.height + tileBounds.top;++i)
-		for(int j = tileBounds.left;j < tileBounds.width + tileBounds.left; ++j)
-			if (m_tilemap[i][j]->getType() != TileType::Gate)
+	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
+		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
+			if (m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Gate)
 				target.draw(*m_tilemap[i][j]);
 
-	for (auto iter : m_darkZones) 
+	for (auto iter : m_darkZones)
 	{
 		sf::RectangleShape temp;
 		temp.setSize(sf::Vector2f(iter.width, iter.height));
 		temp.setPosition(iter.left, iter.top);
 		temp.setFillColor(sf::Color::Red);
-		target.draw(temp,sf::BlendMultiply);
+		target.draw(temp, sf::BlendMultiply);
 	}
 }
 

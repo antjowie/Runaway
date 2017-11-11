@@ -49,24 +49,18 @@ void Gate::update(const float elapsedTime)
 	if (m_tiles.empty()) return;
 
 	// Update texture
-	if (m_isOpen)
+	for (int i = 0; i < m_tiles.size(); ++i)
 	{
-		for (auto &iter : m_tiles)
-		{
-			iter->m_isOpen = true;
-		}
-	}
-	else
-	{
-		for (auto &iter : m_tiles)
-		{
-			iter->m_isOpen = false;
-		}
+		m_tiles[i]->m_isOpen = m_isOpen;
+		m_originalTiles[i].m_isOpen = m_isOpen;
 	}
 
-	for (const auto &iter : m_tiles)
-		iter->update(elapsedTime);
-
+	for (int i = 0; i < m_tiles.size(); ++i)
+	{
+		m_tiles[i]->update(elapsedTime);
+		m_originalTiles[i].update(elapsedTime);
+	}
+	
 	// Update pos
 	const unsigned int middle{ m_tiles.size() / 2 };
 	const float offset{ 1/m_speed * (middle + 1) * m_originalTiles[0].getHitbox().height};
@@ -123,5 +117,9 @@ void Gate::update(const float elapsedTime)
 		bool invisible{ m_tiles[i]->getHitbox().top <= m_originalTiles.back().getHitbox().top - m_originalTiles.back().getHitbox().height };
 		m_tiles[i]->setSolid(!invisible);
 	}
-	
+}
+
+const std::vector<GateTile>& Gate::getOriginalTiles() const
+{
+	return m_originalTiles;
 }

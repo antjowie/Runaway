@@ -12,7 +12,7 @@ class Gate
 private:
 	std::vector<GateTile*> m_tiles;
 	std::vector<GateTile> m_originalTiles; // Original pos
-	sf::IntRect m_textureRect;
+	
 	float m_speed ; // The time it takes to open and close the door in seconds
 
 	bool isClosed();
@@ -27,9 +27,10 @@ public:
 	// Init phase
 	void addTile(GateTile* const tile);
 	void addTile(std::vector<GateTile*> &tiles);
+
 	void setSpeed(const float speed);
-	void updateTextureRect();
+	void updateTextureRect(); // Called to fix textures
 
 	void update(const float elapsedTime);
+	const std::vector<GateTile> &getOriginalTiles() const; // For the light function
 };
-

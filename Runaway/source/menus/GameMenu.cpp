@@ -30,7 +30,7 @@ void GameMenu::changeLevel(const GameMenu::LevelName level)
 		break;
 	}
 	
-	assert(m_level->loadLevel(m_camera,m_player,m_background) && "Load level failed");
+	assert(m_level->loadLevel(m_camera,m_player,m_background,m_light) && "Load level failed");
 	changeTitle("Runaway - " + m_level->getTitle());
 }
 
@@ -38,8 +38,6 @@ GameMenu::GameMenu(MenuStack* const menuStack):
 	Menu(menuStack)
 {
 	changeLevel(LevelName::That);
-	m_darkOverlayTex.create(200 * 32, 50 * 32);
-	m_darkOverlay.setPosition(0, 0);
 }
 
 GameMenu::~GameMenu()
@@ -125,9 +123,13 @@ void GameMenu::update(const float elapsedTime)
 	}
 	
 	// Update background state
-	m_background.update(elapsedTime);
 	m_background.setTarget(m_camera.getView().getCenter());
-	m_background.setDarkZone(m_level->inDarkZone(m_player->m_sprite.getHitbox()));
+	m_background.update(elapsedTime);
+
+	// Update foreground state
+	sf::Uint8 newBrightness { m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? static_cast<sf::Uint8>(100) : static_cast<sf::Uint8>(255)};
+	m_light.setBrightness(newBrightness);
+	m_light.update(elapsedTime);
 
 	// Change player alive state
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) m_player->m_isDead = true;
@@ -151,17 +153,9 @@ void GameMenu::draw(sf::RenderWindow & window)
 	
 	window.draw(m_background);
 
-	/*
-	m_darkOverlayTex.clear(sf::Color::Transparent);
-	//m_darkOverlayTex.draw(m_background.getDarkOverlay());
-	m_level->draw(m_darkOverlayTex,m_camera);
-	m_darkOverlayTex.display();
-	m_darkOverlay.setTexture(m_darkOverlayTex.getTexture());
-	*/
-	m_level->draw(window,m_camera);
-	
+	m_level->draw(window, m_camera);
+	window.draw(m_light,sf::BlendMultiply);
 
-	//window.draw(m_darkOverlay,sf::BlendMultiply);
 	window.draw(*m_player);
-	window.draw(m_background.getDarkOverlay());
+
 }

@@ -30,8 +30,7 @@ private:
 
 	bool checkLoaded();
 	void loadSurroundingTiles();
-	void updatePlayerHitbox(const sf::FloatRect &playerHitbox);
-
+	
 public:
 	CollisionHandler();
 

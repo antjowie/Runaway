@@ -4,9 +4,7 @@
 
 bool CollisionHandler::checkLoaded()
 {
-	bool loaded = true;
-	if (m_tilemap == nullptr) loaded = false;
-	return loaded;
+	return m_tilemap != nullptr;
 }
 
 CollisionHandler::CollisionHandler()
@@ -29,7 +27,6 @@ void CollisionHandler::loadSurroundingTiles()
 {
 	if (!checkLoaded()) return;
 
-	
 	sf::Vector2i tilemapPlayerCoords{ mapWorldToTilemap(sf::Vector2f(m_playerHitbox.left,m_playerHitbox.top),m_tileHeight,m_tileWidth) };
 	const int offset{ 3 };
 
@@ -54,17 +51,11 @@ void CollisionHandler::setTileSize(const sf::Vector2i & tileSize)
 	m_tileHeight = tileSize.y;
 }
 
-void CollisionHandler::updatePlayerHitbox(const sf::FloatRect &playerHitbox)
-{
-	m_playerHitbox = playerHitbox;
-}
-
 const float CollisionHandler::distanceTillBottomCollision(const sf::FloatRect &playerHitbox)
 {
 	if (!checkLoaded()) return 0.0f;
-
+	m_playerHitbox = playerHitbox;
 	loadSurroundingTiles();
-	updatePlayerHitbox(playerHitbox);
 
 	// Get lower hitbox
 	sf::FloatRect bottomHit{ m_playerHitbox };
@@ -73,12 +64,13 @@ const float CollisionHandler::distanceTillBottomCollision(const sf::FloatRect &p
 	for (auto iter : m_surroundingTiles)
 	{
 		float distance = abs(bottomHit.top + bottomHit.height - iter->getHitbox().top);
-		if (iter->isSolid() && bottomHit.intersects(iter->getHitbox()) && distance < m_bottomDistance)
+		if (iter->getTileMeta().m_solid && bottomHit.intersects(iter->getHitbox()) && distance < m_bottomDistance)
 			m_bottomDistance = distance;
 	}
 
 	if (m_bottomDistance == bottomHit.height * 3)
 		m_bottomDistance = 0.0f;
+
 	return m_bottomDistance;
 }
 
@@ -86,8 +78,8 @@ const float CollisionHandler::distanceTillUpperCollision(const sf::FloatRect &pl
 {
 	if (!checkLoaded()) return 0.0f;
 
+	m_playerHitbox = playerHitbox;
 	loadSurroundingTiles();
-	updatePlayerHitbox(playerHitbox);
 
 	// Get upper hitbox	
 	sf::FloatRect upperHit{ m_playerHitbox };
@@ -96,7 +88,7 @@ const float CollisionHandler::distanceTillUpperCollision(const sf::FloatRect &pl
 	for (auto iter : m_surroundingTiles)
 	{
 		float distance = abs(upperHit.top - (iter->getHitbox().top + iter->getHitbox().height));
-		if (iter->isSolid() && upperHit.intersects(iter->getHitbox()) && distance < m_upperDistance)
+		if (iter->getTileMeta().m_solid && upperHit.intersects(iter->getHitbox()) && distance < m_upperDistance)
 			m_upperDistance = distance;
 	}
 
@@ -109,8 +101,8 @@ const float CollisionHandler::distanceTillLeftCollision(const sf::FloatRect &pla
 {
 	if (!checkLoaded()) return 0.0f;
 
+	m_playerHitbox = playerHitbox;
 	loadSurroundingTiles();
-	updatePlayerHitbox(playerHitbox);
 
 	// Get left collision
 	sf::FloatRect leftHit{ m_playerHitbox };
@@ -119,7 +111,7 @@ const float CollisionHandler::distanceTillLeftCollision(const sf::FloatRect &pla
 	for (auto iter : m_surroundingTiles)
 	{
 		float distance = abs(leftHit.left - (iter->getHitbox().left + iter->getHitbox().width));
-		if (iter->isSolid() && leftHit.intersects(iter->getHitbox()) && distance < m_leftDistance)
+		if (iter->getTileMeta().m_solid && leftHit.intersects(iter->getHitbox()) && distance < m_leftDistance)
 			m_leftDistance = distance;
 	}
 
@@ -132,8 +124,8 @@ const float CollisionHandler::distanceTillRightCollision(const sf::FloatRect &pl
 {
 	if (!checkLoaded()) return 0.0f;
 
+	m_playerHitbox = playerHitbox;
 	loadSurroundingTiles();
-	updatePlayerHitbox(playerHitbox);
 
 	// Get right collision
 	sf::FloatRect rightHit{ m_playerHitbox };
@@ -142,7 +134,7 @@ const float CollisionHandler::distanceTillRightCollision(const sf::FloatRect &pl
 	for (auto iter : m_surroundingTiles)
 	{
 		float distance = abs((rightHit.left + rightHit.width) - iter->getHitbox().left);
-		if (iter->isSolid() && rightHit.intersects(iter->getHitbox()) && distance < m_rightDistance)
+		if (iter->getTileMeta().m_solid && rightHit.intersects(iter->getHitbox()) && distance < m_rightDistance)
 			m_rightDistance = distance;
 	}
 

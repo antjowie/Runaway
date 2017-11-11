@@ -9,6 +9,7 @@ private:
 	AnimationHandler m_animHandler;
 	int m_textureType{ 0 };
 
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 public:
 	bool m_isOpen{ false };
 
@@ -16,7 +17,6 @@ public:
 	
 	void move(const float x, const float y);
 	void setTextureType(const unsigned int textureType);
-	void setSolid(const bool isSolid);
 
 	virtual void update(const float elapsedTime) final;
 };
