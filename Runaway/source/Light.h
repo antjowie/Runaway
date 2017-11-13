@@ -6,6 +6,7 @@
 #pragma once
 #include <SFML\Graphics\Sprite.hpp>
 #include <SFML\Graphics\RenderTexture.hpp>
+#include <SFML\Graphics\RectangleShape.hpp>
 #include "Tile.h"
 
 class Light : public sf::Drawable

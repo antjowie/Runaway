@@ -93,7 +93,7 @@ bool Level::initBackground(GameBackground & background)
 
 bool Level::initLight(Light & light)
 {
-	light.setFadeTime(2);
+	light.setFadeTime(3);
 	light.setSize(m_levelWidth, m_levelHeight);
 	light.setBrightness(255);
 
@@ -107,17 +107,10 @@ bool Level::initLight(Light & light)
 				light.addTile(m_tilemap[i][j]);
 		}
 
-	// Add gates
 	for (const auto &iter : m_gateMap)
 	{
-		for (const auto &gateTile : iter.getOriginalTiles())
-		{
-			// To cast child to parent
-			const GateTile * pGate = &gateTile;
-			const Tile * pTile = pGate;
-			light.addTile(pTile);
-		}
-
+		light.addTile(iter.getTopTile());
+		light.addTile(iter.getBottomTile());
 	}
 	return true;
 }
@@ -303,7 +296,7 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 	for (rapidxml::xml_node<> *gate{ xmlNode->first_node() }; gate; gate = gate->next_sibling())
 	{
 		rapidxml::xml_node<> *prop = gate->first_node("properties")->first_node("property");
-
+			
 		if (std::string(gate->first_attribute("name")->value()) == "switch")
 		{
 			EntityAction action;
@@ -311,22 +304,21 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 			converter(pos.x, gate->first_attribute("x")->value());
 			converter(pos.y, gate->first_attribute("y")->value());
 
-
 			converter(action.value, prop->first_attribute("value")->value());
-			
-			m_entityMap.push_back(new Switch(action,pos));
+
+			m_entityMap.push_back(new Switch(action, pos));
 		}
 		else
 		{
 			GateNode gateNode;
-			converter(gateNode.m_pos.left,	gate->first_attribute("x")		->value());
-			converter(gateNode.m_pos.top,	gate->first_attribute("y")		->value());
-			converter(gateNode.m_pos.width, gate->first_attribute("width")	->value());
-			converter(gateNode.m_pos.height,gate->first_attribute("height")	->value());
+			converter(gateNode.m_pos.left, gate->first_attribute("x")->value());
+			converter(gateNode.m_pos.top, gate->first_attribute("y")->value());
+			converter(gateNode.m_pos.width, gate->first_attribute("width")->value());
+			converter(gateNode.m_pos.height, gate->first_attribute("height")->value());
 
 			while (prop)
 			{
-				if(std::string(prop->first_attribute("name")->value()) == "id")
+				if (std::string(prop->first_attribute("name")->value()) == "id")
 					converter(gateNode.m_id, prop->first_attribute("value")->value());
 				else if (std::string(prop->first_attribute("name")->value()) == "speed")
 					converter(gateNode.m_speed, prop->first_attribute("value")->value());
@@ -334,26 +326,27 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 			}
 			gateNodes.push_back(gateNode);
 		}
-		
 	}
 
 	// Link gate tiles to their gate
- 	for (const auto &iter : gateNodes)
+	for (const auto &iter : gateNodes)
 	{
-		Gate gate(iter.m_id,iter.m_speed);
+		Gate gate(iter.m_id, iter.m_speed);
+		std::vector<GateTile*> gateTiles;
 		for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
 			; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getTileMeta().m_tileType == TileType::Gate; pos.y--)
 		{
 			GateTile * tile = static_cast<GateTile*>(m_tilemap[pos.y][pos.x]);
-			gate.addTile(tile);
-
+			gateTiles.push_back(tile);
 		}
+		gate.loadBottomTile(gateTiles.front());
+		gate.loadTopTile(gateTiles.back());
+		gate.loadGate();
+		for (int i = 1; i < gateTiles.size() - 1;++i)
+			gateTiles[i]->setSolid(false);
+
 		m_gateMap.push_back(std::move(gate));
 	}
-
-	// Update gateTile texture
-	for (auto &iter : m_gateMap)
-		iter.updateTextureRect();
 
 	return true;
 }
@@ -474,7 +467,6 @@ bool Level::inDarkZone(sf::FloatRect hitbox)
 void Level::toggleGate(const int id)
 {
 	for (auto &iter : m_gateMap)
-		if (iter.m_id == id)
 			iter.m_isOpen = iter.m_isOpen ? false : true;
 }
 

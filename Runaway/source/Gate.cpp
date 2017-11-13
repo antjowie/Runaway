@@ -1,125 +1,104 @@
 #include "Gate.h"
-
-
-
-bool Gate::isClosed()
-{
-	if(!m_tiles.empty())
-		return m_tiles[0]->getHitbox()== m_originalTiles[0].getHitbox();
-	return true;
-}
-
-Gate::Gate()
-{
-}
+#include <SFML\Graphics\RenderTarget.hpp>
+#include <iostream>
 
 Gate::Gate(const int id, const float speed):
 	m_id(id),m_speed(speed)
 {
 }
 
-void Gate::addTile(GateTile * const tile)
+void Gate::loadTopTile(GateTile* const topGateTile)
 {
-	m_tiles.push_back(tile);
-	m_originalTiles.push_back(GateTile(*tile));
+	m_gate.loadTopPart(topGateTile);
 }
 
-void Gate::addTile(std::vector<GateTile*> &tiles)
+void Gate::loadBottomTile(GateTile* const bottomGateTile)
 {
-	for (auto &iter : tiles)
-		addTile(iter);
+	m_gate.loadBottomPart(bottomGateTile);
 }
 
-void Gate::setSpeed(const float speed)
+void Gate::loadGate()
 {
-	m_speed = speed;
+	m_gate.loadGate();
 }
 
-void Gate::updateTextureRect()
+void GatePart::update(const float percentage)
 {
-	unsigned int middle{ m_tiles.size() / 2 -1};
+	// If percentage = 0 gates are closed
+	// If percentage = 1 gates are open
+	
+	sf::Vector2f newSize{m_top->getHitbox().width,m_originalHeight- m_originalHeight * percentage};
+	if (m_top->getHitbox().height == 0);
+	m_top->setSize(newSize);
+	m_bottom->setSize(newSize);
+}
 
-	m_tiles[middle++]->setTextureType(2);
-	m_tiles[middle]->setTextureType(1);
+void GatePart::loadTopPart(GateTile * const topGateTile)
+{
+	m_top = topGateTile;
+	m_top->part = m_top->Top;
+}
 
+void GatePart::loadBottomPart(GateTile * const bottomGatePart)
+{
+	m_bottom = bottomGatePart;
+	m_bottom->part = m_bottom->Bottom;
+}
+
+void GatePart::loadGate()
+{
+	sf::Vector2f size{ m_top->getHitbox().width, m_top->getHitbox().height};
+	// Since the bottom tile has a higher y coordinate then upper tile.
+	float middle{ (m_bottom->getHitbox().top + m_bottom->getHitbox().height- m_top->getHitbox().top)/ size.y /2.f};
+	m_originalHeight = m_top->getHitbox().height * middle;
+	
+	sf::FloatRect top(m_top->getHitbox().left, m_top->getHitbox().top, m_top->getHitbox().width, m_originalHeight);
+	sf::FloatRect bottom(m_bottom->getHitbox().left, m_bottom->getHitbox().top + m_bottom->getHitbox().height, m_bottom->getHitbox().width, m_originalHeight);
+	
+	m_top->setRect(top);
+	m_bottom->setRect(bottom);
+}
+
+const GateTile * const GatePart::getTopTile() const
+{
+	return m_top;
+}
+
+const GateTile * const GatePart::getBottomTile() const
+{
+	return m_bottom;
+}
+
+void GatePart::setState(const GateTile::State state)
+{
+	m_top->setTextureType(state);
+	m_bottom->setTextureType(state);
+}
+
+const int Gate::getId()
+{
+	return m_id;
+}
+
+const GateTile * const Gate::getTopTile() const
+{
+	return m_gate.getTopTile();
+}
+
+const GateTile * const Gate::getBottomTile() const
+{
+	return m_gate.getBottomTile();
 }
 
 void Gate::update(const float elapsedTime)
 {
-	if (m_tiles.empty()) return;
+	m_isOpen ? m_timeline += elapsedTime : m_timeline -= elapsedTime;
+	m_isOpen ? m_gate.setState(GateTile::State::Open) : m_gate.setState(GateTile::State::Closed);
+	if (m_timeline > m_speed)
+		m_timeline = m_speed;
+	else if (m_timeline < 0)
+		m_timeline = 0;
 
-	// Update texture
-	for (int i = 0; i < m_tiles.size(); ++i)
-	{
-		m_tiles[i]->m_isOpen = m_isOpen;
-		m_originalTiles[i].m_isOpen = m_isOpen;
-	}
-
-	for (int i = 0; i < m_tiles.size(); ++i)
-	{
-		m_tiles[i]->update(elapsedTime);
-		m_originalTiles[i].update(elapsedTime);
-	}
-	
-	// Update pos
-	const unsigned int middle{ m_tiles.size() / 2 };
-	const float offset{ 1/m_speed * (middle + 1) * m_originalTiles[0].getHitbox().height};
-
-	if (m_isOpen)
-	{
-		// Lower bottom row
-		for (unsigned int i = 0; i < middle; i++)
-		{
-			m_tiles[i]->move(0, offset * elapsedTime);
-			if (m_tiles[i]->getHitbox().top > m_originalTiles[i].getHitbox().top + m_originalTiles[i].getHitbox().height * middle)
-				m_tiles[i]->move(0, -(m_tiles[i]->getHitbox().top - (m_originalTiles[i].getHitbox().top + m_originalTiles[i].getHitbox().height * middle)));
-		}
-
-		// Rise upper row
-		for (unsigned int i = middle; i < m_tiles.size(); i++)
-		{
-			m_tiles[i]->move(0, -offset * elapsedTime);
-			if (m_tiles[i]->getHitbox().top < m_originalTiles[i].getHitbox().top - m_originalTiles[i].getHitbox().height * (m_tiles.size() - middle))
-				m_tiles[i]->move(0, abs(m_tiles[i]->getHitbox().top - (m_originalTiles[i].getHitbox().top - m_originalTiles[i].getHitbox().height * (m_tiles.size() - middle))));
-		}	
-	}
-
-	else
-	{
-		// Rise lower row
-		for (unsigned int i = 0; i < middle; i++)
-		{
-			m_tiles[i]->move(0, -offset * elapsedTime);
-			if (m_tiles[i]->getHitbox().top < m_originalTiles[i].getHitbox().top)
-				m_tiles[i]->move(0, abs(m_tiles[i]->getHitbox().top - m_originalTiles[i].getHitbox().top));
-		}
-
-		// Lower upper row
-		for (unsigned int i = middle; i < m_tiles.size(); i++)
-		{
-			m_tiles[i]->move(0, offset * elapsedTime);
-			if (m_tiles[i]->getHitbox().top > m_originalTiles[i].getHitbox().top)
-				m_tiles[i]->move(0, -(m_tiles[i]->getHitbox().top - m_originalTiles[i].getHitbox().top));
-		}
-	}
-	
-	// Update tile visability
-	// Lower row
-	for (unsigned int i = 0; i < middle; i++)
-	{
-		bool invisible{ m_tiles[i]->getHitbox().top >= m_originalTiles.front().getHitbox().top + m_originalTiles.front().getHitbox().height };
-		m_tiles[i]->setSolid(!invisible);
-	}
-	
-	// Upper row
-	for (unsigned int i = middle; i < m_tiles.size(); i++)
-	{
-		bool invisible{ m_tiles[i]->getHitbox().top <= m_originalTiles.back().getHitbox().top - m_originalTiles.back().getHitbox().height };
-		m_tiles[i]->setSolid(!invisible);
-	}
-}
-
-const std::vector<GateTile>& Gate::getOriginalTiles() const
-{
-	return m_originalTiles;
+	const float percentage{ m_timeline / m_speed };
+	m_gate.update(percentage);
 }

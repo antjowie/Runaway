@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include <SFML\Graphics.hpp>
+#include <SFML\Graphics\Sprite.hpp>
 
 enum class TileType{ Air, Block, Top, Light, Gate, Invalid}; // Has to be same order as in Tiled
 
@@ -26,11 +26,11 @@ protected:
 public:
 	Tile(const TileType type, const float x, const float y, const float lightRadius = 0.0f, const bool isSolid = true);
 	
-	virtual void update();
+	virtual void update(const float elapsedTime);
 
 	void setSolid(const bool isSolid = true);
 	// 255 = initial brightness, 0 = black
-	void setBrightness(const sf::Uint8 &brightness = 255);
+	void setBrightness(const sf::Uint8 &brightness = 255); // Temp for background objects
 
 	const sf::FloatRect getHitbox() const;
 	const TileMeta &getTileMeta() const;

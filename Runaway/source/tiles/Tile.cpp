@@ -18,7 +18,7 @@ Tile::Tile(const TileType type, const float x, const float y, const float lightR
 	m_sprite.setPosition(x, y);
 }
 
-void Tile::update()
+void Tile::update(const float elapsedTime)
 {
 }
 

@@ -127,7 +127,7 @@ void GameMenu::update(const float elapsedTime)
 	m_background.update(elapsedTime);
 
 	// Update foreground state
-	sf::Uint8 newBrightness { m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? static_cast<sf::Uint8>(100) : static_cast<sf::Uint8>(255)};
+	sf::Uint8 newBrightness { m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? static_cast<sf::Uint8>(10) : static_cast<sf::Uint8>(255)};
 	m_light.setBrightness(newBrightness);
 	m_light.update(elapsedTime);
 
