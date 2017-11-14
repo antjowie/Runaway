@@ -28,7 +28,7 @@ void GatePart::update(const float percentage)
 	// If percentage = 1 gates are open
 	
 	sf::Vector2f newSize{m_top->getHitbox().width,m_originalHeight- m_originalHeight * percentage};
-	if (m_top->getHitbox().height == 0);
+
 	m_top->setSize(newSize);
 	m_bottom->setSize(newSize);
 }

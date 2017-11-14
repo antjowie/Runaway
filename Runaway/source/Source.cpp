@@ -12,7 +12,7 @@ int main()
 	Config::getInstance().loadConfig();
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(1280, 720), "Runaway", sf::Style::Default);
-
+	
 	sf::Clock time;
 	float elapsedTime;
 	float elapsedRenderTime = 0;

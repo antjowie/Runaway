@@ -43,7 +43,12 @@ void AnimationHandler::update(const float dt)
 {
 	if (m_currentAnim >= (int)m_animations.size() || m_currentAnim < 0) return;
 
+	m_elapsed += dt;
 	const float duration = m_animations[m_currentAnim].m_duration;
+
+	if (m_elapsed > duration * m_animations[m_currentAnim].getLength())
+		fmod(m_elapsed, duration);
+
 	if (int((m_elapsed + dt) / duration) > int((m_elapsed / duration))) {
 		int frame = int((m_elapsed + dt) / duration);
 		if (!m_animations[m_currentAnim].m_isRepeated && (unsigned int)frame > m_animations.at(m_currentAnim).m_endFrame)
@@ -56,9 +61,6 @@ void AnimationHandler::update(const float dt)
 		m_currentFrame = rect;
 	}
 	
-	m_elapsed += dt;
-	if (m_elapsed > duration * m_animations[m_currentAnim].getLength())
-		fmod(m_elapsed, duration);
 }
 
 sf::IntRect AnimationHandler::getFrame() const

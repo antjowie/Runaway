@@ -157,5 +157,4 @@ void GameMenu::draw(sf::RenderWindow & window)
 	window.draw(m_light,sf::BlendMultiply);
 
 	window.draw(*m_player);
-
 }

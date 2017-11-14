@@ -70,6 +70,7 @@ bool Level::initCamera(Camera & camera)
 		sf::FloatRect(m_spawnX, m_spawnY,m_cameraSize.x,m_cameraSize.y), 
 		sf::Vector2f(static_cast<float>(m_levelWidth), static_cast<float>(m_levelHeight)),m_cameraSpeed);
 	camera.update(0); // This will correct the bounds
+	
 	return true;
 }
 
@@ -164,8 +165,8 @@ bool Level::loadTileLayer(std::vector<char> tilemap)
 			converter(m_cameraSize.y, iter->first_attribute("value")->value());
 	}
 
-	m_cameraSize.x *= m_tileWidth;
-	m_cameraSize.y *= m_tileHeight;
+	m_cameraSize.x *= static_cast<float>(m_tileWidth);
+	m_cameraSize.y *= static_cast<float>(m_tileHeight);
 
 	// Calculate aspect ratios if desired (assumes 16:9)
 	if (m_cameraSize.x == 0)

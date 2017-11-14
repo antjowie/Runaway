@@ -29,45 +29,19 @@ PlayerObject::PlayerObject(const bool isValid) :
 		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true, false));
 
 	// Otherwise player is initialized with wrong hitbox which makes him teleport when spawned
-	m_animHandler.changeAnimation(1);
+	m_animHandler.changeAnimation(0);
 	m_sprite.setTextureRect(m_animHandler.getFrame());
 }
 
 void PlayerObject::logic(const float elapsedTime)
 {
-	m_animHandler.update(elapsedTime);
 	sf::Vector2f oldPos{ m_sprite.getPos() };
 
-	// Some weird bug going on
-	// If player decides to stand till on a gate
 	if (m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) != 0)
 	{
-		/*
-		float t{ m_sprite.getPos().y };
-		std::cout << m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) << '\n' << t << '\n';
-		std::cout << t-m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) << '\n';
-		*/
-		//m_sprite.setPos(sf::Vector2f(m_sprite.getPos().x, m_sprite.getPos().y - m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox())));
-		std::cout << -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()) << '\n';
-		float movement{ -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()) };
-		float b{ m_sprite.m_sprite.getGlobalBounds().top };
-		m_sprite.m_sprite.move(0, movement);
-		float a{ m_sprite.m_sprite.getGlobalBounds().top};
-		std::cout << movement << '\n';
-		std::cout << b-a << '\n';
-		std::cout << -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()) << '\n';
-		/*
-
-		float b{ m_sprite.getPos().y };
-		std::cout << b << '\n';
-		std::cout << m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) << '\n' << t - b << '\n';
-		*/
-		if (m_collisionHandler.distanceTillUpperCollision(m_sprite.getHitbox()) != 0 )
-		{
-			m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox());
+		m_sprite.m_sprite.move(0, -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()));
+		if (m_collisionHandler.distanceTillUpperCollision(m_sprite.getHitbox()) != 0)
 			m_isDead = true;
-		}
-	std::cout << '\n';
 	}
 	
 	m_sprite.update(elapsedTime, m_collisionHandler);
@@ -102,13 +76,18 @@ void PlayerObject::logic(const float elapsedTime)
 	// No movement
 	else
 		m_animHandler.changeAnimation(PlayerDirection::Rest);
-
+	
 	// Update animation
+	m_animHandler.update(elapsedTime);
 	m_sprite.setTextureRect(m_animHandler.getFrame());
-	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4,
-		m_sprite.getTextureRect().top, m_sprite.getTextureRect().width - 32 + 14, m_sprite.getTextureRect().height));
+	sf::IntRect t{ m_animHandler.getFrame() };
+	
+	// Correcting hitbox
+	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4, 
+										m_sprite.getTextureRect().top, m_sprite.getTextureRect().width - 32 + 14, 
+										m_sprite.getTextureRect().height));
 
-	// Fix player origin
+	// Fix player origin (for camera centralization)
 	m_sprite.fixOrigin();
 }
 
@@ -120,14 +99,13 @@ void PlayerObject::input(sf::RenderWindow &window)
 
 void PlayerObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	states.blendMode == sf::BlendNone; // Overwrites everything
-	target.draw(m_sprite,states);
+	target.draw(m_sprite, states);
 }
 
 Sprite::Sprite():
 	m_velocity(0,0),
 	m_moveDirection(0,0)
-{	
+{
 }
 
 void Sprite::input()
