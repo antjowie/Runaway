@@ -19,6 +19,8 @@ DataManager::DataManager()
 
 	// Load misc
 	loadTexture("mainMenuBackground", texturePath + "mainMenuBackground.png");
+
+	getTexture("player").setSmooth(true);
 }
 
 DataManager & DataManager::getInstance()

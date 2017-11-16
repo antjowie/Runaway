@@ -92,7 +92,7 @@ bool Level::initBackground(GameBackground & background)
 	return true;
 }
 
-bool Level::initLight(Light & light)
+bool Level::initLight(Light & light, const LightPool & playerPool)
 {
 	light.setFadeTime(3);
 	light.setSize(m_levelWidth, m_levelHeight);
@@ -103,16 +103,18 @@ bool Level::initLight(Light & light)
 		for (int j = 0; j < m_tilemapWidth; ++j)
 		{
 			if (m_background[i][j]->getTileMeta().m_light != 0)
-				light.addTile(m_background[i][j]);
+				light.addDrawable(m_background[i][j]);
 			if (m_tilemap[i][j]->getTileMeta().m_tileType == TileType::Light)
-				light.addTile(m_tilemap[i][j]);
+				light.addDrawable(m_tilemap[i][j]);
 		}
 
 	for (const auto &iter : m_gateMap)
 	{
-		light.addTile(iter.getTopTile());
-		light.addTile(iter.getBottomTile());
+		light.addDrawable(iter.getTopTile());
+		light.addDrawable(iter.getBottomTile());
 	}
+
+	light.addDrawable(&playerPool);
 	return true;
 }
 
@@ -403,7 +405,7 @@ bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackgrou
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
 	if (!initBackground(background)) return false;
-	if (!initLight(light)) return false;
+	if (!initLight(light,player->getLightPool())) return false;
 	return true;
 }
 

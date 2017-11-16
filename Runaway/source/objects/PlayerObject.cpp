@@ -84,17 +84,27 @@ void PlayerObject::logic(const float elapsedTime)
 	
 	// Correcting hitbox
 	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4, 
-										m_sprite.getTextureRect().top, m_sprite.getTextureRect().width - 32 + 14, 
-										m_sprite.getTextureRect().height));
+										m_sprite.getTextureRect().top + 2, m_sprite.getTextureRect().width - 32 + 14, 
+										m_sprite.getTextureRect().height - 2));
 
 	// Fix player origin (for camera centralization)
 	m_sprite.fixOrigin();
+
+	// Move the light rect
+	m_lightPool.setPos(m_sprite.getPos());
+	m_lightPool.update(elapsedTime);
+		
 }
 
 void PlayerObject::input(sf::RenderWindow &window)
 {	
 	if(!m_isDead)
 	m_sprite.input();
+}
+
+const LightPool & PlayerObject::getLightPool() const
+{
+	return m_lightPool;
 }
 
 void PlayerObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -106,6 +116,7 @@ Sprite::Sprite():
 	m_velocity(0,0),
 	m_moveDirection(0,0)
 {
+	m_sprite.setColor(sf::Color(0,0,0,255));
 }
 
 void Sprite::input()

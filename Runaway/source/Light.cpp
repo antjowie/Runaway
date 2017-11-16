@@ -14,16 +14,15 @@ Light::Light()
 	m_light.setPosition(0, 0);
 }
 
-void Light::addTile(const std::vector<const Tile*>& tiles)
+void Light::addDrawable(const std::vector<const sf::Drawable*> &drawables)
 {	
-	for (const auto &iter : tiles)
-		addTile(iter);
+	for (const auto &iter : drawables)
+		addDrawable(iter);
 }
 
-void Light::addTile(const Tile * const tile)
+void Light::addDrawable(const sf::Drawable* const drawable)
 {
-	if (tile->getTileMeta().m_light != 0.f)
-		m_tiles.push_back(tile);
+		m_tiles.push_back(drawable);
 }
 
 void Light::update(const float elapsedTime)

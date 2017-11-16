@@ -116,7 +116,7 @@ const sf::View & Camera::getView() const
 	return m_view;
 }
 
-void Camera::zoom(float factor)
+void Camera::zoom(float scale)
 {
-	m_view.zoom(factor);
+	m_view.zoom(scale);
 }

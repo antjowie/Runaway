@@ -74,6 +74,8 @@ void GameMenu::input(sf::RenderWindow & window)
 					m_level->toggleGate(iter->getAction().value);
 				}
 			}
+
+			event.mouseButton.button == sf::Mouse::Left ? m_camera.zoom(1.05f) : m_camera.zoom(0.95f);
 			break;
 		}
 	}

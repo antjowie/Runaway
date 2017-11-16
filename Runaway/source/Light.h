@@ -12,7 +12,7 @@
 class Light : public sf::Drawable
 {
 private: 
-	std::vector<const Tile*> m_tiles; // Tiles which emit light
+	std::vector<const sf::Drawable*> m_tiles; // Tiles which emit light
 	
 	sf::RenderTexture m_lightTex;
 	sf::Sprite m_light;
@@ -30,8 +30,8 @@ private:
 public:
 	Light();
 
-	void addTile(const std::vector<const Tile*> &tiles);
-	void addTile(const Tile* const tile);
+	void addDrawable(const std::vector<const sf::Drawable*> &drawables);
+	void addDrawable(const sf::Drawable* const drawable);
 
 	void update(const float elapsedTime);
 

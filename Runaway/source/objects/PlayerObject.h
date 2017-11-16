@@ -3,6 +3,7 @@
 #include "AnimationHandler.h"
 #include "CollisionHandler.h"
 #include "Tile.h"
+#include "LightPool.h"
 
 class Sprite: public sf::Drawable
 {
@@ -49,8 +50,10 @@ class PlayerObject :
 	public Object
 {
 private:
-	enum PlayerDirection{Rest,JumpRight,DropRight,JumpLeft,DropLeft,Right,Left};
+	enum PlayerDirection { Rest, JumpRight, DropRight, JumpLeft, DropLeft, Right, Left };
 	AnimationHandler m_animHandler;
+	LightPool m_lightPool;
+	
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 
 public:
@@ -62,4 +65,6 @@ public:
 
 	virtual void logic(const float elapsedTime);
 	virtual void input(sf::RenderWindow &window);
+
+	const LightPool& getLightPool() const;
 };

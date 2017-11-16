@@ -29,6 +29,6 @@ public:
 	sf::IntRect const getTileBounds(const int tileX, const int tileY) const;
 	const sf::View &getView() const;
 
-	void zoom(float factor);
+	void zoom(float scale);
 };
 
