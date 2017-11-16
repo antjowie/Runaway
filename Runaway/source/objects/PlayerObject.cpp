@@ -93,7 +93,10 @@ void PlayerObject::logic(const float elapsedTime)
 	// Move the light rect
 	m_lightPool.setPos(m_sprite.getPos());
 	m_lightPool.update(elapsedTime);
-		
+	
+	// Check if light pool's empty
+	if (m_lightPool.isEmpty())
+		m_isDead = true;
 }
 
 void PlayerObject::input(sf::RenderWindow &window)
@@ -102,13 +105,10 @@ void PlayerObject::input(sf::RenderWindow &window)
 	m_sprite.input();
 }
 
-const LightPool & PlayerObject::getLightPool() const
-{
-	return m_lightPool;
-}
-
 void PlayerObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
+	if (!m_lightPool.isCapped())
+		target.draw(m_lightPool, states);
 	target.draw(m_sprite, states);
 }
 

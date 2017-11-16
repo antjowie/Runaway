@@ -52,19 +52,17 @@ class PlayerObject :
 private:
 	enum PlayerDirection { Rest, JumpRight, DropRight, JumpLeft, DropLeft, Right, Left };
 	AnimationHandler m_animHandler;
-	LightPool m_lightPool;
 	
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 
 public:
 	bool m_isDead{ false };
-	CollisionHandler m_collisionHandler; // This one is public so that level can initialize it
-	Sprite m_sprite; // This one is public so that camera can access it
+	LightPool m_lightPool;					// Public for level access
+	CollisionHandler m_collisionHandler;	// This one is public so that level can initialize it
+	Sprite	m_sprite;						// This one is public so that camera can access it
 
 	PlayerObject(const bool isValid = false);
 
 	virtual void logic(const float elapsedTime);
 	virtual void input(sf::RenderWindow &window);
-
-	const LightPool& getLightPool() const;
 };

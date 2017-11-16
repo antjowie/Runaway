@@ -17,6 +17,10 @@ DataManager::DataManager()
 	loadTexture("checkpoint", entityPath + "checkpoint/checkpointSprite.png");
 	loadTexture("switch", entityPath + "switch/switchSprite.png");
 
+	// Load meta
+	std::string metaPath(texturePath + "meta/");
+	loadTexture("lightCircle", metaPath + "lightCircle/lightCircle.png");
+
 	// Load misc
 	loadTexture("mainMenuBackground", texturePath + "mainMenuBackground.png");
 

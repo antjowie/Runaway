@@ -75,7 +75,7 @@ void GameMenu::input(sf::RenderWindow & window)
 				}
 			}
 
-			event.mouseButton.button == sf::Mouse::Left ? m_camera.zoom(1.05f) : m_camera.zoom(0.95f);
+			//event.mouseButton.button == sf::Mouse::Left ? m_camera.zoom(1.05f) : m_camera.zoom(0.95f);
 			break;
 		}
 	}
@@ -88,6 +88,8 @@ void GameMenu::update(const float elapsedTime)
 
 	// Had to be called after update because this will fix positions when player already has moved
 	m_level->update(elapsedTime);
+
+	m_player->m_lightPool.setRate(m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? -50.f : 200.f);
 	m_player->logic(elapsedTime);
 	
 	sf::Vector2f  offset{ m_player->m_sprite.getMoveDirection() };
@@ -129,15 +131,14 @@ void GameMenu::update(const float elapsedTime)
 	m_background.update(elapsedTime);
 
 	// Update foreground state
-	sf::Uint8 newBrightness { m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? static_cast<sf::Uint8>(10) : static_cast<sf::Uint8>(255)};
-	m_light.setBrightness(newBrightness);
+	m_light.setBrightness(m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? static_cast<sf::Uint8>(0) : static_cast<sf::Uint8>(255));
 	m_light.update(elapsedTime);
 
-	// Change player alive state
+	// Dead conditions
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) m_player->m_isDead = true;
 	if (m_level->inLevelBounds(m_player->m_sprite.getPos()))
 		m_player->m_isDead = true;
-	
+
 	// Check player alive state
 	if (m_player->m_isDead)
 	{
@@ -157,6 +158,6 @@ void GameMenu::draw(sf::RenderWindow & window)
 
 	m_level->draw(window, m_camera);
 	window.draw(m_light,sf::BlendMultiply);
-
+	 
 	window.draw(*m_player);
 }

@@ -405,7 +405,7 @@ bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackgrou
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
 	if (!initBackground(background)) return false;
-	if (!initLight(light,player->getLightPool())) return false;
+	if (!initLight(light,player->m_lightPool)) return false;
 	return true;
 }
 
@@ -449,8 +449,8 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 		sf::RectangleShape temp;
 		temp.setSize(sf::Vector2f(iter.width, iter.height));
 		temp.setPosition(iter.left, iter.top);
-		temp.setFillColor(sf::Color::Red);
-		target.draw(temp, sf::BlendMultiply);
+		temp.setFillColor(sf::Color(40,0,0,255));
+		target.draw(temp);
 	}
 }
 

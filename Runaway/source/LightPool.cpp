@@ -1,20 +1,44 @@
 #include "LightPool.h"
 #include <SFML\Graphics\RenderTarget.hpp>
 #include <SFML\Graphics\RectangleShape.hpp>
+#include <iostream>
+
+#include "DataManager.h"
+
+void LightPool::setSize(const float width, const float height)
+{
+	// The radius value represents the original diameter
+	const sf::Vector2f size{ m_sprite.getGlobalBounds().width, m_sprite.getGlobalBounds().height };
+	
+	m_sprite.scale(width / size.x, height / size.y);
+	if (size.x != size.x)
+		m_sprite.setScale(0.001f, m_sprite.getScale().y);
+	if (size.y != size.y)
+		m_sprite.setScale(m_sprite.getScale().x, 0.001f);
+
+	std::cout << size.x << '\n';
+}
+
+void LightPool::setSize(const float diameter)
+{
+	setSize(diameter, diameter);
+}
 
 void LightPool::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	sf::RectangleShape temp;
-	temp.setSize(sf::Vector2f(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height));
-	temp.setOrigin(temp.getSize().x / 2, temp.getSize().y / 2);
-	temp.setPosition(m_sprite.getPosition());
-	temp.setFillColor(sf::Color::Yellow);
-	
-	target.draw(temp, states);
+	target.draw(m_sprite, states);
 }
 
 void LightPool::update(const float elapsedTime)
 {
+	m_pool += m_rate * elapsedTime;
+	if (m_pool < 0)
+		m_pool = 0;
+	else if (m_pool > m_cap)
+		m_pool = m_cap;
+
+	// Update texture
+	setSize(m_pool);
 }
 
 void LightPool::setPos(const sf::Vector2f & pos)
@@ -22,12 +46,27 @@ void LightPool::setPos(const sf::Vector2f & pos)
 	m_sprite.setPosition(pos);
 }
 
-LightPool::LightPool()
+void LightPool::setRate(const float rate)
 {
-	m_sprite.setTextureRect(sf::IntRect(0, 0, 32, 50));
-	m_sprite.setColor(sf::Color::Yellow);
+	m_rate = rate;
 }
 
-LightPool::~LightPool()
+const bool LightPool::isCapped() const
 {
+	return m_pool == m_cap;
+}
+
+const bool LightPool::isEmpty() const
+{
+	return m_pool == 0;
+}
+
+LightPool::LightPool()
+{
+	m_sprite.setTexture(DataManager::getInstance().getTexture("lightCircle"));
+	m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
+	m_cap = 32 * 16 * 2;
+	m_pool = 32 * 5 * 2;
+	//setSize(32 * 5 * 2);
+
 }
