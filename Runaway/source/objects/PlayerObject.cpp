@@ -80,7 +80,6 @@ void PlayerObject::logic(const float elapsedTime)
 	// Update animation
 	m_animHandler.update(elapsedTime);
 	m_sprite.setTextureRect(m_animHandler.getFrame());
-	sf::IntRect t{ m_animHandler.getFrame() };
 	
 	// Correcting hitbox
 	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4, 
@@ -91,9 +90,10 @@ void PlayerObject::logic(const float elapsedTime)
 	m_sprite.fixOrigin();
 
 	// Move the light rect
+	if (m_lightPool.isCapped()) m_lightPool.setSize(75.f);
 	m_lightPool.setPos(m_sprite.getPos());
 	m_lightPool.update(elapsedTime);
-	
+
 	// Check if light pool's empty
 	if (m_lightPool.isEmpty())
 		m_isDead = true;
@@ -107,8 +107,7 @@ void PlayerObject::input(sf::RenderWindow &window)
 
 void PlayerObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	if (!m_lightPool.isCapped())
-		target.draw(m_lightPool, states);
+	target.draw(m_lightPool, states);
 	target.draw(m_sprite, states);
 }
 
