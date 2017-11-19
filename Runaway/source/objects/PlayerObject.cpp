@@ -31,18 +31,26 @@ PlayerObject::PlayerObject(const bool isValid) :
 	// Otherwise player is initialized with wrong hitbox which makes him teleport when spawned
 	m_animHandler.changeAnimation(0);
 	m_sprite.setTextureRect(m_animHandler.getFrame());
+
+	// Init launcher
+	m_launcher.setPos(m_sprite.getPos());
+	m_launcher.setFireRate(0.5f);
+	m_launcher.setProjectileSpeed(32 * 8);
+	m_launcher.setProjectileLife(3);
+	m_launcher.setProjectileSize(sf::Vector2f(25, 25));
 }
 
 void PlayerObject::logic(const float elapsedTime)
 {
 	sf::Vector2f oldPos{ m_sprite.getPos() };
-
+	
 	if (m_collisionHandler.distanceTillBottomCollision(m_sprite.getHitbox()) != 0)
 	{
 		m_sprite.m_sprite.move(0, -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()));
 		if (m_collisionHandler.distanceTillUpperCollision(m_sprite.getHitbox()) != 0)
 			m_isDead = true;
 	}
+	
 	
 	m_sprite.update(elapsedTime, m_collisionHandler);
 	//m_sprite.debugMove(elapsedTime);
@@ -97,18 +105,25 @@ void PlayerObject::logic(const float elapsedTime)
 	// Check if light pool's empty
 	if (m_lightPool.isEmpty())
 		m_isDead = true;
+
+	// Update launcher
+	m_launcher.setPos(m_sprite.getPos());
+	m_launcher.update(elapsedTime);
 }
 
 void PlayerObject::input(sf::RenderWindow &window)
 {	
 	if(!m_isDead)
 	m_sprite.input();
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		m_launcher.shoot(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView()));
 }
 
 void PlayerObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(m_lightPool, states);
 	target.draw(m_sprite, states);
+	target.draw(m_launcher, states);
 }
 
 Sprite::Sprite():

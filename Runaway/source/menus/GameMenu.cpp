@@ -65,16 +65,6 @@ void GameMenu::input(sf::RenderWindow & window)
 			break;
 
 		case sf::Event::MouseButtonPressed:
-			// Temporary placed right here
-			for (const auto &iter : m_level->getEntityMap())
-			{
-				if (iter->getType() == EntityType::Switch && iter->getHitbox().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y),m_camera.getView())))
-				{
-					iter->m_isActive = iter->m_isActive ? false : true;
-					m_level->toggleGate(iter->getAction().value);
-				}
-			}
-
 			//event.mouseButton.button == sf::Mouse::Left ? m_camera.zoom(1.05f) : m_camera.zoom(0.95f);
 			break;
 		}
@@ -92,6 +82,7 @@ void GameMenu::update(const float elapsedTime)
 	m_player->m_lightPool.setRate(m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? -50.f : 200.f);
 	m_player->logic(elapsedTime);
 	
+	/*
 	sf::Vector2f  offset{ m_player->m_sprite.getMoveDirection() };
 	if (offset.x > 0)
 		offset.x = m_camera.getView().getSize().x / 2;
@@ -102,7 +93,8 @@ void GameMenu::update(const float elapsedTime)
 	else if (offset.y > 0)
 	offset.y = m_camera.getView().getSize().y / 2;
 
-	//m_camera.setTarget(m_player->m_sprite.getPos() + offset);
+	m_camera.setTarget(m_player->m_sprite.getPos() + offset);
+	*/
 	m_camera.setView(m_player->m_sprite.getPos());
 	m_camera.update(elapsedTime);
 
@@ -123,6 +115,18 @@ void GameMenu::update(const float elapsedTime)
 			case EntityType::Coin:
 				
 				break;				
+			}
+		for(auto &iter: m_player->m_launcher.getProjectiles())
+			if(entity->getType() == EntityType::Switch && entity->getHitbox().intersects(iter.m_sprite.getGlobalBounds()))
+			{
+				for (const auto &toggler : m_level->getEntityMap())
+				{
+					if (toggler->getType() == EntityType::Switch && toggler->getAction().value == entity->getAction().value)	
+						toggler->m_isActive = toggler->m_isActive ? false : true;
+				}
+					
+				m_level->toggleGate(entity->getAction().value);
+				iter.m_life = 0;
 			}
 	}
 	

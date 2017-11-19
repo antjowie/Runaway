@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="32" tileheight="32" nextobjectid="46">
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="32" tileheight="32" nextobjectid="48">
  <properties>
   <property name="cameraHeight" type="float" value="0"/>
   <property name="cameraWidth" type="float" value="35"/>
@@ -137,6 +137,16 @@
    <properties>
     <property name="id" type="int" value="2"/>
     <property name="speed" type="float" value="4"/>
+   </properties>
+  </object>
+  <object id="46" name="switch" x="4032" y="768" width="32" height="32">
+   <properties>
+    <property name="id" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="47" name="switch" x="4256" y="768" width="32" height="32">
+   <properties>
+    <property name="id" type="int" value="2"/>
    </properties>
   </object>
  </objectgroup>

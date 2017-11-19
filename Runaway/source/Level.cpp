@@ -82,6 +82,9 @@ bool Level::initPlayer(PlayerObject * const player)
 	// Collision
 	player->m_collisionHandler.setTileSize(sf::Vector2i(m_tileWidth, m_tileHeight));
 	if (!player->m_collisionHandler.loadTilemap(&m_tilemap)) return false;
+
+	// Launcher
+	player->m_launcher.loadTilemap(&m_tilemap);
 	return true;
 }
 
@@ -92,7 +95,7 @@ bool Level::initBackground(GameBackground & background)
 	return true;
 }
 
-bool Level::initLight(Light & light, const LightPool & playerPool)
+bool Level::initLight(Light & light, const PlayerObject * const player)
 {
 	light.setFadeTime(3);
 	light.setSize(m_levelWidth, m_levelHeight);
@@ -114,7 +117,8 @@ bool Level::initLight(Light & light, const LightPool & playerPool)
 		light.addDrawable(iter.getBottomTile());
 	}
 
-	light.addDrawable(&playerPool);
+	light.addDrawable(&player->m_lightPool);
+	light.addDrawable(&player->m_launcher);
 	return true;
 }
 
@@ -405,7 +409,7 @@ bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackgrou
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
 	if (!initBackground(background)) return false;
-	if (!initLight(light,player->m_lightPool)) return false;
+	if (!initLight(light,player)) return false;
 	return true;
 }
 
@@ -436,14 +440,6 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 			if (m_tilemap[i][j]->getTileMeta().m_tileType == TileType::Gate)
 				target.draw(*m_tilemap[i][j]);
 
-	for (const auto &iter : m_entityMap)
-		target.draw(*iter);
-
-	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
-		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
-			if (m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Gate)
-				target.draw(*m_tilemap[i][j]);
-
 	for (auto iter : m_darkZones)
 	{
 		sf::RectangleShape temp;
@@ -452,6 +448,15 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 		temp.setFillColor(sf::Color(40,0,0,255));
 		target.draw(temp);
 	}
+
+	for (const auto &iter : m_entityMap)
+		target.draw(*iter);
+
+	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
+		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
+			if (m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Gate)
+				target.draw(*m_tilemap[i][j]);
+
 }
 
 bool Level::inLevelBounds(const sf::Vector2f & point)
@@ -470,6 +475,7 @@ bool Level::inDarkZone(sf::FloatRect hitbox)
 void Level::toggleGate(const int id)
 {
 	for (auto &iter : m_gateMap)
+		if(iter.getId() == id)
 			iter.m_isOpen = iter.m_isOpen ? false : true;
 }
 

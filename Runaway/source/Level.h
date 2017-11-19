@@ -52,7 +52,7 @@ private:
 	bool initCamera(Camera &camera);
 	bool initPlayer(PlayerObject *const player);
 	bool initBackground(GameBackground &background);
-	bool initLight(Light &light, const LightPool & playerPool);
+	bool initLight(Light &light, const PlayerObject * const player);
 
 	bool loadTileLayer(std::vector<char> tilemap);
 	void loadTilemap(std::vector<std::vector<Tile*>> &tilemap, const std::string tilemapString);

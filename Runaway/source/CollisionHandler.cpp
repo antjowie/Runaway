@@ -39,6 +39,7 @@ void CollisionHandler::loadSurroundingTiles()
 			{
 				// Order shouldn't matter. If we do map this vector to tilemap vector. Our function calls would do 6 comparisons less each
 				// Our first vector is y, the subsequent vectors are x.
+				if ((*m_tilemap)[j][i]->getTileMeta().m_solid == true)
 				m_surroundingTiles.push_back((*m_tilemap)[j][i]);
 			}
 		}

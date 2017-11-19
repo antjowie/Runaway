@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Runaway\source\Launcher.cpp" />
     <ClCompile Include="Runaway\source\LightPool.cpp" />
     <ClCompile Include="Runaway\source\Light.cpp" />
     <ClCompile Include="Runaway\source\GameBackground.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="Runaway\source\entities\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Runaway\source\Launcher.h" />
     <ClInclude Include="Runaway\source\LightPool.h" />
     <ClInclude Include="Runaway\source\Light.h" />
     <ClInclude Include="Runaway\source\GameBackground.h" />
