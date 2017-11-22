@@ -3,19 +3,13 @@
 
 #include <cassert>
 
-void GameMenu::changeLevel(const GameMenu::LevelName level)
+GameMenu::GameMenu(MenuStack* const menuStack, const LevelName levelName):
+	Menu(menuStack)
 {
-	if (m_levelId == level) return;
-	m_levelId = level;
-
-	clearObject();
-	delete m_player;
-	delete m_level;
-
 	m_player = new PlayerObject(true);
 
 	std::string levelPath("Runaway/data/levels/");
-	switch (m_levelId)
+	switch (levelName)
 	{
 	case LevelName::Test:
 		m_level = new Level(levelPath + "test/", "Test level", 1.f, "test");
@@ -29,15 +23,9 @@ void GameMenu::changeLevel(const GameMenu::LevelName level)
 		assert(false && "Level doesn't exist");
 		break;
 	}
-	
-	assert(m_level->loadLevel(m_camera,m_player,m_background,m_light) && "Load level failed");
-	changeTitle("Runaway - " + m_level->getTitle());
-}
 
-GameMenu::GameMenu(MenuStack* const menuStack):
-	Menu(menuStack)
-{
-	changeLevel(LevelName::That);
+	assert(m_level->loadLevel(m_camera, m_player, m_background, m_light) && "Load level failed");
+	changeTitle("Runaway - " + m_level->getTitle());
 }
 
 GameMenu::~GameMenu()
@@ -95,6 +83,7 @@ void GameMenu::update(const float elapsedTime)
 
 	m_camera.setTarget(m_player->m_sprite.getPos() + offset);
 	*/
+	
 	m_camera.setView(m_player->m_sprite.getPos());
 	m_camera.update(elapsedTime);
 

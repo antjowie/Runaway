@@ -48,9 +48,8 @@ void PlayerObject::logic(const float elapsedTime)
 	{
 		m_sprite.m_sprite.move(0, -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()));
 		if (m_collisionHandler.distanceTillUpperCollision(m_sprite.getHitbox()) != 0)
-			m_isDead = true;
+  			m_isDead = true;
 	}
-	
 	
 	m_sprite.update(elapsedTime, m_collisionHandler);
 	//m_sprite.debugMove(elapsedTime);
@@ -77,9 +76,9 @@ void PlayerObject::logic(const float elapsedTime)
 
 	// Horizontal movement
 	else if (newPos.x > offset)
-		m_animHandler.changeAnimation(PlayerDirection::Right);
-	else if (newPos.x < -offset )
 		m_animHandler.changeAnimation(PlayerDirection::Left);
+	else if (newPos.x < -offset )
+		m_animHandler.changeAnimation(PlayerDirection::Right);
 
 	// No movement
 	else
@@ -113,6 +112,7 @@ void PlayerObject::logic(const float elapsedTime)
 
 void PlayerObject::input(sf::RenderWindow &window)
 {	
+	if (!window.hasFocus()) return;
 	if(!m_isDead)
 	m_sprite.input();
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))

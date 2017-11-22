@@ -24,6 +24,11 @@ DataManager::DataManager()
 	// Load misc
 	loadTexture("mainMenuBackground", texturePath + "mainMenuBackground.png");
 
+	// Load level backgrounds
+	std::string levelPath(dataPath + "levels/");
+	loadTexture("testBackground", levelPath + "test/background.png");
+	loadTexture("thatBackground", levelPath + "that/background.png");
+
 	getTexture("player").setSmooth(true);
 }
 

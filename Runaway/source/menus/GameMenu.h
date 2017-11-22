@@ -11,27 +11,25 @@
 #include "GameBackground.h"
 #include "Light.h"
 
+enum class LevelName {
+	Test,
+	That,
+	Blank
+};
+
 class GameMenu :
-	public Menu
+public Menu
 {
 private:
-	enum class LevelName {
-		Blank,
-		Test,
-		That
-	};
 
 	GameBackground m_background;
 	Light m_light;
 	PlayerObject *m_player; // I have 2 pointers toward player, one in the m_objects and one here, to access the unique functions
 	Camera m_camera;
-	LevelName m_levelId{ LevelName::Blank };
-	Level *m_level; 
-
-    void changeLevel(const LevelName level);
+	Level *m_level;
 
 public:
-	GameMenu(MenuStack* const menuStack);
+	GameMenu(MenuStack* const menuStack,const LevelName levelName);
 	~GameMenu();
 
 	virtual void input(sf::RenderWindow &window);

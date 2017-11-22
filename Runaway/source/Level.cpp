@@ -105,7 +105,7 @@ bool Level::initLight(Light & light, const PlayerObject * const player)
 	for(int i = 0; i < m_tilemapHeight; ++i)
 		for (int j = 0; j < m_tilemapWidth; ++j)
 		{
-			if (m_background[i][j]->getTileMeta().m_light != 0)
+			if (!m_background.empty() && m_background[i][j]->getTileMeta().m_light != 0)
 				light.addDrawable(m_background[i][j]);
 			if (m_tilemap[i][j]->getTileMeta().m_tileType == TileType::Light)
 				light.addDrawable(m_tilemap[i][j]);
@@ -430,6 +430,7 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 	sf::IntRect tileBounds = camera.getTileBounds(m_tileWidth, m_tileHeight);
 
 	// Draw background tiles
+	if(!m_background.empty())
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
 				target.draw(*m_background[i][j]);

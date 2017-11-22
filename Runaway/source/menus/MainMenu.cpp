@@ -4,6 +4,7 @@
 #include "MenuStack.h"
 #include "OptionsMenu.h"
 #include "GameMenu.h"
+#include "GameSelectMenu.h"
 
 MainMenu::MainMenu(MenuStack *const menuStack) :
 	Menu(menuStack)
@@ -68,7 +69,7 @@ void MainMenu::input(sf::RenderWindow & window)
 				switch (iter->getFunction())
 				{
 				case Function::Play:
-					m_menuStack->push(new GameMenu(m_menuStack));
+					m_menuStack->push(new GameSelectMenu(m_menuStack));
 					break;
 
 				case Function::Options:
