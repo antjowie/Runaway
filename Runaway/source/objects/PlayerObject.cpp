@@ -76,9 +76,9 @@ void PlayerObject::logic(const float elapsedTime)
 
 	// Horizontal movement
 	else if (newPos.x > offset)
-		m_animHandler.changeAnimation(PlayerDirection::Left);
-	else if (newPos.x < -offset )
 		m_animHandler.changeAnimation(PlayerDirection::Right);
+	else if (newPos.x < -offset )
+		m_animHandler.changeAnimation(PlayerDirection::Left);
 
 	// No movement
 	else

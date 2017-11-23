@@ -11,10 +11,12 @@ class GameSelectMenu :
 	public Menu
 {
 private:
-	
+	LevelName m_currentLevel{ LevelName::Test };
+
 	struct LevelButton
 	{
 		sf::RectangleShape m_rect;
+		sf::RectangleShape m_unlocked;
 		sf::Text m_text;
 		LevelName m_level{ LevelName::Blank };
 		bool m_hover{ false };

@@ -53,9 +53,13 @@ GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 			temp.m_rect.setOutlineThickness(5);
 			temp.m_rect.setOutlineColor(sf::Color::White);
 
+			temp.m_unlocked.setSize(temp.m_rect.getSize());
+			temp.m_unlocked.setPosition(temp.m_rect.getPosition());
+			temp.m_unlocked.setFillColor(sf::Color(60, 60, 60));
+
 			temp.m_text.setFont(DataManager::getInstance().getFont("pixel"));
 			temp.m_text.setString(getLevelName(temp.m_level));
-			temp.m_text.setPosition(temp.m_rect.getPosition().x, temp.m_rect.getPosition().y - temp.m_rect.getSize().y + temp.m_text.getCharacterSize());
+			temp.m_text.setPosition(temp.m_rect.getPosition().x, temp.m_rect.getPosition().y + temp.m_rect.getSize().y - temp.m_text.getCharacterSize());
 		}
 }
 
@@ -70,17 +74,15 @@ void GameSelectMenu::input(sf::RenderWindow& window)
 		case sf::Event::MouseMoved:
 			for (auto &iter : m_levels)
 			{
-				if (iter.m_rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y))))
-					iter.m_hover = true;
-				else
-					iter.m_hover = false;
+				if ((iter.m_level <= m_currentLevel))
+					iter.m_hover = iter.m_rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y))) ? true : false;
 			}
 			break;
 			
 		case sf::Event::MouseButtonPressed:
 			for (auto &iter : m_levels)
-				if(iter.m_rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x,event.mouseButton.y))))
-					m_menuStack->push(new GameMenu(m_menuStack,iter.m_level));
+				if(iter.m_rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x,event.mouseButton.y))) && iter.m_level <= m_currentLevel)
+					m_menuStack->push(new GameMenu(m_menuStack,iter.m_level,m_currentLevel));
 			break;
 
 		case sf::Event::KeyPressed:
@@ -123,10 +125,13 @@ void GameSelectMenu::draw(sf::RenderWindow &window)
 {
 	window.setView(window.getDefaultView());
 	Menu::draw(window);
+	std::cout << getLevelName(m_currentLevel) << '\n';
 	for (const auto &iter : m_levels)
 	{
 		window.draw(iter.m_rect);
 		window.draw(iter.m_text);
+		if (!(iter.m_level <= m_currentLevel))
+			window.draw(iter.m_unlocked);
 	}
 
 }

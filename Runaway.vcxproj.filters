@@ -114,6 +114,9 @@
     <ClCompile Include="Runaway\source\menus\GameSelectMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Runaway\source\entities\Finish.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Runaway\source\Camera.h">
@@ -219,6 +222,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Runaway\source\menus\GameSelectMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runaway\source\entities\Finish.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

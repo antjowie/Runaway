@@ -1,5 +1,5 @@
 //
-// Entities are all in game related items, like coins, checkpoints
+// Entities are all in game related items like coins, checkpoints
 //
 
 #pragma once
@@ -9,7 +9,8 @@ enum class EntityType
 {
 	Coin,
 	Checkpoint,
-	Switch
+	Switch,
+	Finish
 };
 
 union EntityAction{

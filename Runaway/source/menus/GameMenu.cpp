@@ -3,8 +3,8 @@
 
 #include <cassert>
 
-GameMenu::GameMenu(MenuStack* const menuStack, const LevelName levelName):
-	Menu(menuStack)
+GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &currentLevel):
+	Menu(menuStack), m_levelName(levelName), m_levelProgress(currentLevel)
 {
 	m_player = new PlayerObject(true);
 
@@ -104,6 +104,14 @@ void GameMenu::update(const float elapsedTime)
 			case EntityType::Coin:
 				
 				break;				
+
+			case EntityType::Finish:
+				// If player completes level
+				if(m_levelName >= m_levelProgress)
+				m_levelProgress = static_cast<LevelName>(static_cast<int>(m_levelProgress) + 1);
+				m_isPop = true;
+				break;
+
 			}
 		for(auto &iter: m_player->m_launcher.getProjectiles())
 			if(entity->getType() == EntityType::Switch && entity->getHitbox().intersects(iter.m_sprite.getGlobalBounds()))

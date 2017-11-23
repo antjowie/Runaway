@@ -21,6 +21,8 @@ class GameMenu :
 public Menu
 {
 private:
+	LevelName &m_levelName;		// The level the player is playing
+	LevelName &m_levelProgress; // The level the player is at
 
 	GameBackground m_background;
 	Light m_light;
@@ -29,7 +31,7 @@ private:
 	Level *m_level;
 
 public:
-	GameMenu(MenuStack* const menuStack,const LevelName levelName);
+	GameMenu(MenuStack* const menuStack,LevelName &levelName, LevelName &currentLevel);
 	~GameMenu();
 
 	virtual void input(sf::RenderWindow &window);

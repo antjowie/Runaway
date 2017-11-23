@@ -1,6 +1,7 @@
 #include "Level.h"
 #include "Checkpoint.h"
 #include "Switch.h"
+#include "Finish.h"
 #include "DataManager.h"
 
 #include <fstream>
@@ -116,6 +117,10 @@ bool Level::initLight(Light & light, const PlayerObject * const player)
 		light.addDrawable(iter.getTopTile());
 		light.addDrawable(iter.getBottomTile());
 	}
+
+	for (const auto &iter : m_entityMap)
+		if (iter->getType() == EntityType::Finish)
+			light.addDrawable(iter);
 
 	light.addDrawable(&player->m_lightPool);
 	light.addDrawable(&player->m_launcher);
@@ -252,25 +257,29 @@ bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 		}
 		else
 		{
+			// All enities are loaded here
 			// Check entity type
+			sf::Vector2f spawn;
+			converter(spawn.x, entity->first_attribute("x")->value());
+			converter(spawn.y, entity->first_attribute("y")->value());
+			EntityAction action;
+			
 			if (name == "checkpoint")
 			{
-				sf::Vector2f spawn;
-				converter(spawn.x, entity->first_attribute("x")->value());
-				converter(spawn.y, entity->first_attribute("y")->value());
-				EntityAction action;
 				action.pos = spawn;
-				m_entityMap.push_back(new Checkpoint(action , action.pos));
+				m_entityMap.push_back(new Checkpoint(action, action.pos));
 			}
 			else if (name == "coin")
 			{
-				EntityAction action;
 				converter(action.value, entity->first_attribute("value")->value());
-				sf::Vector2f spawn;
-				converter(spawn.x, entity->first_attribute("x")->value());
-				converter(spawn.y, entity->first_attribute("y")->value());
 				//m_entityMap.push_back(new Coin(entityAction, spawn));
 			}
+			
+			else if (name == "finish")
+			{
+				m_entityMap.push_back(new Finish(action, spawn));	
+			}
+			
 		}
 	}
 	return true;
@@ -452,6 +461,7 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 
 	for (const auto &iter : m_entityMap)
 		target.draw(*iter);
+
 
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
