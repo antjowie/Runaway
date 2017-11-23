@@ -444,12 +444,6 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
 				target.draw(*m_background[i][j]);
 
-	// So that gate wont be rendered above tiles
-	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
-		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
-			if (m_tilemap[i][j]->getTileMeta().m_tileType == TileType::Gate)
-				target.draw(*m_tilemap[i][j]);
-
 	for (auto iter : m_darkZones)
 	{
 		sf::RectangleShape temp;
@@ -462,10 +456,8 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 	for (const auto &iter : m_entityMap)
 		target.draw(*iter);
 
-
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
-			if (m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Gate)
 				target.draw(*m_tilemap[i][j]);
 
 }

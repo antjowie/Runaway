@@ -21,7 +21,7 @@ class GameSelectMenu :
 	public Menu
 {
 private:
-	LevelName m_currentLevel{ LevelName::Test };
+	LevelName m_currentLevel;
 
 	float m_timeline{ 0 };
 
@@ -38,7 +38,8 @@ private:
 	
 public:
 	GameSelectMenu(MenuStack* const menuStack);
-	
+	~GameSelectMenu();
+
 	virtual void input(sf::RenderWindow &window) override final;
 	virtual void update(const float elapsedTime) override final;
 	virtual void draw(sf::RenderWindow &window)  override final;

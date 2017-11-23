@@ -5,13 +5,16 @@
 #pragma once
 #include "Menu.h"
 #include "TextButtonObject.h"
+#include "GameSelectMenu.h"
 
 class MainMenu :
 	public Menu
 {
 private:
 	std::vector<TextButtonObject*> m_buttons;
+	LevelName m_level;
 
+	void init(); // If player returns from GameSelect, continue button will not be loaded. This funtion fixed that
 public:
 	MainMenu(MenuStack *const menuStack);
 	~MainMenu();

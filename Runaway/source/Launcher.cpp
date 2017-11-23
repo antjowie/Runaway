@@ -110,6 +110,11 @@ void Launcher::loadTilemap(std::vector<std::vector<Tile*>> * tilemap)
 	m_tilemap = tilemap;
 }
 
+const sf::Vector2f & Launcher::getProjectileSize() const
+{
+	return m_projectileSize;
+}
+
 std::list<Launcher::Projectile> &Launcher::getProjectiles()
 {
 	return m_projectiles;

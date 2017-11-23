@@ -17,6 +17,11 @@ void LightPool::setSize(const float diameter)
 	setSize(diameter, diameter);
 }
 
+void LightPool::depleteLight(const float radius)
+{
+	m_pool = m_pool - radius;
+}
+
 void LightPool::changeSize(const float elapsedTime)
 {
 	// The radius value represents the original diameter

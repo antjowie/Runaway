@@ -35,7 +35,8 @@ public:
 
 	void setSize(const float width, const float height);
 	void setSize(const float diameter);
-	
+	void depleteLight(const float radius);
+
 	// Defines at which rate the light should change
 	void setRate(const float depletetion);
 	const bool isCapped() const;

@@ -3,6 +3,7 @@
 #include "DataManager.h"
 #include "MenuStack.h"
 #include "BackgroundObject.h"
+#include "Config.h"
 
 #include <iostream>
 
@@ -32,6 +33,7 @@ sf::Texture & GameSelectMenu::getLevelBackground(const LevelName levelName) cons
 GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 	Menu(menuStack, "Runaway - level select")
 {
+	m_currentLevel = static_cast<LevelName>(Config::getInstance().getConfig("level").integer);
 	pushObject(new BackgroundObject("mainMenuBackground", true));
 
 	for (int j = 1; j < 4; ++j)
@@ -65,6 +67,12 @@ GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 		}
 }
 
+GameSelectMenu::~GameSelectMenu()
+{
+	// For some reason this doesn't get called
+	Config::getInstance().setConfig("level", Item(static_cast<int>(m_currentLevel)));
+}
+
 void GameSelectMenu::input(sf::RenderWindow& window)
 {
 	Menu::input(window);
@@ -83,13 +91,17 @@ void GameSelectMenu::input(sf::RenderWindow& window)
 			
 		case sf::Event::MouseButtonPressed:
 			for (auto &iter : m_levels)
-				if(iter.m_rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x,event.mouseButton.y))) && iter.m_level <= m_currentLevel)
+				if (iter.m_rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))) && iter.m_level <= m_currentLevel)
 					m_menuStack->push(new GameMenu(m_menuStack,iter.m_level,m_currentLevel));
+
 			break;
 
 		case sf::Event::KeyPressed:
 			if (event.key.code == sf::Keyboard::Key::Escape)
+			{
+				Config::getInstance().setConfig("level", Item(static_cast<int>(m_currentLevel)));
 				m_isPop = true;
+			}
 			break;
 
 		default:
@@ -117,7 +129,6 @@ void GameSelectMenu::update(const float elapsedTime)
 		int before{ temp };
 		
 		temp = iter.m_hover ? temp + max * (m_timeline /fadeTime): temp - max * (m_timeline /fadeTime);
-		std::cout << m_timeline << '\n' << temp << "\n\n";
 		if (temp > max) 
 			temp = max;
 		if (temp < min)
@@ -142,5 +153,4 @@ void GameSelectMenu::draw(sf::RenderWindow &window)
 		if (!(iter.m_level <= m_currentLevel))
 			window.draw(iter.m_unlocked);
 	}
-
 }

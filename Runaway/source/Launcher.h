@@ -50,5 +50,7 @@ public:
 	void setProjectileSpeed(const float projectileSpeed);
 	void loadTilemap(std::vector<std::vector<Tile*>> * tilemap);
 
+	const sf::Vector2f &getProjectileSize() const;
+
 	std::list<Projectile> &getProjectiles();
 };

@@ -66,7 +66,9 @@ void Config::loadDefaultConfig()
 	m_config.emplace("jump", sf::Keyboard::Key::Space);
 	m_config.emplace("dash", sf::Keyboard::Key::LShift);
 
-	m_config.emplace("frameLimit",	60);
+	m_config.emplace("frameLimit", 60);
+
+	m_config.emplace("level", 0);
 }
 
 void Config::saveConfig()
@@ -138,6 +140,7 @@ void Config::checkConfig()
 	if (!m_config.count("dash")) corrupt = true;
 
 	if (!m_config.count("frameLimit")) corrupt = true;
+	if (!m_config.count("level")) corrupt = true;
 
 	if (corrupt)
 		loadDefaultConfig();
@@ -156,7 +159,9 @@ const Item Config::getConfig(const std::string key)
 
 void Config::setConfig(const std::string key, Item value)
 {
-	m_config[key] = value;
+	// It doesn't want to overwrite???
+	m_config.erase(key);
+	m_config.emplace(key, value);
 }
 
 Item::Item(const sf::Keyboard::Key key):

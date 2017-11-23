@@ -24,6 +24,7 @@
     <ClCompile Include="Runaway\source\LightPool.cpp" />
     <ClCompile Include="Runaway\source\Light.cpp" />
     <ClCompile Include="Runaway\source\GameBackground.cpp" />
+    <ClCompile Include="Runaway\source\LightTrail.cpp" />
     <ClCompile Include="Runaway\source\menus\GameSelectMenu.cpp" />
     <ClCompile Include="Runaway\source\tiles\InvalidTile.cpp" />
     <ClCompile Include="Runaway\source\Gate.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="Runaway\source\LightPool.h" />
     <ClInclude Include="Runaway\source\Light.h" />
     <ClInclude Include="Runaway\source\GameBackground.h" />
+    <ClInclude Include="Runaway\source\LightTrail.h" />
     <ClInclude Include="Runaway\source\menus\GameSelectMenu.h" />
     <ClInclude Include="Runaway\source\tiles\InvalidTile.h" />
     <ClInclude Include="Runaway\source\Gate.h" />

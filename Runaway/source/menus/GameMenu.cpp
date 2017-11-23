@@ -1,5 +1,6 @@
 #include "GameMenu.h"
 #include "DataManager.h"
+#include "Config.h"
 
 #include <cassert>
 
@@ -13,22 +14,6 @@ GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &
 	std::transform(lower.begin(), lower.end(), lower.begin(), tolower);
 	m_level = new Level(levelPath + lower + '/', getLevelName(levelName) + " level", 1.f, "test");
 
-	/*
-	switch (levelName)
-	{
-	case LevelName::Test:
-		m_level = new Level(levelPath + "test/", "Test level", 1.f, "test");
-		break;
-
-	case LevelName::That:
-		m_level = new Level(levelPath + "that/", "That level", 1.f, "test");
-		break;
-
-	default:
-		assert(false && "Level doesn't exist");
-		break;
-	}
-	*/
 	assert(m_level->loadLevel(m_camera, m_player, m_background, m_light) && "Load level failed");
 	changeTitle("Runaway - " + m_level->getTitle());
 }
@@ -75,20 +60,6 @@ void GameMenu::update(const float elapsedTime)
 	m_player->m_lightPool.setRate(m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? -50.f : 200.f);
 	m_player->logic(elapsedTime);
 	
-	/*
-	sf::Vector2f  offset{ m_player->m_sprite.getMoveDirection() };
-	if (offset.x > 0)
-		offset.x = m_camera.getView().getSize().x / 2;
-	else if (offset.x <0)
-		offset.x = -m_camera.getView().getSize().x / 2;
-	if (offset.y < 0)
-		offset.y = -m_camera.getView().getSize().y / 2;
-	else if (offset.y > 0)
-	offset.y = m_camera.getView().getSize().y / 2;
-
-	m_camera.setTarget(m_player->m_sprite.getPos() + offset);
-	*/
-	
 	m_camera.setView(m_player->m_sprite.getPos());
 	m_camera.update(elapsedTime);
 
@@ -105,15 +76,15 @@ void GameMenu::update(const float elapsedTime)
 				entity->m_isActive = true;
 				m_level->setSpawn(entity->getAction().pos);
 				break;
-			
+
 			case EntityType::Coin:
 				
 				break;				
 
 			case EntityType::Finish:
 				// If player completes level
-				if(m_levelName >= m_levelProgress)
-				m_levelProgress = static_cast<LevelName>(static_cast<int>(m_levelProgress) + 1);
+				if (m_levelName >= m_levelProgress)
+					m_levelProgress = static_cast<LevelName>(static_cast<int>(m_levelProgress) + 1);
 				m_isPop = true;
 				break;
 

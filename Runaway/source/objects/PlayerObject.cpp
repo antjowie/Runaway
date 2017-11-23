@@ -103,8 +103,17 @@ void PlayerObject::logic(const float elapsedTime)
 
 	// Check if light pool's empty
 	if (m_lightPool.isEmpty())
-		m_isDead = true;
-
+	{
+		m_darknessTimeline += elapsedTime;
+		if (m_darknessTimeline > 5)
+			m_isDead = true;
+	}
+	else
+	{
+		m_darknessTimeline -= elapsedTime;
+		if (m_darknessTimeline < 0)
+			m_darknessTimeline = 0;
+	}
 	// Update launcher
 	m_launcher.setPos(m_sprite.getPos());
 	m_launcher.update(elapsedTime);
@@ -116,7 +125,12 @@ void PlayerObject::input(sf::RenderWindow &window)
 	if(!m_isDead)
 	m_sprite.input();
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		unsigned int temp{ m_launcher.getProjectiles().size() };
 		m_launcher.shoot(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView()));
+		if (temp < m_launcher.getProjectiles().size())
+			m_lightPool.depleteLight(m_launcher.getProjectileSize().x + m_launcher.getProjectileSize().y);
+	}
 }
 
 void PlayerObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -261,8 +275,6 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 			m_sprite.move(collisionHandler.distanceTillLeftCollision(getHitbox()), 0);
 			m_velocity.x = 0;
 		}
-
-		// Check before and after dash
 	}
 
 	// Decrease accelerations

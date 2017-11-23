@@ -4,18 +4,23 @@
 #include "MenuStack.h"
 #include "OptionsMenu.h"
 #include "GameMenu.h"
-#include "GameSelectMenu.h"
+#include <iostream>
 
-MainMenu::MainMenu(MenuStack *const menuStack) :
-	Menu(menuStack)
+void MainMenu::init()
 {
+	m_buttons.clear();
+	clearObject();
+
+	// Used to check if player returns from save data
+	m_level = static_cast<LevelName>(Config::getInstance().getConfig("level").integer);
+
 	// Maybe unnecessarily 
 	std::vector<Object*> tempVec;
 	tempVec.reserve(2);
-	m_buttons.reserve(3);
+	m_buttons.reserve(4);
 
 	// Background
-	tempVec.push_back(new BackgroundObject("mainMenuBackground",true));
+	tempVec.push_back(new BackgroundObject("mainMenuBackground", true));
 
 	// Menu buttons
 	m_buttons.push_back(new TextButtonObject("NEW GAME", Function::Play, true));
@@ -23,22 +28,42 @@ MainMenu::MainMenu(MenuStack *const menuStack) :
 	m_buttons.push_back(new TextButtonObject("QUIT", Function::Quit, true));
 
 	int i{ 0 };
-	for (auto iter: m_buttons)
+	for (auto iter : m_buttons)
 	{
 		const int offset{ i++ * 100 };
-		
+
 		iter->setOriginToLeftMiddle();
-		iter->setPos(sf::Vector2f(100, 430 + static_cast<float>(offset)));
-		iter->setBody(sf::IntRect(0, 400 + offset, 1280, 60));
+		iter->setPos(sf::Vector2f(100, 400 + static_cast<float>(offset)));
+		iter->setBody(sf::IntRect(0, 370 + offset, 1280, 60));
+	}
+
+
+	if (static_cast<int>(m_level) >= 1)
+	{
+		m_buttons.push_back(new TextButtonObject("CONTINUE", Function::Continue, true));
+		m_buttons.back()->setOriginToLeftMiddle();
+		sf::Vector2f temp{ m_buttons.front()->getPos() };
+		temp.y -= 30;
+		m_buttons.back()->setPos(temp);
+		m_buttons.back()->setBody(sf::IntRect(0, temp.y - 30, 1280, 60));
+		temp.y += 60;
+		m_buttons.front()->setPos(temp);
+		m_buttons.front()->setBody(sf::IntRect(0, temp.y - 30, 1280, 60));
 	}
 
 	// Title
-	TextObject *title = new TextObject("RUNAWAY",true);
+	TextObject *title = new TextObject("RUNAWAY", true);
 	title->setPos(sf::Vector2f(100, 175));
 	title->setTextSize(100);
 	tempVec.push_back(title);
 
 	pushObject(tempVec);
+}
+
+MainMenu::MainMenu(MenuStack *const menuStack) :
+	Menu(menuStack)
+{
+	init();
 }
 
 MainMenu::~MainMenu()
@@ -62,13 +87,18 @@ void MainMenu::input(sf::RenderWindow & window)
 	{
 		switch (event.type)
 		{	
-			// For button functions
+		// For button functions
 		case sf::Event::MouseButtonPressed:
 			for (auto iter : m_buttons)
 			{
 				switch (iter->getFunction())
 				{
+				case Function::Continue:
+					m_menuStack->push(new GameSelectMenu(m_menuStack));
+					break;
+
 				case Function::Play:
+					Config::getInstance().setConfig("level", Item(0));
 					m_menuStack->push(new GameSelectMenu(m_menuStack));
 					break;
 
@@ -99,6 +129,9 @@ void MainMenu::input(sf::RenderWindow & window)
 
 void MainMenu::update(const float elapsedTime)
 {
+	if (m_level != static_cast<LevelName>(Config::getInstance().getConfig("level").integer))
+		init();
+	std::cout << (int)m_level << '\t' << Config::getInstance().getConfig("level").integer << '\n';
 	Menu::update(elapsedTime);
 	for (const auto &iter : m_buttons)
 		if (iter->isValid()) iter->logic(elapsedTime);

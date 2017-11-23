@@ -12,14 +12,12 @@ private:
 	sf::Vector2i m_moveDirection;	// The direction the player walks in
 	sf::Vector2f m_velocity;	// The acceleration of the player
 
-
 	bool m_hitDash{ false };
 	float m_dashCooldown{ 0 };
 
 	bool m_isCrouching{ false };
 	bool m_canJump{ false };
-	float m_jumpStrength{ 0 }; // The ammount player is still allowed to jump
-
+	
 	const bool isItemPressed(const std::string string) const;
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 
@@ -52,9 +50,10 @@ class PlayerObject :
 	public Object
 {
 private:
+	float m_darknessTimeline{ 0 };
 	enum PlayerDirection { Rest, JumpRight, DropRight, JumpLeft, DropLeft, Right, Left };
 	AnimationHandler m_animHandler;
-	
+
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 
 public:

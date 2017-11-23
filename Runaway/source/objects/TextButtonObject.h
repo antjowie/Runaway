@@ -6,7 +6,7 @@
 #pragma once
 #include "TextObject.h"
 
-enum class Function { Play, Options, Quit, Back, Nothing };
+enum class Function { Play, Continue, Options, Quit, Back, Nothing };
 
 
 class TextButtonObject :
