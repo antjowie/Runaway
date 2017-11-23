@@ -1,10 +1,12 @@
 #include "GameSelectMenu.h"
+#include "GameMenu.h"
 #include "DataManager.h"
 #include "MenuStack.h"
 #include "BackgroundObject.h"
+
 #include <iostream>
 
-std::string GameSelectMenu::getLevelName(const LevelName levelName) const
+std::string getLevelName(const LevelName levelName)
 {
 	switch (levelName)
 	{
@@ -101,31 +103,38 @@ void GameSelectMenu::update(const float elapsedTime)
 {
 	const int min{ 20 };
 	const int max{ 200 };
-	const float fadeTime{ 1 };
+	const float fadeTime{ 0.5f };
 
-	Menu::update(elapsedTime);
+	// Sometimes the user his fps is too high which results into the int not changing (the change is too small f.e. 20.0 goes to 20.7 and gets casted to int (20))
+	m_timeline += elapsedTime;
+	if (m_timeline < 1.f / 60.f)
+		return;
+	
+	Menu::update(m_timeline);
 	for (auto &iter : m_levels)
 	{
 		int temp{ iter.m_rect.getOutlineColor().a };
-		iter.m_hover ? temp += max * (elapsedTime / fadeTime) : temp -= max * (elapsedTime / fadeTime);
-
-		if (temp > max)
+		int before{ temp };
+		
+		temp = iter.m_hover ? temp + max * (m_timeline /fadeTime): temp - max * (m_timeline /fadeTime);
+		std::cout << m_timeline << '\n' << temp << "\n\n";
+		if (temp > max) 
 			temp = max;
 		if (temp < min)
 			temp = min;
 
 		sf::Color color{ iter.m_rect.getOutlineColor() };
 		color.a = static_cast<sf::Uint8>(temp);
-
 		iter.m_rect.setOutlineColor(color);
 	}
+
+	m_timeline = 0;
 }
 
 void GameSelectMenu::draw(sf::RenderWindow &window)
 {
 	window.setView(window.getDefaultView());
 	Menu::draw(window);
-	std::cout << getLevelName(m_currentLevel) << '\n';
 	for (const auto &iter : m_levels)
 	{
 		window.draw(iter.m_rect);

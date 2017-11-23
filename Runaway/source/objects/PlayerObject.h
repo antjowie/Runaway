@@ -18,6 +18,7 @@ private:
 
 	bool m_isCrouching{ false };
 	bool m_canJump{ false };
+	float m_jumpStrength{ 0 }; // The ammount player is still allowed to jump
 
 	const bool isItemPressed(const std::string string) const;
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;

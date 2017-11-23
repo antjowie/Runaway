@@ -9,6 +9,11 @@ GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &
 	m_player = new PlayerObject(true);
 
 	std::string levelPath("Runaway/data/levels/");
+	std::string lower(getLevelName(levelName));
+	std::transform(lower.begin(), lower.end(), lower.begin(), tolower);
+	m_level = new Level(levelPath + lower + '/', getLevelName(levelName) + " level", 1.f, "test");
+
+	/*
 	switch (levelName)
 	{
 	case LevelName::Test:
@@ -23,7 +28,7 @@ GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &
 		assert(false && "Level doesn't exist");
 		break;
 	}
-
+	*/
 	assert(m_level->loadLevel(m_camera, m_player, m_background, m_light) && "Load level failed");
 	changeTitle("Runaway - " + m_level->getTitle());
 }

@@ -10,12 +10,7 @@
 #include "PlayerObject.h"
 #include "GameBackground.h"
 #include "Light.h"
-
-enum class LevelName {
-	Test,
-	That,
-	Blank
-};
+#include "GameSelectMenu.h" // For one function and LevelName
 
 class GameMenu :
 public Menu

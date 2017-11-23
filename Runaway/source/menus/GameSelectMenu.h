@@ -1,17 +1,29 @@
 //
 // This menu select the level
+// All new levels go into this class
+// To add a level, just place it into the LevelName enum and getLevelName function
+// All levels are made with tiled, do be carefull about the structure
 //
 
 #pragma once
 #include "Menu.h"
-#include "GameMenu.h"
 #include <vector>
+
+enum class LevelName {
+	Test,
+	That,
+	Blank
+};
+
+std::string getLevelName(const LevelName levelName);
 
 class GameSelectMenu :
 	public Menu
 {
 private:
 	LevelName m_currentLevel{ LevelName::Test };
+
+	float m_timeline{ 0 };
 
 	struct LevelButton
 	{
@@ -22,7 +34,6 @@ private:
 		bool m_hover{ false };
 	}m_levels[static_cast<int>(LevelName::Blank)];
 
-	std::string getLevelName(const LevelName levelName) const;
 	sf::Texture &getLevelBackground(const LevelName levelName) const;
 	
 public:

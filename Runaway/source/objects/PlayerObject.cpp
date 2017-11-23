@@ -140,7 +140,7 @@ void Sprite::input()
 
 	if ((isItemPressed("moveUp") || isItemPressed("jump"))&& m_canJump)
 		m_moveDirection.y = -1;
-
+	
 	if ((isItemPressed("dash") && (m_dashCooldown == 0)))
 		m_hitDash = true;
 
@@ -154,15 +154,13 @@ void Sprite::input()
 
 void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler)
 {
-	// TODO: add jump offset
-
 	const float
 		tileSize{ 32 },
 		speed{ 3.5 },	// Blocks to run with accel = 1
 		gravity{ 24 },	// Blocks to drop in 1 second
 
 		oneTileTravel{ 2.f * gravity },
-		jumpStrength{ sqrt(oneTileTravel * 4.5f) },	// Amount of blocks to jump in one second (won't go higher)
+		jumpStrength{ sqrt(oneTileTravel * 3.f) },	// Amount of blocks to jump in one second (won't go higher)
 
 		maxAccel{ 2 },	// Max accel  
 		accel{ 4 },		// accel / maxAccel = time to reach max accel
@@ -181,7 +179,10 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 			m_velocity.y = -jumpStrength * tileSize;
 		}
 	}
-	
+
+	if(m_hasJumped && m_velocity.y < 0 && !((isItemPressed("moveUp") || isItemPressed("jump"))))
+		m_velocity.y += gravity * tileSize * elapsedTime;
+
 	// This is placed in the middle because otherwise the desired jump height won't be reached
 	m_sprite.move(0, m_velocity.y * elapsedTime);
 
