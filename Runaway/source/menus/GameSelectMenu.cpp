@@ -9,10 +9,10 @@ std::string GameSelectMenu::getLevelName(const LevelName levelName) const
 	switch (levelName)
 	{
 	case LevelName::Test:
-		return "test";
+		return "Test";
 		break;
 	case LevelName::That:
-		return "that";
+		return "That";
 		break;
 	default:
 		return "ERROR";
@@ -97,7 +97,7 @@ void GameSelectMenu::input(sf::RenderWindow& window)
 
 void GameSelectMenu::update(const float elapsedTime)
 {
-	const int min{ 0 };
+	const int min{ 20 };
 	const int max{ 200 };
 	const float fadeTime{ 1 };
 
@@ -105,8 +105,7 @@ void GameSelectMenu::update(const float elapsedTime)
 	for (auto &iter : m_levels)
 	{
 		int temp{ iter.m_rect.getOutlineColor().a };
-		if (iter.m_hover)
-			temp += max * (elapsedTime / fadeTime);
+		iter.m_hover ? temp += max * (elapsedTime / fadeTime) : temp -= max * (elapsedTime / fadeTime);
 
 		if (temp > max)
 			temp = max;
@@ -125,5 +124,9 @@ void GameSelectMenu::draw(sf::RenderWindow &window)
 	window.setView(window.getDefaultView());
 	Menu::draw(window);
 	for (const auto &iter : m_levels)
+	{
 		window.draw(iter.m_rect);
+		window.draw(iter.m_text);
+	}
+
 }
