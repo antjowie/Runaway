@@ -14,6 +14,7 @@ DataManager::DataManager()
 	// Load entities
 	std::string entityPath(texturePath + "entities/");
 	loadTexture("player", entityPath + "player/playerSprite.png");
+	loadTexture("playerLight", entityPath + "player/playerLightSprite.png");
 	loadTexture("checkpoint", entityPath + "checkpoint/checkpointSprite.png");
 	loadTexture("switch", entityPath + "switch/switchSprite.png");
 	loadTexture("finish", entityPath + "finish/finishSprite.png");

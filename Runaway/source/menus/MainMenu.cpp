@@ -17,7 +17,7 @@ void MainMenu::init()
 	// Maybe unnecessarily 
 	std::vector<Object*> tempVec;
 	tempVec.reserve(2);
-	m_buttons.reserve(4);
+	m_buttons.reserve(4); 
 
 	// Background
 	tempVec.push_back(new BackgroundObject("mainMenuBackground", true));
@@ -131,7 +131,6 @@ void MainMenu::update(const float elapsedTime)
 {
 	if (m_level != static_cast<LevelName>(Config::getInstance().getConfig("level").integer))
 		init();
-	std::cout << (int)m_level << '\t' << Config::getInstance().getConfig("level").integer << '\n';
 	Menu::update(elapsedTime);
 	for (const auto &iter : m_buttons)
 		if (iter->isValid()) iter->logic(elapsedTime);

@@ -3,6 +3,7 @@
 #include "Switch.h"
 #include "Finish.h"
 #include "DataManager.h"
+#include "LightTrail.h"
 
 #include <fstream>
 #include <sstream>
@@ -122,6 +123,7 @@ bool Level::initLight(Light & light, const PlayerObject * const player)
 		if (iter->getType() == EntityType::Finish)
 			light.addDrawable(iter);
 
+	light.addDrawable(&player->m_trail);
 	light.addDrawable(&player->m_lightPool);
 	light.addDrawable(&player->m_launcher);
 	return true;
