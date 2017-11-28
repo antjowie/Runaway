@@ -147,7 +147,6 @@ void Level::loadTilemap(std::vector<std::vector<Tile*>>& tilemap, const std::str
 			tilemap[j][i] = getTile(id, static_cast<float>(m_tileWidth* i), static_cast<float>(m_tileHeight* j));
 		}
 	}
-
 }
 
 bool Level::loadTileLayer(std::vector<char> tilemap)
@@ -294,6 +293,7 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 		sf::FloatRect m_pos;
 		float m_speed;
 		int m_id;
+		float m_height{ -1 };
 	};
 
 	rapidxml::xml_node<> *xmlNode;
@@ -340,6 +340,8 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 					converter(gateNode.m_id, prop->first_attribute("value")->value());
 				else if (std::string(prop->first_attribute("name")->value()) == "speed")
 					converter(gateNode.m_speed, prop->first_attribute("value")->value());
+				else if (std::string(prop->first_attribute("name")->value()) == "height")
+					converter(gateNode.m_height, prop->first_attribute("value")->value());
 				prop = prop->next_sibling();
 			}
 			gateNodes.push_back(gateNode);
@@ -349,21 +351,51 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 	// Link gate tiles to their gate
 	for (const auto &iter : gateNodes)
 	{
-		Gate gate(iter.m_id, iter.m_speed);
-		std::vector<GateTile*> gateTiles;
-		for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
-			; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getTileMeta().m_tileType == TileType::Gate; pos.y--)
+		if (iter.m_height == -1)
 		{
-			GateTile * tile = static_cast<GateTile*>(m_tilemap[pos.y][pos.x]);
-			gateTiles.push_back(tile);
-		}
-		gate.loadBottomTile(gateTiles.front());
-		gate.loadTopTile(gateTiles.back());
-		gate.loadGate();
-		for (int i = 1; i < gateTiles.size() - 1;++i)
-			gateTiles[i]->setSolid(false);
+			Gate gate(iter.m_id, iter.m_speed);
+			std::vector<GateTile*> gateTiles;
+			for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
+				; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getTileMeta().m_tileType == TileType::Gate; pos.y--)
+			{
+				GateTile * tile = static_cast<GateTile*>(m_tilemap[pos.y][pos.x]);
+				gateTiles.push_back(tile);
+			}
+			gate.loadBottomTile(gateTiles.front());
+			gate.loadTopTile(gateTiles.back());
+			gate.loadGate();
+			for (int i = 1; i < gateTiles.size() - 1;++i)
+				gateTiles[i]->setSolid(false);
 
-		m_gateMap.push_back(std::move(gate));
+			m_gateMap.push_back(std::move(gate));
+		}
+		else
+		{
+			Elevator elevator(iter.m_id, iter.m_height, iter.m_speed);
+			std::vector<ElevatorTile*> elevatorTiles;
+			for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
+				; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getTileMeta().m_tileType == TileType::Gate; pos.y--)
+			{
+				ElevatorTile * tile = static_cast<ElevatorTile*>(m_tilemap[pos.y][pos.x]);
+				elevatorTiles.push_back(tile);
+			}
+			if (elevatorTiles.size() == 0)
+			{
+				sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height));
+				m_tilemap[pos.y][pos.x] = getTile(static_cast<int>(TileType::Gate), iter.m_pos.left,iter.m_pos.top);
+				ElevatorTile * tile = static_cast<ElevatorTile*>(m_tilemap[pos.y][pos.x]);
+				tile->setSize(sf::Vector2f(tile->getHitbox().width, 0));
+				elevatorTiles.push_back(tile);
+			}
+				elevator.loadBottomTile(elevatorTiles.front());
+				elevator.loadTopTile(elevatorTiles.back());
+				elevator.loadElevator();
+				for (std::size_t i = 1; i < elevatorTiles.size(); ++i)
+					elevatorTiles[i]->setSolid(false);
+				
+
+			m_elevatorMap.push_back(std::move(elevator));
+		}
 	}
 
 	return true;
@@ -434,6 +466,8 @@ void Level::update(const float elapsedTime)
 	{
 		iter.update(elapsedTime);
 	}
+	for (auto &iter : m_elevatorMap)
+		iter.update(elapsedTime);
 }
 
 void Level::draw(sf::RenderTarget & target, const Camera &camera) const
@@ -481,6 +515,9 @@ void Level::toggleGate(const int id)
 {
 	for (auto &iter : m_gateMap)
 		if(iter.getId() == id)
+			iter.m_isOpen = iter.m_isOpen ? false : true;
+	for (auto &iter : m_elevatorMap)
+		if (iter.getId() == id)
 			iter.m_isOpen = iter.m_isOpen ? false : true;
 }
 

@@ -1,6 +1,7 @@
 //
 // The Gate class will make the outer gate parts become two gate componenets
 // The gate tiles inbetween will be invisible
+// Gate is not responsible for drawing tiles, it only modifies them
 //
 
 #pragma once

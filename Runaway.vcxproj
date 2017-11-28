@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Runaway\source\Elevator.cpp" />
     <ClCompile Include="Runaway\source\entities\Finish.cpp" />
     <ClCompile Include="Runaway\source\Launcher.cpp" />
     <ClCompile Include="Runaway\source\LightPool.cpp" />
@@ -27,6 +28,7 @@
     <ClCompile Include="Runaway\source\LightTrail.cpp" />
     <ClCompile Include="Runaway\source\menus\GameSelectMenu.cpp" />
     <ClCompile Include="Runaway\source\PlayerSprite.cpp" />
+    <ClCompile Include="Runaway\source\tiles\ElevatorTile.cpp" />
     <ClCompile Include="Runaway\source\tiles\InvalidTile.cpp" />
     <ClCompile Include="Runaway\source\Gate.cpp" />
     <ClCompile Include="Runaway\source\tiles\AirTile.cpp" />
@@ -57,6 +59,7 @@
     <ClCompile Include="Runaway\source\entities\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Runaway\source\Elevator.h" />
     <ClInclude Include="Runaway\source\entities\Finish.h" />
     <ClInclude Include="Runaway\source\Launcher.h" />
     <ClInclude Include="Runaway\source\LightPool.h" />
@@ -65,6 +68,7 @@
     <ClInclude Include="Runaway\source\LightTrail.h" />
     <ClInclude Include="Runaway\source\menus\GameSelectMenu.h" />
     <ClInclude Include="Runaway\source\PlayerSprite.h" />
+    <ClInclude Include="Runaway\source\tiles\ElevatorTile.h" />
     <ClInclude Include="Runaway\source\tiles\InvalidTile.h" />
     <ClInclude Include="Runaway\source\Gate.h" />
     <ClInclude Include="Runaway\source\tiles\AirTile.h" />

@@ -5,7 +5,7 @@
 #pragma once
 #include <SFML\Graphics\Sprite.hpp>
 
-enum class TileType{ Air, Block, Top, Light, Gate, Invalid}; // Has to be same order as in Tiled
+enum class TileType{ Air, Block, Top, Light, Gate, Elevator, Invalid}; // Has to be same order as in Tiled
 
 struct TileMeta
 {

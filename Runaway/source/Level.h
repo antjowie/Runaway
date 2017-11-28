@@ -7,6 +7,7 @@
 
 #pragma once
 #include "Level.h"
+#include "Elevator.h"
 #include "Gate.h"
 #include "Tile.h"
 #include "Camera.h"
@@ -34,6 +35,7 @@ private:
 	std::vector<std::vector<Tile*>> m_background;
 	std::vector<Entity*> m_entityMap;
 	std::vector<Gate> m_gateMap;
+	std::vector<Elevator> m_elevatorMap;
 	std::vector<sf::FloatRect> m_darkZones;
 	
 	sf::Vector2f m_cameraSize;
