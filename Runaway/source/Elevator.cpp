@@ -51,7 +51,6 @@ void Elevator::update(const float elapsedTime)
 	const float percentage(m_timeline / m_speed);
 	float newHeight{ (1.f - percentage)*m_originalHeight + percentage * (m_originalHeight+ m_height* 32.f)};
 	m_bottomElevatorTile->setSize(sf::Vector2f(m_bottomElevatorTile->getHitbox().width, newHeight));
-	std::cout << m_bottomElevatorTile->getHitbox().height<< '\n';
 }
 
 const int Elevator::getId() const

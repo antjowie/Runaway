@@ -28,7 +28,7 @@ void CollisionHandler::loadSurroundingTiles()
 	if (!checkLoaded()) return;
 
 	sf::Vector2i tilemapPlayerCoords{ mapWorldToTilemap(sf::Vector2f(m_playerHitbox.left,m_playerHitbox.top),m_tileHeight,m_tileWidth) };
-	const int offset{ 3 };
+	const int offset{ 12 };
 
 	m_surroundingTiles.clear();
 	for (int j= tilemapPlayerCoords.y - offset; j<= tilemapPlayerCoords.y + offset; j++)

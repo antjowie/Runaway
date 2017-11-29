@@ -24,7 +24,6 @@ void Checkpoint::logic(const float elapsedTime)
 	if(m_isActive)
 	m_animHandler.update(elapsedTime);
 
-
 	// These are directly taken from the file
 	sf::IntRect correctedHitbox{ m_animHandler.getFrame() };
 
@@ -34,6 +33,7 @@ void Checkpoint::logic(const float elapsedTime)
 	correctedHitbox.height = 26;
 
 	m_sprite.setTextureRect(correctedHitbox);
+	m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
 }
 
 void Checkpoint::draw(sf::RenderTarget &target, sf::RenderStates states) const

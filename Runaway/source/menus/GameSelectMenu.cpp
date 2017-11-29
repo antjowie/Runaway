@@ -93,7 +93,7 @@ void GameSelectMenu::input(sf::RenderWindow& window)
 			for (auto &iter : m_levels)
 				if (iter.m_rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))) && iter.m_level <= m_currentLevel)
 					m_menuStack->push(new GameMenu(m_menuStack,iter.m_level,m_currentLevel));
-
+			while (window.pollEvent(event));	// This line makes sure that player can't spam a level
 			break;
 
 		case sf::Event::KeyPressed:

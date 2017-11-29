@@ -24,7 +24,7 @@ protected:
 
 public:
 	Menu(MenuStack* const menuStack, const std::string &title = "Runaway");
-	~Menu();
+	virtual ~Menu();
 
 	virtual void input(sf::RenderWindow &window) ;	// Gets input
 	virtual void update(const float elapsedTime);	// Updates all valid objects

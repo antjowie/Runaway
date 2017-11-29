@@ -85,6 +85,16 @@ const bool LightPool::isEmpty() const
 	return m_pool == 0;
 }
 
+const float LightPool::getPool() const
+{
+	return m_pool;
+}
+
+const float LightPool::getCap() const
+{
+	return m_cap;
+}
+
 LightPool::LightPool():
 	m_cap(32 * 16 * 2),
 	m_pool(32 * 5 * 2),

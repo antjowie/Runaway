@@ -2,12 +2,12 @@
 #include "Config.h"
 #include "DataManager.h"
 
-PlayerObject::PlayerObject(const bool isValid) :
+PlayerObject::PlayerObject(SoundManager &soundManager, const bool isValid) :
 	Object(isValid),
 	m_animHandler(32 , 32)
 {
 	m_sprite.setTexture(DataManager::getInstance().getTexture("player"));
-
+	
 	// Animation related
 	// Rest
 	m_animHandler.addAnimation(Animation(0, 3, 0.75f, true, false));
@@ -25,13 +25,26 @@ PlayerObject::PlayerObject(const bool isValid) :
 	// Init launcher
 	m_launcher.setPos(m_sprite.getPos());
 	m_launcher.setFireRate(0.5f);
-	m_launcher.setProjectileSpeed(32 * 8);
-	m_launcher.setProjectileLife(3);
+	m_launcher.setProjectileSpeed(32 * 12);
+	m_launcher.setProjectileLife(2);
 	m_launcher.setProjectileSize(sf::Vector2f(25, 25));
 
 	// Init trail
 	m_trail.loadLife(0.35f);
 	m_trail.loadSprite(&m_sprite);
+	
+	// Init audio
+	m_lightPoolSound = new SoundObject(SoundType::Effect,soundManager);
+	m_lightPoolSound->setRelativeToListener(true);
+	m_lightPoolSound->setPosition(0, 0, 0);
+	m_lightPoolSound->setBuffer(DataManager::getInstance().getSound("lightPool"));
+	m_lightPoolSound->setLoop(true);
+	m_lightPoolSound->setPitch(0);
+}
+
+PlayerObject::~PlayerObject()
+{
+	m_lightPoolSound->m_shouldPop = true;
 }
 
 void PlayerObject::logic(const float elapsedTime)
@@ -99,7 +112,7 @@ void PlayerObject::logic(const float elapsedTime)
 	if (m_lightPool.isEmpty())
 	{
 		m_darknessTimeline += elapsedTime;
-		if (m_darknessTimeline > 5)
+		if (m_darknessTimeline > 3)
 			m_isDead = true;
 	}
 	else
@@ -108,6 +121,17 @@ void PlayerObject::logic(const float elapsedTime)
 		if (m_darknessTimeline < 0)
 			m_darknessTimeline = 0;
 	}
+
+	// Update sound
+	m_lightPoolSound->setPitch(m_lightPool.getPool()/ m_lightPool.getCap() + (0.2f / (m_lightPool.getPool() + 1.f)));
+
+	m_lightPool.isCapped() ? m_soundTimeline -= 50 * elapsedTime : m_soundTimeline += 50 * elapsedTime;
+	if (m_soundTimeline < 10)
+		m_soundTimeline = 10;
+	else if (m_soundTimeline > 100)
+		m_soundTimeline = 100;
+	m_lightPoolSound->setVolume(m_soundTimeline);
+
 	// Update launcher
 	m_launcher.setPos(m_sprite.getPos());
 	m_launcher.update(elapsedTime);

@@ -32,6 +32,10 @@ DataManager::DataManager()
 	loadTexture("thatBackground", levelPath + "that/background.png");
 
 	getTexture("player").setSmooth(true);
+
+	// Load sounds
+	std::string soundPath(dataPath + "sounds/");
+	loadSound("lightPool", soundPath + "lightPool.wav");
 }
 
 DataManager & DataManager::getInstance()
@@ -57,6 +61,13 @@ void DataManager::loadFont(const std::string fontName, const std::string fontPat
 	m_fontMap[fontName] = font;
 }
 
+void DataManager::loadSound(const std::string soundName, const std::string soundPath)
+{
+	sf::SoundBuffer sound;
+	sound.loadFromFile(soundPath);
+	m_soundMap[soundName] = sound;
+}
+
 sf::Texture & DataManager::getTexture(const std::string textureName)
 {
 	return m_textureMap[textureName];
@@ -65,4 +76,9 @@ sf::Texture & DataManager::getTexture(const std::string textureName)
 sf::Font & DataManager::getFont(const std::string fontName)
 {
 	return m_fontMap[fontName];
+}
+
+sf::SoundBuffer & DataManager::getSound(const std::string soundName)
+{
+	return m_soundMap[soundName];
 }

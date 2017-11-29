@@ -16,8 +16,8 @@ bool Launcher::checkCollision(const Launcher::Projectile &projectile) const
 	sf::Vector2i pos{ mapWorldToTilemap(sprite.getPosition(), (*m_tilemap)[0][0]->getHitbox().width, (*m_tilemap)[0][0]->getHitbox().height) };
 	
 	// Assumes all tilemaps are rectangles
-	for (int i = pos.x - 1; i <= pos.x + 1 && i > 0 && i < m_tilemap[0][0].size(); ++i)
-		for (int j = pos.y - 1; j <= pos.y + 1 && j > 0 && j < m_tilemap[0].size(); ++j)
+	for (int i = pos.x - 5; i <= pos.x + 5 && i > 0 && i < m_tilemap[0][0].size(); ++i)
+		for (int j = pos.y - 5; j <= pos.y + 5 && j > 0 && j < m_tilemap[0].size(); ++j)
 		{
 			if (sprite.getGlobalBounds().intersects((*m_tilemap)[j][i]->getHitbox()) && (*m_tilemap)[j][i]->getTileMeta().m_solid == true) return true;
 		}

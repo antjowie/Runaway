@@ -11,6 +11,7 @@
 #include "GameBackground.h"
 #include "Light.h"
 #include "GameSelectMenu.h" // For one function and LevelName
+#include "SoundManager.h"
 
 class GameMenu :
 public Menu
@@ -19,6 +20,7 @@ private:
 	LevelName &m_levelName;		// The level the player is playing
 	LevelName &m_levelProgress; // The level the player is at
 
+	SoundManager m_soundManager;
 	GameBackground m_background;
 	Light m_light;
 	PlayerObject *m_player; // I have 2 pointers toward player, one in the m_objects and one here, to access the unique functions

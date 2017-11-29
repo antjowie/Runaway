@@ -2,12 +2,13 @@
 #include "DataManager.h"
 #include "Config.h"
 
+#include <iostream>
 #include <cassert>
 
 GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &currentLevel):
 	Menu(menuStack), m_levelName(levelName), m_levelProgress(currentLevel)
 {
-	m_player = new PlayerObject(true);
+	m_player = new PlayerObject(m_soundManager,true);
 
 	std::string levelPath("Runaway/data/levels/");
 	std::string lower(getLevelName(levelName));
@@ -16,11 +17,14 @@ GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &
 
 	assert(m_level->loadLevel(m_camera, m_player, m_background, m_light) && "Load level failed");
 	changeTitle("Runaway - " + m_level->getTitle());
+
+	m_soundManager.play();
 }
 
 GameMenu::~GameMenu()
 {
 	Menu::~Menu();
+	delete m_player;
 	delete m_level;
 }
 
@@ -124,6 +128,8 @@ void GameMenu::update(const float elapsedTime)
 
 		m_background.died();
 	}
+
+	m_soundManager.update();
 }
 
 void GameMenu::draw(sf::RenderWindow & window)

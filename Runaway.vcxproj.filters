@@ -129,6 +129,12 @@
     <ClCompile Include="Runaway\source\Elevator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Runaway\source\SoundManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Runaway\source\SoundObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Runaway\source\Camera.h">
@@ -249,6 +255,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Runaway\source\Elevator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runaway\source\SoundObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runaway\source\SoundManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

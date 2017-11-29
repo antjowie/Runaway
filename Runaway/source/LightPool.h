@@ -41,4 +41,6 @@ public:
 	void setRate(const float depletetion);
 	const bool isCapped() const;
 	const bool isEmpty() const;
+	const float getPool() const;
+	const float getCap() const;
 };

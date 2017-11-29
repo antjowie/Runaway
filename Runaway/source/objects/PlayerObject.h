@@ -7,6 +7,8 @@
 #include "Launcher.h"
 #include "PlayerSprite.h"
 #include "LightTrail.h"
+#include "SoundManager.h"
+
 
 class PlayerObject :
 	public Object
@@ -15,6 +17,9 @@ private:
 	float m_darknessTimeline{ 0 };
 	enum PlayerDirection { Rest, JumpRight, DropRight, JumpLeft, DropLeft, Right, Left };
 	AnimationHandler m_animHandler;
+	
+	float m_soundTimeline{ 0 };
+	SoundObject * m_lightPoolSound;
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 
@@ -26,7 +31,8 @@ public:
 	Sprite m_sprite;						// This one is public so that camera can access it
 	LightTrail m_trail;						// Public for light objects
 
-	PlayerObject(const bool isValid = false);
+	PlayerObject(SoundManager &soundManager, const bool isValid = false);
+	~PlayerObject();
 
 	virtual void logic(const float elapsedTime);
 	virtual void input(sf::RenderWindow &window);
