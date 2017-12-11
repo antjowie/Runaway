@@ -15,7 +15,8 @@ GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &
 	std::transform(lower.begin(), lower.end(), lower.begin(), tolower);
 	m_level = new Level(levelPath + lower + '/', getLevelName(levelName) + " level", 1.f, "test");
 
-	assert(m_level->loadLevel(m_camera, m_player, m_background, m_light) && "Load level failed");
+	m_level->loadLevel(m_camera, m_player, m_background, m_light) && "Load level failed";
+	
 	changeTitle("Runaway - " + m_level->getTitle());
 
 	m_soundManager.play();

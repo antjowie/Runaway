@@ -211,7 +211,7 @@
       <AdditionalIncludeDirectories>E:\Docs\C++ projects\Runaway\Runaway\source\tiles;E:\Docs\C++ projects\Runaway\Runaway\source\entities;E:\Docs\C++ projects\Runaway\Runaway\source;E:\Docs\C++ projects\Runaway\Runaway\source\menus;E:\Docs\C++ projects\Runaway\Runaway\source\objects;E:\Docs\C++ libraries\SFML\SFML-2.4.1\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

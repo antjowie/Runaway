@@ -15,7 +15,7 @@ class PlayerObject :
 {
 private:
 	float m_darknessTimeline{ 0 };
-	enum PlayerDirection { Rest, JumpRight, DropRight, JumpLeft, DropLeft, Right, Left };
+	enum PlayerDirection { Rest, JumpRight, DropRight, JumpLeft, DropLeft, Right, Left ,DashRight,DashLeft};
 	AnimationHandler m_animHandler;
 	
 	float m_soundTimeline{ 0 };

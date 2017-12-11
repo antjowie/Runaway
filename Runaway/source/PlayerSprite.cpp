@@ -225,6 +225,13 @@ void Sprite::fixOrigin()
 	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2, m_sprite.getGlobalBounds().height / 2);
 }
 
+float Sprite::getMaxSpeed() const
+{
+	// TODO
+	// Give class variables to calculate this instead of handwriting it
+	return 3.5f * 2.f * 32.f;
+}
+
 const sf::FloatRect Sprite::getHitbox() const
 {
 	return m_sprite.getGlobalBounds();

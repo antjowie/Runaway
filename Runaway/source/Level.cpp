@@ -9,6 +9,7 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <iostream>
 
 void remove_char(std::string &str, char ch)
 {
@@ -153,7 +154,6 @@ bool Level::loadTileLayer(std::vector<char> tilemap)
 {
 	rapidxml::xml_document<> map;
 	rapidxml::xml_node<> *node;
-
 	try
 	{
 		map.parse<0>(&tilemap[0]);

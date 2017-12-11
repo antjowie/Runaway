@@ -36,6 +36,8 @@ public:
 	void setTexture(const sf::Texture &texture);
 	void fixOrigin();
 
+	// Used for dash animation, returns value in pixels
+	float getMaxSpeed() const;
 	const sf::FloatRect getHitbox() const;
 	const sf::IntRect getTextureRect() const;
 	const sf::Vector2f getPos() const;

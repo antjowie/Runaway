@@ -2,6 +2,8 @@
 #include "Config.h"
 #include "DataManager.h"
 
+#include <iostream>
+
 PlayerObject::PlayerObject(SoundManager &soundManager, const bool isValid) :
 	Object(isValid),
 	m_animHandler(32 , 32)
@@ -17,6 +19,9 @@ PlayerObject::PlayerObject(SoundManager &soundManager, const bool isValid) :
 	for (int i = 0; i < 2; i++)
 		// Walk right, walk left
 		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true, false));
+	for (int i = 0; i < 2; i++)
+		// Dash right, dash left
+		m_animHandler.addAnimation(Animation(0, 3, 0.02f, false, false));
 
 	// Otherwise player is initialized with wrong hitbox which makes him teleport when spawned
 	m_animHandler.changeAnimation(0);
@@ -65,8 +70,14 @@ void PlayerObject::logic(const float elapsedTime)
 	// Brace for some ugly vector checking for animation
 	float offset{ elapsedTime };
 
-	// Vertical movement
-	if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset) && m_sprite.m_hasJumped)
+	// Dash movement
+	if (newPos.x / elapsedTime > m_sprite.getMaxSpeed() + 10.f)
+		m_animHandler.changeAnimation(PlayerDirection::DashRight);
+	else if (newPos.x / elapsedTime < -m_sprite.getMaxSpeed() - 10.f)
+			m_animHandler.changeAnimation(PlayerDirection::DashLeft);
+
+		// Vertical movement
+	else if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset) && m_sprite.m_hasJumped)
 	{
 		if (newPos.y > offset)
 			m_animHandler.changeAnimation(PlayerDirection::DropRight);
