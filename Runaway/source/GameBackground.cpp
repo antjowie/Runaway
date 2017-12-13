@@ -49,7 +49,6 @@ void GameBackground::update(const float elapsedTime)
 	tempAlpha.a = static_cast<sf::Uint8>(m_deadAlpha);
 	m_deadBackground.setFillColor(tempAlpha);
 
-	/*
 	// Change color when player is in a darkZone
 	if (m_inDarkZone)
 	{
@@ -74,7 +73,6 @@ void GameBackground::update(const float elapsedTime)
 		if (m_overlayAlpha < 0)
 			m_overlayAlpha = 0;
 	}
-	*/
 
 	tempAlpha = m_darkBackground.getFillColor();
 	tempAlpha.a = static_cast<sf::Uint8>(m_darkAlpha);
@@ -110,6 +108,11 @@ void GameBackground::init(const sf::Vector2f & size)
 	m_deadBackground.setSize(size);
 	m_darkBackground.setSize(size);
 	m_darkOverlay.setSize(size);
+}
+
+void GameBackground::setInDarkZone(const bool inDarkZone)
+{
+	m_inDarkZone = inDarkZone;
 }
 
 const sf::RectangleShape & GameBackground::getDarkOverlay() const

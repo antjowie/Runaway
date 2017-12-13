@@ -4,6 +4,7 @@
 #include "Finish.h"
 #include "DataManager.h"
 #include "LightTrail.h"
+#include "LightTile.h"
 
 #include <fstream>
 #include <sstream>
@@ -111,7 +112,10 @@ bool Level::initLight(Light & light, const PlayerObject * const player)
 			if (!m_background.empty() && m_background[i][j]->getTileMeta().m_light != 0)
 				light.addDrawable(m_background[i][j]);
 			if (m_tilemap[i][j]->getTileMeta().m_tileType == TileType::Light)
+			{
 				light.addDrawable(m_tilemap[i][j]);
+				light.addDrawable(&static_cast<LightTile*>(m_tilemap[i][j])->getLightPool());
+			}
 		}
 
 	for (const auto &iter : m_gateMap)
@@ -486,7 +490,7 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 		temp.setSize(sf::Vector2f(iter.width, iter.height));
 		temp.setPosition(iter.left, iter.top);
 		temp.setFillColor(sf::Color(40,0,0,255));
-		target.draw(temp);
+		target.draw(temp, sf::BlendMultiply);
 	}
 
 	for (const auto &iter : m_entityMap)

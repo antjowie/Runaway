@@ -167,6 +167,7 @@ void PlayerObject::input(sf::RenderWindow &window)
 	}
 }
 
+
 void PlayerObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(m_lightPool, states);

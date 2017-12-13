@@ -1,6 +1,7 @@
 #include "GameMenu.h"
 #include "DataManager.h"
 #include "Config.h"
+#include "TileHeader.h"
 
 #include <iostream>
 #include <cassert>
@@ -62,7 +63,32 @@ void GameMenu::update(const float elapsedTime)
 	// Had to be called after update because this will fix positions when player already has moved
 	m_level->update(elapsedTime);
 
-	m_player->m_lightPool.setRate(m_level->inDarkZone(m_player->m_sprite.getHitbox()) ? -50.f : 200.f);
+	const bool inDarkZone{ m_level->inDarkZone(m_player->m_sprite.getHitbox()) };
+	if (inDarkZone)
+		for (const auto &vertic : m_level->getTilemap())
+		{
+			bool found{ false };
+			for (const auto &tile : vertic)
+			{
+				if (tile->getTileMeta().m_tileType != TileType::Light) continue;
+				const float radius{ 32 * 3.f };
+				const sf::Vector2f lightPos{ tile->getHitbox().left + tile->getHitbox().width / 2, tile->getHitbox().top + tile->getHitbox().height / 2 };
+				const sf::Vector2f playerPos{ m_player->m_sprite.getHitbox().left, m_player->m_sprite.getHitbox().top };
+
+				if (std::powf(lightPos.x - playerPos.x, 2) + std::powf(lightPos.y - playerPos.y, 2) <= radius * radius)
+				{
+					m_player->m_lightPool.setRate(25.f);
+					found = true;
+					break;
+				}
+			}
+			if (found) break;
+			m_player->m_lightPool.setRate(-50.f);
+		}
+	else
+		m_player->m_lightPool.setRate(200.f);
+
+
 	m_player->logic(elapsedTime);
 	
 	m_camera.setView(m_player->m_sprite.getPos());
@@ -83,7 +109,7 @@ void GameMenu::update(const float elapsedTime)
 				break;
 
 			case EntityType::Coin:
-				
+				// TODO when shop maybe will be added
 				break;				
 
 			case EntityType::Finish:
@@ -92,8 +118,8 @@ void GameMenu::update(const float elapsedTime)
 					m_levelProgress = static_cast<LevelName>(static_cast<int>(m_levelProgress) + 1);
 				m_isPop = true;
 				break;
-
 			}
+
 		for(auto &iter: m_player->m_launcher.getProjectiles())
 			if(entity->getType() == EntityType::Switch && entity->getHitbox().intersects(iter.m_sprite.getGlobalBounds()))
 			{
@@ -109,6 +135,7 @@ void GameMenu::update(const float elapsedTime)
 	}
 	
 	// Update background state
+	m_background.setInDarkZone(inDarkZone);
 	m_background.setTarget(m_camera.getView().getCenter());
 	m_background.update(elapsedTime);
 

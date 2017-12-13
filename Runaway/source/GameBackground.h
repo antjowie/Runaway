@@ -12,6 +12,7 @@ private:
 	float m_deadAlpha{ 0 };
 	float m_darkAlpha{ 0 };
 	float m_overlayAlpha{ 0 };
+	bool m_inDarkZone{ false };
 
 	sf::Vector2f m_originalPos;
 	sf::Vector2f m_target;
@@ -28,6 +29,8 @@ public:
 	void died();
 	void setTarget(const sf::Vector2f &target);
 	void init(const sf::Vector2f &size);
+
+	void setInDarkZone(const bool inDarkZone);
 
 	const sf::RectangleShape &getDarkOverlay() const;
 };
