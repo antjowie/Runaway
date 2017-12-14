@@ -1,10 +1,9 @@
 #include "GameMenu.h"
 #include "DataManager.h"
 #include "Config.h"
+#include "MenuStack.h"
 #include "TileHeader.h"
 
-#include <iostream>
-#include <cassert>
 
 GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &currentLevel):
 	Menu(menuStack), m_levelName(levelName), m_levelProgress(currentLevel)
@@ -88,7 +87,6 @@ void GameMenu::update(const float elapsedTime)
 	else
 		m_player->m_lightPool.setRate(200.f);
 
-
 	m_player->logic(elapsedTime);
 	
 	m_camera.setView(m_player->m_sprite.getPos());
@@ -151,10 +149,14 @@ void GameMenu::update(const float elapsedTime)
 	// Check player alive state
 	if (m_player->m_isDead)
 	{
+	/*
 		m_player->m_sprite.setPos(m_level->getSpawn());
 		m_player->m_isDead = false;
 
 		m_background.died();
+	*/
+		m_isPop = true;
+		m_menuStack->push(Menu)
 	}
 
 	m_soundManager.update();
