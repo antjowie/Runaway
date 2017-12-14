@@ -160,7 +160,7 @@ void PlayerObject::input(sf::RenderWindow &window)
 	m_sprite.input();
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 	{
-		unsigned int temp{ m_launcher.getProjectiles().size() };
+		size_t temp{ m_launcher.getProjectiles().size() };
 		m_launcher.shoot(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView()));
 		if (temp < m_launcher.getProjectiles().size())
 			m_lightPool.depleteLight(m_launcher.getProjectileSize().x + m_launcher.getProjectileSize().y);

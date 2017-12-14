@@ -46,7 +46,7 @@ void TextButtonObject::logic(const float elapsedTime)
 
 void TextButtonObject::input(sf::RenderWindow & window)
 {
-	sf::Vector2f mousePositions = window.mapPixelToCoords(sf::Mouse::getPosition(window));	// For resizing purposes
+	sf::Vector2f mousePositions = window.mapPixelToCoords(sf::Mouse::getPosition(window),window.getView());	// For resizing purposes
 
 	m_hover = m_body.contains(static_cast<sf::Vector2i>(mousePositions)) ? true : false;
 	m_isClicked = (m_hover && sf::Mouse::isButtonPressed(sf::Mouse::Left)) ? true : false;

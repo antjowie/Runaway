@@ -149,14 +149,14 @@ void GameMenu::update(const float elapsedTime)
 	// Check player alive state
 	if (m_player->m_isDead)
 	{
-	/*
+	
 		m_player->m_sprite.setPos(m_level->getSpawn());
 		m_player->m_isDead = false;
 
 		m_background.died();
-	*/
-		m_isPop = true;
-		m_menuStack->push(Menu)
+	
+		//m_isPop = true;
+		//m_menuStack->push(Menu)
 	}
 
 	m_soundManager.update();
