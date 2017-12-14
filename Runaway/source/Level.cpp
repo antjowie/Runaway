@@ -259,6 +259,8 @@ bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 		{
 			converter(m_spawnX, entity->first_attribute("x")->value());
 			converter(m_spawnY, entity->first_attribute("y")->value());
+			m_origSpawnX = m_spawnX;
+			m_origSpawnY = m_spawnY;
 		}
 		else
 		{
@@ -539,6 +541,11 @@ const std::vector<std::vector<Tile*>> &Level::getTilemap() const
 const sf::Vector2f Level::getSpawn() const
 {
 	return sf::Vector2f(m_spawnX, m_spawnY);
+}
+
+const sf::Vector2f Level::getOriginalSpawn() const
+{
+	return sf::Vector2f(m_origSpawnX,m_origSpawnY);
 }
 
 const std::string & Level::getTitle() const

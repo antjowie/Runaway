@@ -1,8 +1,16 @@
 #include "DiedMenu.h"
+#include "MainMenu.h"
+#include "MenuStack.h"
+
+#include <iostream>
 
 DiedMenu::DiedMenu(MenuStack *const menuStack):
 	Menu::Menu(menuStack,"Runaway - you died")
 {
+	m_blackFade.setFillColor(sf::Color::Black);
+	m_blackFade.setSize(sf::Vector2f(1280, 720));
+	m_blackFade.setPosition(0, 0);
+
 	// Constants for the buttons
 	const int height{ 200 };
 	const int textOffset{ 20 };
@@ -14,7 +22,7 @@ DiedMenu::DiedMenu(MenuStack *const menuStack):
 	pushObject(title);
 
 	m_buttons.push_back(new TextButtonObject("CONTINUE", Function::Continue, true));
-	m_buttons.push_back(new TextButtonObject("RETURN TO MAIN MENU", Function::Back, true));
+	m_buttons.push_back(new TextButtonObject("EXIT GAME", Function::Quit, true));
 
 	for (size_t i{ 0 }; i < m_buttons.size(); i++) 
 	{
@@ -27,7 +35,7 @@ DiedMenu::DiedMenu(MenuStack *const menuStack):
 		// Background
 		iter->m_bodyTexture.setPosition(pos);
 		iter->m_bodyTexture.setSize(sf::Vector2f(1280, height));
-	
+		
 		// Text
 		iter->setTextSize(50);
 		iter->setPos(sf::Vector2f(textOffset, pos.y + height/2 - textSize / 2));
@@ -52,28 +60,39 @@ void DiedMenu::input(sf::RenderWindow & window)
 		case sf::Event::Closed:
 			window.close();
 			break;
-
 		}
 	}
 
 	for (const auto &iter : m_buttons)
-		iter->input(window);
-}
-void DiedMenu::update(const float elapsedTime)
-{
-	for (const auto &iter : m_buttons)
 	{
-		iter->logic(elapsedTime);
-		if(iter->getFunction() != Function::Nothing)
+		iter->input(window);
+		if (iter->getFunction() != Function::Nothing)
 			switch (iter->getFunction())
 			{
-				case Function::Continue:
+			case Function::Continue:
+				m_isPop = true;
 				break;
 
-				case Function::Back:
+			case Function::Quit:
+				window.close();
 				break;
 			}
 	}
+}
+
+void DiedMenu::update(const float elapsedTime)
+{
+	for (const auto &iter : m_buttons)
+		iter->logic(elapsedTime);
+
+	m_fadeTimeline += elapsedTime / m_fadeTime;
+	if (m_fadeTimeline > 1)
+		m_fadeTimeline = 1;
+	const sf::Uint8 newAlpha{ static_cast<sf::Uint8>(255.f - 255.f * m_fadeTimeline) };
+	sf::Color newColor{ m_blackFade.getFillColor() };
+	newColor.a = newAlpha;
+	m_blackFade.setFillColor(newColor);
+
 }
 
 void DiedMenu::draw(sf::RenderWindow & window)
@@ -85,6 +104,8 @@ void DiedMenu::draw(sf::RenderWindow & window)
 	// Because of this many objects got their own little storage handlers (mostly vectors or lists). 
 	// In my next project I have a way better way to manage it, but if I change it now, I have to change everything that uses and doesn't
 	// use the object manager. And that didn't seem to be worth it to me.
+	window.draw(m_blackFade);
+	
 	Menu::draw(window);
 
 	window.setView(window.getDefaultView());

@@ -36,6 +36,10 @@ public:
 	void setSize(const float width, const float height);
 	void setSize(const float diameter);
 	void depleteLight(const float radius);
+	// Relative decides wether 
+	// (true) the percentage should be taken from the remaining light
+	// (false) or from the max capacity
+	void depleteLight(const float percentage, const bool relative);
 
 	// Defines at which rate the light should change
 	void setRate(const float depletetion);

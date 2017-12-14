@@ -151,6 +151,11 @@ void PlayerObject::logic(const float elapsedTime)
 	if (m_sprite.m_dashCooldown == 0)
 		m_trail.pushTrail();
 	m_trail.update(elapsedTime);
+
+	// Update respawn timer
+	m_respawnTimeline -= elapsedTime;
+	if (m_respawnTimeline < 0)
+		m_respawnTimeline = 0;
 }
 
 void PlayerObject::input(sf::RenderWindow &window)
@@ -165,6 +170,12 @@ void PlayerObject::input(sf::RenderWindow &window)
 		if (temp < m_launcher.getProjectiles().size())
 			m_lightPool.depleteLight(m_launcher.getProjectileSize().x + m_launcher.getProjectileSize().y);
 	}
+	if (m_respawnTimeline == 0  && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P))
+	{
+		m_respawn = true;
+		m_respawnTimeline = 0.5f;
+	}
+
 }
 
 

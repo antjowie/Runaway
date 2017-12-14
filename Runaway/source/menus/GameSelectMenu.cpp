@@ -4,8 +4,7 @@
 #include "MenuStack.h"
 #include "BackgroundObject.h"
 #include "Config.h"
-
-#include <iostream>
+#include "DiedMenu.h"
 
 std::string getLevelName(const LevelName levelName)
 {
@@ -103,11 +102,7 @@ void GameSelectMenu::input(sf::RenderWindow& window)
 				m_isPop = true;
 			}
 			break;
-
-		default:
-			break;
 		}
-
 	}
 }
 

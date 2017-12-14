@@ -70,6 +70,13 @@ void LightPool::setPos(const sf::Vector2f & pos)
 	m_sprite.setPosition(pos);
 }
 
+void LightPool::depleteLight(const float percentage, const bool relative)
+{
+	float toDeplete{ relative ? m_pool : m_cap};
+	toDeplete = toDeplete * percentage / 100.f;
+	depleteLight(toDeplete);
+}
+
 void LightPool::setRate(const float rate)
 {
 	m_rate = rate;

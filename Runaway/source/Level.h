@@ -46,6 +46,7 @@ private:
 	int m_tilemapWidth{ 0 }, m_tilemapHeight{ 0 };	// In tiles
 	int m_tileWidth{ 0 }, m_tileHeight{ 0 };		// Size of a tile
 	float m_spawnX{ 0 }, m_spawnY{ 0 };
+	float m_origSpawnX{ 0 }, m_origSpawnY{ 0 };
 
 	const std::string m_title;
 	const std::string m_tilesetName;
@@ -79,6 +80,7 @@ public:
 	bool loadLevel(Camera &camera, PlayerObject * const player,GameBackground &background, Light &light); // This will load all the files for this level
 	
 	const sf::Vector2f getSpawn() const;
+	const sf::Vector2f getOriginalSpawn() const;
 	const std::string &getTitle() const;
 	const std::vector<std::vector<Tile*>> &getTilemap() const;
 	const std::vector<Entity*> &getEntityMap() const;

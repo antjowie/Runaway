@@ -3,7 +3,7 @@
 #include "Config.h"
 #include "MenuStack.h"
 #include "TileHeader.h"
-
+#include "DiedMenu.h"
 
 GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &currentLevel):
 	Menu(menuStack), m_levelName(levelName), m_levelProgress(currentLevel)
@@ -142,21 +142,26 @@ void GameMenu::update(const float elapsedTime)
 	m_light.update(elapsedTime);
 
 	// Dead conditions
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) m_player->m_isDead = true;
 	if (m_level->inLevelBounds(m_player->m_sprite.getPos()))
 		m_player->m_isDead = true;
 
 	// Check player alive state
+	m_soundManager.setTargetVolume(100, SoundType::Effect);
 	if (m_player->m_isDead)
 	{
-	
-		m_player->m_sprite.setPos(m_level->getSpawn());
+		m_soundManager.setTargetVolume(0,SoundType::Effect);
+		m_menuStack->push(new DiedMenu(m_menuStack));
+
+		m_player->m_sprite.setPos(m_level->getOriginalSpawn());
 		m_player->m_isDead = false;
 
 		m_background.died();
-	
-		//m_isPop = true;
-		//m_menuStack->push(Menu)
+	}
+	if (m_player->m_respawn)
+	{
+		m_player->m_sprite.setPos(m_level->getSpawn());
+		m_player->m_lightPool.depleteLight(50.f,false);
+		m_player->m_respawn = false;
 	}
 
 	m_soundManager.update();

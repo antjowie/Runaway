@@ -18,6 +18,7 @@ private:
 	enum PlayerDirection { Rest, JumpRight, DropRight, JumpLeft, DropLeft, Right, Left ,DashRight,DashLeft};
 	AnimationHandler m_animHandler;
 	
+	float m_respawnTimeline{ 0 };
 	float m_soundTimeline{ 0 };
 	SoundObject * m_lightPoolSound;
 
@@ -25,6 +26,7 @@ private:
 
 public:
 	bool m_isDead{ false };
+	bool m_respawn{ false };
 	LightPool m_lightPool;					// Public for level access
 	Launcher m_launcher;					// Public for level access
 	CollisionHandler m_collisionHandler;	// This one is public so that level can initialize it

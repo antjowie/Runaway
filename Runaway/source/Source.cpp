@@ -7,8 +7,6 @@
 #include "MainMenu.h"
 #include "Config.h"
 
-#include "DiedMenu.h"
-
 int main() 
 {
 	Config::getInstance().loadConfig();
@@ -22,7 +20,7 @@ int main()
 	
 	const float frameLimit{ static_cast<float>(Config::getInstance().getConfig("frameLimit").integer) }; // So that our keyboard pollrate will not be tied to loop
 	window.setFramerateLimit(static_cast<unsigned>(frameLimit));
-	menuStack.push(new DiedMenu(&menuStack));
+	menuStack.push(new MainMenu(&menuStack));
 	time.restart();
 
 	while (window.isOpen())

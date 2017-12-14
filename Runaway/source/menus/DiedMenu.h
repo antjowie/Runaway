@@ -8,6 +8,11 @@
 class DiedMenu : public Menu
 {
 private:
+	sf::RectangleShape m_blackFade;
+	// It's a percentage
+	float m_fadeTimeline { 0.f };
+	const float m_fadeTime{ 8.f };
+
 	std::vector<TextButtonObject*> m_buttons;
 
 public: 
