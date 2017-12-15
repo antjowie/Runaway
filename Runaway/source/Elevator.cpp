@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-Elevator::Elevator(const int id, const float height, const float speed):
-	m_id(id),m_height(height),m_speed(speed)
+Elevator::Elevator(const int id, const float height, const float speed, const bool inverted):
+	m_id(id),m_height(height),m_speed(speed), m_inverted(inverted)
 {
 }
 
@@ -41,6 +41,8 @@ void Elevator::loadElevator()
 
 void Elevator::update(const float elapsedTime)
 {
+	if (m_inverted)
+		m_isOpen = !m_isOpen;
 	m_isOpen ? m_timeline += elapsedTime : m_timeline -= elapsedTime;
 	m_isOpen ? m_bottomElevatorTile->setTextureType(ElevatorTile::State::Open) : m_bottomElevatorTile->setTextureType(ElevatorTile::State::Closed);
 	if (m_timeline > m_speed)
@@ -51,6 +53,9 @@ void Elevator::update(const float elapsedTime)
 	const float percentage(m_timeline / m_speed);
 	float newHeight{ (1.f - percentage)*m_originalHeight + percentage * (m_originalHeight+ m_height* 32.f)};
 	m_bottomElevatorTile->setSize(sf::Vector2f(m_bottomElevatorTile->getHitbox().width, newHeight));
+
+	if (m_inverted)
+		m_isOpen = !m_isOpen;
 }
 
 const int Elevator::getId() const

@@ -14,10 +14,12 @@ private:
 	float m_speed;
 	float m_timeline{ 0 };
 
+	const bool m_inverted{ false };
+
 public:
 	bool m_isOpen;
 
-	Elevator(const int id, const float m_height, const float speed);
+	Elevator(const int id, const float m_height, const float speed, const bool inverted = false);
 
 	void loadTopTile(ElevatorTile* const topElevatorTile);
 	void loadBottomTile(ElevatorTile* const bottomElevatorTile);

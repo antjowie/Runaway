@@ -2,8 +2,8 @@
 #include <SFML\Graphics\RenderTarget.hpp>
 #include <iostream>
 
-Gate::Gate(const int id, const float speed):
-	m_id(id),m_speed(speed)
+Gate::Gate(const int id, const float speed, const bool inverted):
+	m_id(id),m_speed(speed),m_inverted(inverted)
 {
 }
 
@@ -92,6 +92,9 @@ const GateTile * const Gate::getBottomTile() const
 
 void Gate::update(const float elapsedTime)
 {
+	if (m_inverted)
+		m_isOpen = !m_isOpen;
+
 	m_isOpen ? m_timeline += elapsedTime : m_timeline -= elapsedTime;
 	m_isOpen ? m_gate.setState(GateTile::State::Open) : m_gate.setState(GateTile::State::Closed);
 	if (m_timeline > m_speed)
@@ -101,4 +104,7 @@ void Gate::update(const float elapsedTime)
 
 	const float percentage{ m_timeline / m_speed };
 	m_gate.update(percentage);
+
+	if (m_inverted)
+		m_isOpen = !m_isOpen;
 }

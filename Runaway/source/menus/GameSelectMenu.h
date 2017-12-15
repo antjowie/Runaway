@@ -10,8 +10,7 @@
 #include <vector>
 
 enum class LevelName {
-	Test,
-	That,
+	Introduction,
 	Blank
 };
 

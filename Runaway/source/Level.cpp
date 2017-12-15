@@ -258,7 +258,9 @@ bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 		if (name == "spawn")
 		{
 			converter(m_spawnX, entity->first_attribute("x")->value());
+			m_spawnX += 16;
 			converter(m_spawnY, entity->first_attribute("y")->value());
+			m_spawnY += 16;
 			m_origSpawnX = m_spawnX;
 			m_origSpawnY = m_spawnY;
 		}
@@ -273,6 +275,8 @@ bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 			
 			if (name == "checkpoint")
 			{
+				spawn.x += 16;
+				spawn.y += 16;
 				action.pos = spawn;
 				m_entityMap.push_back(new Checkpoint(action, action.pos));
 			}
@@ -300,6 +304,7 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 		float m_speed;
 		int m_id;
 		float m_height{ -1 };
+		bool m_inverted;
 	};
 
 	rapidxml::xml_node<> *xmlNode;
@@ -348,6 +353,15 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 					converter(gateNode.m_speed, prop->first_attribute("value")->value());
 				else if (std::string(prop->first_attribute("name")->value()) == "height")
 					converter(gateNode.m_height, prop->first_attribute("value")->value());
+				else if (std::string(prop->first_attribute("name")->value()) == "inverted")
+				{
+					std::string temp;
+					converter(temp, prop->first_attribute("value")->value());
+					if (temp == "true")
+						gateNode.m_inverted = true;
+					else
+						gateNode.m_inverted = false;
+				}
 				prop = prop->next_sibling();
 			}
 			gateNodes.push_back(gateNode);
@@ -359,7 +373,7 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 	{
 		if (iter.m_height == -1)
 		{
-			Gate gate(iter.m_id, iter.m_speed);
+			Gate gate(iter.m_id, iter.m_speed,iter.m_inverted);
 			std::vector<GateTile*> gateTiles;
 			for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
 				; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getTileMeta().m_tileType == TileType::Gate; pos.y--)
@@ -377,7 +391,7 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 		}
 		else
 		{
-			Elevator elevator(iter.m_id, iter.m_height, iter.m_speed);
+			Elevator elevator(iter.m_id, iter.m_height, iter.m_speed,iter.m_inverted);
 			std::vector<ElevatorTile*> elevatorTiles;
 			for (sf::Vector2i pos = mapWorldToTilemap(sf::Vector2f(iter.m_pos.left, iter.m_pos.top), static_cast<int>(iter.m_pos.width), static_cast<int>(iter.m_pos.height))
 				; pos.y >= 0 && m_tilemap[pos.y][pos.x]->getTileMeta().m_tileType == TileType::Gate; pos.y--)
@@ -498,10 +512,15 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 	for (const auto &iter : m_entityMap)
 		target.draw(*iter);
 
+	for (const auto &vertic : m_tilemap)
+		for (const auto &horiz : vertic)
+			if (horiz->getTileMeta().m_tileType == TileType::Gate || horiz->getTileMeta().m_tileType == TileType::Elevator)
+				target.draw(*horiz);
+
 	for (int i = tileBounds.top; i < tileBounds.height + tileBounds.top; ++i)
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
-				target.draw(*m_tilemap[i][j]);
-
+			if (m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Gate && m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Elevator)
+			target.draw(*m_tilemap[i][j]);
 }
 
 bool Level::inLevelBounds(const sf::Vector2f & point)

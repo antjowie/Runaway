@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="gate" color="#0000ff">
+  <property name="id" type="int" default="0"/>
+  <property name="inverted" type="bool" default="false"/>
+  <property name="speed" type="float" default="0"/>
+ </objecttype>
+ <objecttype name="switch" color="#ffff00">
+  <property name="id" type="float" default="0"/>
+ </objecttype>
+ <objecttype name="elevator" color="#0000ff">
+  <property name="height" type="float" default="0"/>
+  <property name="id" type="int" default="0"/>
+  <property name="inverted" type="bool" default="false"/>
+  <property name="speed" type="float" default="0"/>
+ </objecttype>
+ <objecttype name="checkpoint" color="#00ff00"/>
+ <objecttype name="spawn" color="#00ff00"/>
+ <objecttype name="darkZone" color="#ff0000"/>
+ <objecttype name="finish" color="#ffffff"/>
+</objecttypes>

@@ -10,11 +10,8 @@ std::string getLevelName(const LevelName levelName)
 {
 	switch (levelName)
 	{
-	case LevelName::Test:
-		return "Test";
-		break;
-	case LevelName::That:
-		return "That";
+	case LevelName::Introduction:
+		return "Introduction";
 		break;
 	default:
 		return "ERROR";
@@ -62,7 +59,10 @@ GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 
 			temp.m_text.setFont(DataManager::getInstance().getFont("pixel"));
 			temp.m_text.setString(getLevelName(temp.m_level));
-			temp.m_text.setPosition(temp.m_rect.getPosition().x, temp.m_rect.getPosition().y + temp.m_rect.getSize().y - temp.m_text.getCharacterSize());
+			float textpos{ temp.m_text.getGlobalBounds().width - temp.m_rect.getGlobalBounds().width };
+			if (textpos < 0)
+				textpos = 0;
+			temp.m_text.setPosition(temp.m_rect.getPosition().x - textpos / 2.f, temp.m_rect.getPosition().y + temp.m_rect.getSize().y + temp.m_text.getCharacterSize() / 2);
 		}
 }
 

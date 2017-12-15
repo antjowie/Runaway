@@ -24,7 +24,7 @@ DiedMenu::DiedMenu(MenuStack *const menuStack):
 	m_buttons.push_back(new TextButtonObject("CONTINUE", Function::Continue, true));
 	m_buttons.push_back(new TextButtonObject("EXIT GAME", Function::Quit, true));
 
-	for (size_t i{ 0 }; i < m_buttons.size(); i++) 
+	for (size_t i{ 0 }; i < m_buttons.size(); i++)
 	{
 		sf::Vector2f pos{ 0,720.f - height * 2.f + static_cast<float>(i * height) };
 		TextButtonObject *iter{ static_cast<TextButtonObject*>(m_buttons[i]) };
