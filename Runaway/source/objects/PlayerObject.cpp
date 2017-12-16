@@ -21,7 +21,7 @@ PlayerObject::PlayerObject(SoundManager &soundManager, const bool isValid) :
 		m_animHandler.addAnimation(Animation(0, 3, 0.2f, true, false));
 	for (int i = 0; i < 2; i++)
 		// Dash right, dash left
-		m_animHandler.addAnimation(Animation(0, 3, 0.02f, false, false));
+		m_animHandler.addAnimation(Animation(0, 2, 0.08f, false, false));
 
 	// Otherwise player is initialized with wrong hitbox which makes him teleport when spawned
 	m_animHandler.changeAnimation(0);
@@ -70,11 +70,20 @@ void PlayerObject::logic(const float elapsedTime)
 	// Brace for some ugly vector checking for animation
 	float offset{ elapsedTime };
 
+	// Used for fixing player sprite sheet collision
+
+	bool dashed{ false };
 	// Dash movement
 	if (newPos.x / elapsedTime > m_sprite.getMaxSpeed() + 10.f)
+	{
 		m_animHandler.changeAnimation(PlayerDirection::DashRight);
+		dashed = true;
+	}
 	else if (newPos.x / elapsedTime < -m_sprite.getMaxSpeed() - 10.f)
-			m_animHandler.changeAnimation(PlayerDirection::DashLeft);
+	{
+		m_animHandler.changeAnimation(PlayerDirection::DashLeft);
+		dashed = true;
+	}
 
 		// Vertical movement
 	else if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset) && m_sprite.m_hasJumped)
@@ -107,9 +116,14 @@ void PlayerObject::logic(const float elapsedTime)
 	m_sprite.setTextureRect(m_animHandler.getFrame());
 	
 	// Correcting hitbox
+	if(!dashed)
 	m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left + m_sprite.getTextureRect().width / 4, 
 										m_sprite.getTextureRect().top + 2, m_sprite.getTextureRect().width - 32 + 14, 
 										m_sprite.getTextureRect().height - 2));
+	else
+		m_sprite.setTextureRect(sf::IntRect(m_sprite.getTextureRect().left,
+			m_sprite.getTextureRect().top + 2, m_sprite.getTextureRect().width,
+			m_sprite.getTextureRect().height - 2));
 
 	// Fix player origin (for camera centralization)
 	m_sprite.fixOrigin();
@@ -148,7 +162,7 @@ void PlayerObject::logic(const float elapsedTime)
 	m_launcher.update(elapsedTime);
 
 	// Update trail
-	if (m_sprite.m_dashCooldown == 0)
+	if (m_sprite.m_dashCooldown == 0 || dashed)
 		m_trail.pushTrail();
 	m_trail.update(elapsedTime);
 
@@ -175,7 +189,6 @@ void PlayerObject::input(sf::RenderWindow &window)
 		m_respawn = true;
 		m_respawnTimeline = 0.5f;
 	}
-
 }
 
 

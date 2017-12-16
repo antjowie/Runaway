@@ -254,7 +254,7 @@ bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 	for (rapidxml::xml_node<> *entity = node->first_node(); entity; entity = entity->next_sibling())
 	{
 		// Some specific type checking
-		converter(name, entity->first_attribute("name")->value());
+		converter(name, entity->first_attribute("type")->value());
 		if (name == "spawn")
 		{
 			converter(m_spawnX, entity->first_attribute("x")->value());
@@ -285,12 +285,20 @@ bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 				converter(action.value, entity->first_attribute("value")->value());
 				//m_entityMap.push_back(new Coin(entityAction, spawn));
 			}
-			
+
 			else if (name == "finish")
 			{
-				m_entityMap.push_back(new Finish(action, spawn));	
+				m_entityMap.push_back(new Finish(action, spawn));
 			}
-			
+			else if (name == "text")
+			{
+				std::string string{ entity->first_node()->value() };
+				std::transform(string.begin(),string.end(),string.begin(),::toupper);
+				sf::Text text(string,DataManager::getInstance().getFont("pixel"));
+				text.setPosition(spawn);
+				text.setCharacterSize(8);
+				m_textMap.push_back(text);
+			}
 		}
 	}
 	return true;
@@ -521,6 +529,9 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
 			if (m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Gate && m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Elevator)
 			target.draw(*m_tilemap[i][j]);
+
+	for (const auto &iter : m_textMap)
+		target.draw(iter);
 }
 
 bool Level::inLevelBounds(const sf::Vector2f & point)

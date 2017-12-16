@@ -31,6 +31,9 @@ void converter(T &converted, const char &toConvert);
 class Level
 {
 private:
+	// All these data managers are getting out of hand, but that is because I haven't planed this code well enough
+	// While I could fix it, I think it isn't worth it and instead invest my time into finishing the game
+	std::vector<sf::Text> m_textMap;
 	std::vector<std::vector<Tile*>> m_tilemap;
 	std::vector<std::vector<Tile*>> m_background;
 	std::vector<Entity*> m_entityMap;

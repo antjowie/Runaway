@@ -143,7 +143,10 @@ void GameMenu::update(const float elapsedTime)
 
 	// Dead conditions
 	if (m_level->inLevelBounds(m_player->m_sprite.getPos()))
-		m_player->m_isDead = true;
+		if (inDarkZone)
+			m_player->m_isDead = true;
+		else
+			m_player->m_respawn = true;
 
 	// Check player alive state
 	m_soundManager.setTargetVolume(100, SoundType::Effect);
@@ -157,6 +160,7 @@ void GameMenu::update(const float elapsedTime)
 
 		m_background.died();
 	}
+
 	if (m_player->m_respawn)
 	{
 		m_player->m_sprite.setPos(m_level->getSpawn());
