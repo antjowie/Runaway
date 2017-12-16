@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runaway\source\Elevator.cpp" />
+    <ClCompile Include="Runaway\source\entities\Coin.cpp" />
     <ClCompile Include="Runaway\source\entities\Finish.cpp" />
     <ClCompile Include="Runaway\source\Launcher.cpp" />
     <ClCompile Include="Runaway\source\LightPool.cpp" />
@@ -63,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Runaway\source\Elevator.h" />
+    <ClInclude Include="Runaway\source\entities\Coin.h" />
     <ClInclude Include="Runaway\source\entities\Finish.h" />
     <ClInclude Include="Runaway\source\Launcher.h" />
     <ClInclude Include="Runaway\source\LightPool.h" />

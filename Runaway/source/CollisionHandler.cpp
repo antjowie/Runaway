@@ -28,7 +28,7 @@ void CollisionHandler::loadSurroundingTiles()
 	if (!checkLoaded()) return;
 
 	sf::Vector2i tilemapPlayerCoords{ mapWorldToTilemap(sf::Vector2f(m_playerHitbox.left,m_playerHitbox.top),m_tileHeight,m_tileWidth) };
-	const int offset{ 12 };
+	const int offset{ 5 };
 
 	m_surroundingTiles.clear();
 	for (int j= tilemapPlayerCoords.y - offset; j<= tilemapPlayerCoords.y + offset; j++)
@@ -44,6 +44,12 @@ void CollisionHandler::loadSurroundingTiles()
 			}
 		}
 	}
+
+	// Load all gates
+	for (const auto &vertic : *m_tilemap)
+		for (const auto &horizon : vertic)
+			if (horizon->getTileMeta().m_tileType == TileType::Elevator || horizon->getTileMeta().m_tileType == TileType::Gate)
+				m_surroundingTiles.push_back(horizon);
 }
 
 void CollisionHandler::setTileSize(const sf::Vector2i & tileSize)

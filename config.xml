@@ -2,7 +2,7 @@
 <config>
 	<keyboard dash="38" jump="57" moveDown="18" moveLeft="0" moveRight="3" moveUp="22"/>
 	<mouse/>
-	<logic/>
-	<integer frameLimit="60" level="0"/>
+	<logic coin="1" coin0="0" coin1="0" coin10="0" coin11="0" coin2="0" coin3="0" coin4="0" coin5="0" coin6="0" coin7="0" coin8="0" coin9="0" oin="1"/>
+	<integer frameLimit="60" level="2"/>
 </config>
 

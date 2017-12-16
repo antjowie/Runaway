@@ -76,7 +76,7 @@ void GameMenu::update(const float elapsedTime)
 
 				if (std::powf(lightPos.x - playerPos.x, 2) + std::powf(lightPos.y - playerPos.y, 2) <= radius * radius)
 				{
-					m_player->m_lightPool.setRate(25.f);
+					m_player->m_lightPool.setRate(75.f);
 					found = true;
 					break;
 				}
@@ -107,7 +107,7 @@ void GameMenu::update(const float elapsedTime)
 				break;
 
 			case EntityType::Coin:
-				// TODO when shop maybe will be added
+				entity->getAction();
 				break;				
 
 			case EntityType::Finish:

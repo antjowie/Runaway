@@ -10,8 +10,11 @@ std::string getLevelName(const LevelName levelName)
 {
 	switch (levelName)
 	{
-	case LevelName::Introduction:
-		return "Introduction";
+	case LevelName::WakeUp:
+		return "Wake Up";
+		break;
+	case LevelName::TheGate:
+		return "The Gate";
 		break;
 	default:
 		return "ERROR";

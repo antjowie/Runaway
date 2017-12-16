@@ -15,9 +15,11 @@ DataManager::DataManager()
 	std::string entityPath(texturePath + "entities/");
 	loadTexture("player", entityPath + "player/playerSprite.png");
 	loadTexture("playerLight", entityPath + "player/playerLightSprite.png");
+
 	loadTexture("checkpoint", entityPath + "checkpoint/checkpointSprite.png");
 	loadTexture("switch", entityPath + "switch/switchSprite.png");
 	loadTexture("finish", entityPath + "finish/finishSprite.png");
+	loadTexture("coin", entityPath + "coin/coinSprite.png");
 
 	// Load meta
 	std::string metaPath(texturePath + "meta/");
@@ -28,7 +30,8 @@ DataManager::DataManager()
 
 	// Load level backgrounds
 	std::string levelPath(dataPath + "levels/");
-	loadTexture("introductionBackground", levelPath + "introduction/background.png");
+	loadTexture("wake upBackground", levelPath + "wake up/background.png");
+	loadTexture("the gateBackground", levelPath + "the gate/background.png");
 	
 	getTexture("player").setSmooth(true);
 

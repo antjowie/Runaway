@@ -5,12 +5,12 @@
 #include "DataManager.h"
 #include "LightTrail.h"
 #include "LightTile.h"
+#include "Coin.h"
 
 #include <fstream>
 #include <sstream>
 #include <algorithm>
 #include <string>
-#include <iostream>
 
 void remove_char(std::string &str, char ch)
 {
@@ -282,8 +282,8 @@ bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 			}
 			else if (name == "coin")
 			{
-				converter(action.value, entity->first_attribute("value")->value());
-				//m_entityMap.push_back(new Coin(entityAction, spawn));
+				converter(action.value, entity->first_node()->first_node()->first_attribute("value")->value());
+				m_entityMap.push_back(new Coin(action, spawn));
 			}
 
 			else if (name == "finish")
@@ -334,7 +334,7 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 	{
 		rapidxml::xml_node<> *prop = gate->first_node("properties")->first_node("property");
 			
-		if (std::string(gate->first_attribute("name")->value()) == "switch")
+		if (std::string(gate->first_attribute("type")->value()) == "switch")
 		{
 			EntityAction action;
 			sf::Vector2f pos;

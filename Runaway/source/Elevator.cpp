@@ -37,6 +37,9 @@ void Elevator::loadElevator()
 		m_topElevatorTile->setSolid(false);
 		m_topElevatorTile->setSize(sf::Vector2f(0, 0));
 	}
+
+	if (m_inverted)
+		m_timeline = m_speed;
 }
 
 void Elevator::update(const float elapsedTime)

@@ -20,6 +20,8 @@ void Gate::loadBottomTile(GateTile* const bottomGateTile)
 void Gate::loadGate()
 {
 	m_gate.loadGate();
+	if(m_inverted)
+	m_timeline = m_speed;
 }
 
 void GatePart::update(const float percentage)

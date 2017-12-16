@@ -69,6 +69,10 @@ void Config::loadDefaultConfig()
 	m_config.emplace("frameLimit", 60);
 
 	m_config.emplace("level", 0);
+
+	for (int i = 0; i < 12; i++)
+		m_config.emplace(std::string("coin") + std::to_string(i), false);
+
 }
 
 void Config::saveConfig()
@@ -141,6 +145,10 @@ void Config::checkConfig()
 
 	if (!m_config.count("frameLimit")) corrupt = true;
 	if (!m_config.count("level")) corrupt = true;
+
+	for (int i = 0; i < 12; i++)	
+		if (!m_config.count(std::string("coin") + std::to_string(i))) corrupt = true;
+
 
 	if (corrupt)
 		loadDefaultConfig();

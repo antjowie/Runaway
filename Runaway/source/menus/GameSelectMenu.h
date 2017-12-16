@@ -10,7 +10,8 @@
 #include <vector>
 
 enum class LevelName {
-	Introduction,
+	WakeUp,
+	TheGate,
 	Blank
 };
 
