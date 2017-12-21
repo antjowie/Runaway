@@ -26,6 +26,7 @@ private:
 
 public:
 	bool m_isDead{ false };
+	bool m_inDarkZone{ false }; // Used to modify light and stuff
 	bool m_respawn{ false };
 	LightPool m_lightPool;					// Public for level access
 	Launcher m_launcher;					// Public for level access

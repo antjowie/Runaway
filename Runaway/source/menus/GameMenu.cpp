@@ -76,7 +76,7 @@ void GameMenu::update(const float elapsedTime)
 
 				if (std::powf(lightPos.x - playerPos.x, 2) + std::powf(lightPos.y - playerPos.y, 2) <= radius * radius)
 				{
-					m_player->m_lightPool.setRate(75.f);
+					m_player->m_lightPool.setRate(200.f);
 					found = true;
 					break;
 				}
@@ -85,8 +85,9 @@ void GameMenu::update(const float elapsedTime)
 			m_player->m_lightPool.setRate(-50.f);
 		}
 	else
-		m_player->m_lightPool.setRate(200.f);
+		m_player->m_lightPool.setRate(150.f);
 
+	m_player->m_inDarkZone = inDarkZone;
 	m_player->logic(elapsedTime);
 	
 	m_camera.setView(m_player->m_sprite.getPos());

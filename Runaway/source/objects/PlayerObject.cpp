@@ -60,7 +60,10 @@ void PlayerObject::logic(const float elapsedTime)
 	{
 		m_sprite.m_sprite.move(0, -m_collisionHandler.distanceTillBottomCollision(m_sprite.m_sprite.getGlobalBounds()));
 		if (m_collisionHandler.distanceTillUpperCollision(m_sprite.getHitbox()) != 0)
-  			m_isDead = true;
+			if (m_inDarkZone)
+				m_isDead = true;
+			else
+				m_respawn = true;
 	}
 	
 	m_sprite.update(elapsedTime, m_collisionHandler);
@@ -84,7 +87,7 @@ void PlayerObject::logic(const float elapsedTime)
 		m_animHandler.changeAnimation(PlayerDirection::DashLeft);
 		dashed = true;
 	}
-
+	
 		// Vertical movement
 	else if (newPos.x >= -offset && (newPos.y < -offset || newPos.y > offset) && m_sprite.m_hasJumped)
 	{
@@ -129,7 +132,7 @@ void PlayerObject::logic(const float elapsedTime)
 	m_sprite.fixOrigin();
 
 	// Move the light rect
-	if (m_lightPool.isCapped()) m_lightPool.setSize(75.f);
+	if (!m_inDarkZone && m_lightPool.isCapped()) m_lightPool.setSize(75.f);
 	m_lightPool.setPos(m_sprite.getPos());
 	m_lightPool.update(elapsedTime);
 

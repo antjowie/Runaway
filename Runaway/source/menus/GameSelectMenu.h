@@ -11,7 +11,10 @@
 
 enum class LevelName {
 	WakeUp,
+	Factory,
+	Hallway,
 	TheGate,
+	TheMine,
 	Blank
 };
 

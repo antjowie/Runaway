@@ -13,8 +13,17 @@ std::string getLevelName(const LevelName levelName)
 	case LevelName::WakeUp:
 		return "Wake Up";
 		break;
+	case LevelName::Factory:
+		return "Factory";
+		break;
+	case LevelName::Hallway:
+		return "Hallway";
+		break;
 	case LevelName::TheGate:
 		return "The Gate";
+		break;
+	case LevelName::TheMine:
+		return "The Mine";
 		break;
 	default:
 		return "ERROR";
@@ -51,7 +60,7 @@ GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 			temp.m_level = static_cast<LevelName>(index);
 			
 			temp.m_rect.setTexture(&getLevelBackground(temp.m_level));
-			temp.m_rect.setPosition(i * width + 25, j * height);
+			temp.m_rect.setPosition(i * width + 25, j * (height + 50));
 			temp.m_rect.setSize(sf::Vector2f(width - 50,height));
 			temp.m_rect.setOutlineThickness(5);
 			temp.m_rect.setOutlineColor(sf::Color::White);
@@ -61,7 +70,10 @@ GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 			temp.m_unlocked.setFillColor(sf::Color(60, 60, 60));
 
 			temp.m_text.setFont(DataManager::getInstance().getFont("pixel"));
-			temp.m_text.setString(getLevelName(temp.m_level));
+			temp.m_text.setCharacterSize(20);
+			std::string title(getLevelName(temp.m_level));
+			std::transform(title.begin(), title.end(), title.begin(), toupper);
+			temp.m_text.setString(title);
 			float textpos{ temp.m_text.getGlobalBounds().width - temp.m_rect.getGlobalBounds().width };
 			if (textpos < 0)
 				textpos = 0;

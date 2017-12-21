@@ -30,9 +30,12 @@ DataManager::DataManager()
 
 	// Load level backgrounds
 	std::string levelPath(dataPath + "levels/");
-	loadTexture("wake upBackground", levelPath + "wake up/background.png");
+	loadTexture("factoryBackground", levelPath + "factory/background.png");
+	loadTexture("hallwayBackground", levelPath + "hallway/background.png");
 	loadTexture("the gateBackground", levelPath + "the gate/background.png");
-	
+	loadTexture("the mineBackground", levelPath + "the mine/background.png");
+	loadTexture("wake upBackground", levelPath + "wake up/background.png");
+
 	getTexture("player").setSmooth(true);
 
 	// Load sounds
