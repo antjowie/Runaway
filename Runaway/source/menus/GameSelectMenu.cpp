@@ -22,9 +22,11 @@ std::string getLevelName(const LevelName levelName)
 	case LevelName::TheGate:
 		return "The Gate";
 		break;
+/*
 	case LevelName::TheMine:
 		return "The Mine";
 		break;
+*/
 	default:
 		return "ERROR";
 		break;
@@ -83,7 +85,6 @@ GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 
 GameSelectMenu::~GameSelectMenu()
 {
-	// For some reason this doesn't get called
 	Config::getInstance().setConfig("level", Item(static_cast<int>(m_currentLevel)));
 }
 
@@ -116,6 +117,11 @@ void GameSelectMenu::input(sf::RenderWindow& window)
 				Config::getInstance().setConfig("level", Item(static_cast<int>(m_currentLevel)));
 				m_isPop = true;
 			}
+			break;
+
+		case sf::Event::Closed:
+			Config::getInstance().saveConfig();
+			window.close();
 			break;
 		}
 	}

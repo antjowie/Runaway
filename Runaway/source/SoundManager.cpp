@@ -1,4 +1,5 @@
 #include "SoundManager.h"
+#include "Config.h"
 
 void SoundManager::play()
 {
@@ -37,12 +38,14 @@ void SoundManager::setTargetVolume(const float volume, const SoundType type)
 	{
 	case SoundType::Effect:
 		for (const auto& iter : m_effects)
-			iter->setVolume(iter->getVolume() * (volume / 100.f ));
+			iter->setVolume(volume);
+		Config::getInstance().setConfig("effects", Item((int)volume));
 		break;
 		
 	case SoundType::Music:
 		for (const auto& iter : m_effects)
-			iter->setVolume(iter->getVolume() * (volume / 100.f));
+			iter->setVolume(volume);
+		Config::getInstance().setConfig("music", Item((int)volume));
 		
 	default:
 		// Maybe return error code
@@ -66,6 +69,12 @@ void SoundManager::addSound(SoundObject * const sound)
 		// Maybe push some kind of error
 		break;
 	}
+}
+
+SoundManager::SoundManager()
+{
+	setTargetVolume(Config::getInstance().getConfig("music").integer, SoundType::Music);
+	setTargetVolume(Config::getInstance().getConfig("effects").integer, SoundType::Effect);
 }
 
 SoundManager::~SoundManager()

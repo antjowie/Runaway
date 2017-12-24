@@ -14,7 +14,7 @@ enum class LevelName {
 	Factory,
 	Hallway,
 	TheGate,
-	TheMine,
+	//TheMine,
 	Blank
 };
 

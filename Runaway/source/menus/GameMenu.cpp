@@ -39,16 +39,13 @@ void GameMenu::input(sf::RenderWindow & window)
 	{
 		switch (event.type)
 		{
-		case sf::Event::Closed: 
+		case sf::Event::Closed:
+			Config::getInstance().saveConfig();
 			window.close();
 			break;
 
 		case sf::Event::KeyPressed:
 			if (event.key.code == sf::Keyboard::Key::Escape) m_isPop = true;
-			break;
-
-		case sf::Event::MouseButtonPressed:
-			//event.mouseButton.button == sf::Mouse::Left ? m_camera.zoom(1.05f) : m_camera.zoom(0.95f);
 			break;
 		}
 	}
@@ -78,7 +75,7 @@ void GameMenu::update(const float elapsedTime)
 				{
 					m_player->m_lightPool.setRate(200.f);
 					found = true;
-					break;
+					break; // Very necessary indeed
 				}
 			}
 			if (found) break;

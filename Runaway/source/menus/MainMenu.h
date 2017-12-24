@@ -17,7 +17,7 @@ private:
 	void init(); // If player returns from GameSelect, continue button will not be loaded. This funtion fixed that
 public:
 	MainMenu(MenuStack *const menuStack);
-	~MainMenu();
+	virtual ~MainMenu() override final;
 
 	virtual void input(sf::RenderWindow &window);
 	virtual void update(const float elapsedTime);

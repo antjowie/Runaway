@@ -69,6 +69,9 @@ void Config::loadDefaultConfig()
 	m_config.emplace("frameLimit", 60);
 
 	m_config.emplace("level", 0);
+	
+	m_config.emplace("music", 100);
+	m_config.emplace("effects", 100);
 
 	for (int i = 0; i < 12; i++)
 		m_config.emplace(std::string("coin") + std::to_string(i), false);
@@ -146,6 +149,9 @@ void Config::checkConfig()
 	if (!m_config.count("frameLimit")) corrupt = true;
 	if (!m_config.count("level")) corrupt = true;
 
+	if (!m_config.count("music")) corrupt = true;
+	if (!m_config.count("effects")) corrupt = true;
+	
 	for (int i = 0; i < 12; i++)	
 		if (!m_config.count(std::string("coin") + std::to_string(i))) corrupt = true;
 

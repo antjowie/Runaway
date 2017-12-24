@@ -24,5 +24,6 @@ public:
 												   
 	void addSound(SoundObject * const sound);
 
+	SoundManager();
 	~SoundManager();
 };
