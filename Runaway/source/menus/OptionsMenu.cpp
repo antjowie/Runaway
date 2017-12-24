@@ -3,7 +3,9 @@
 #include "BackgroundObject.h"
 #include "TextObject.h"
 #include "Config.h"
+#include "InputNames.h"
 
+#include <iostream>
 OptionsMenu::OptionsMenu(MenuStack * const menuStack):
 	Menu(menuStack),
 	m_music		(400,170,Config::getInstance().getConfig("music").integer,500),
@@ -26,11 +28,11 @@ OptionsMenu::OptionsMenu(MenuStack * const menuStack):
 	TextObject * effects{ new TextObject("EFFECTS",true) };
 	effects->setPos(sf::Vector2f(100, 200));
 
-
 	tempVec.push_back(volume);
 	tempVec.push_back(music);
 	tempVec.push_back(effects);
-
+	
+	std::cout << toString(Config::getInstance().getConfig("moveLeft").keyboard) << '\n';
 
 	// Initialize buttons
 	m_buttons.push_back(new TextButtonObject("BACK", Function::Back, true));
