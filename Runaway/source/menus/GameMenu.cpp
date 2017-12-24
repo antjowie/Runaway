@@ -147,7 +147,7 @@ void GameMenu::update(const float elapsedTime)
 			m_player->m_respawn = true;
 
 	// Check player alive state
-	m_soundManager.setTargetVolume(100, SoundType::Effect);
+	m_soundManager.setTargetVolume(Config::getInstance().getConfig("effects").integer, SoundType::Effect);
 	if (m_player->m_isDead)
 	{
 		m_soundManager.setTargetVolume(0,SoundType::Effect);
