@@ -180,14 +180,14 @@ void PlayerObject::input(sf::RenderWindow &window)
 	if (!window.hasFocus()) return;
 	if(!m_isDead)
 	m_sprite.input();
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	if (sf::Mouse::isButtonPressed(Config::getInstance().getConfig("shoot").mouse))
 	{
 		size_t temp{ m_launcher.getProjectiles().size() };
 		m_launcher.shoot(window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView()));
 		if (temp < m_launcher.getProjectiles().size())
 			m_lightPool.depleteLight(m_launcher.getProjectileSize().x + m_launcher.getProjectileSize().y);
 	}
-	if (m_respawnTimeline == 0  && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P))
+	if (m_respawnTimeline == 0  && sf::Keyboard::isKeyPressed(Config::getInstance().getConfig("respawn").keyboard))
 	{
 		m_respawn = true;
 		m_respawnTimeline = 0.5f;

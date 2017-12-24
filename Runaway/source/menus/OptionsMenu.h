@@ -35,6 +35,46 @@ public:
 	float getProgress() const;
 };
 
+union Key
+{
+	sf::Keyboard::Key key;
+	sf::Mouse::Button button;
+	
+	Key(sf::Keyboard::Key key);
+	Key(sf::Mouse::Button button);
+};
+
+enum class KeyType
+{
+	Keyboard,
+	Mouse
+};
+
+class ConfigKey : public sf::Drawable
+{
+private:
+	Key m_key;
+	KeyType m_keyType;
+
+	sf::Text m_name;
+	sf::Text m_text;
+
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
+
+public:
+	bool selected;
+	void setKey(const Key &key, const KeyType keyType);
+	
+	void update(const float elapsedTime);
+
+	const Key getKey() const;
+	const KeyType getKeyType() const;
+	const sf::IntRect getHitbox() const;
+
+	ConfigKey(const sf::Vector2f pos, const std::string name, const Key &key, const KeyType keyType);
+	ConfigKey(const float x, const float y, const std::string name, const Key &key, const KeyType keyType);
+};
+
 class OptionsMenu :
 	public Menu
 {
@@ -43,6 +83,9 @@ private:
 
 	Slider m_music;
 	Slider m_effects;
+
+	std::vector<ConfigKey> m_keys;
+	void initKeys();
 
 public:
 	OptionsMenu(MenuStack* const menuStack);

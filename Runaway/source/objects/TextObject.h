@@ -24,6 +24,7 @@ public:
 	void setTextSize(const unsigned int newTextSize);
 	void setString(const std::string &text);
 	void setOriginToLeftMiddle();	// Odd name but sets the origin to the middle of the left edge
+	void setOriginToRightMiddle();	// Odd name but sets the origin to the middle of the left edge
 
 	sf::Vector2f const &getPos() const;
 };

@@ -42,7 +42,7 @@ private:
 
 	std::map<std::string, Item> m_config;
 
-	void checkConfig();
+	bool checkConfig();
 
 public:
 	static Config &getInstance();

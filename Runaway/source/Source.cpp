@@ -22,8 +22,7 @@ int main()
 	
 	const float frameLimit{ static_cast<float>(Config::getInstance().getConfig("frameLimit").integer) }; // So that our keyboard pollrate will not be tied to loop
 	window.setFramerateLimit(static_cast<unsigned>(frameLimit));
-//	menuStack.push(new MainMenu(&menuStack));
-	menuStack.push(new OptionsMenu(&menuStack));
+	menuStack.push(new MainMenu(&menuStack));
 	time.restart();
 
 	while (window.isOpen())

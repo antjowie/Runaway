@@ -23,7 +23,7 @@ void Config::loadConfig()
 		loadDefaultConfig();
 		return;
 	}
-
+	
 	// Format the file
 	std::vector<char> buffer((std::istreambuf_iterator<char>(configFile)), std::istreambuf_iterator<char>());
 	buffer.push_back('\0'); 
@@ -51,20 +51,21 @@ void Config::loadConfig()
 				m_config.emplace(attr->name(), temp);
 		}
 	}
-	checkConfig();
+	if (checkConfig())
+		loadDefaultConfig();
 }
 
 void Config::loadDefaultConfig()
 {
 	m_config.clear();
 
-	m_config.emplace("moveUp",		sf::Keyboard::Key::W);
 	m_config.emplace("moveLeft",	sf::Keyboard::Key::A);
-	m_config.emplace("moveDown",	sf::Keyboard::Key::S);
 	m_config.emplace("moveRight",	sf::Keyboard::Key::D);
+	m_config.emplace("dash",		sf::Keyboard::Key::LShift);
+	m_config.emplace("jump",		sf::Keyboard::Key::Space);
 
-	m_config.emplace("jump", sf::Keyboard::Key::Space);
-	m_config.emplace("dash", sf::Keyboard::Key::LShift);
+	m_config.emplace("shoot",	sf::Mouse::Button::Left);
+	m_config.emplace("respawn", sf::Keyboard::Key::P);
 
 	m_config.emplace("frameLimit", 60);
 
@@ -131,20 +132,20 @@ Config::~Config()
 	saveConfig();
 }
 
-void Config::checkConfig()
+bool Config::checkConfig()
 {
 	// This function checks if all config data is initialized. If someone didn't modify the file from within the program,
 	// the file may be missing some setting and thus will load the default config
 	bool corrupt = false;
 
 	// Quite ugly
-	if (!m_config.count("moveUp")) corrupt = true;
 	if (!m_config.count("moveLeft")) corrupt = true;
-	if (!m_config.count("moveDown")) corrupt = true;
 	if (!m_config.count("moveRight")) corrupt = true;
-
-	if (!m_config.count("jump")) corrupt = true;
 	if (!m_config.count("dash")) corrupt = true;
+	if (!m_config.count("jump")) corrupt = true;
+	
+	if (!m_config.count("shoot")) corrupt = true;
+	if (!m_config.count("respawn")) corrupt = true;
 
 	if (!m_config.count("frameLimit")) corrupt = true;
 	if (!m_config.count("level")) corrupt = true;
@@ -155,9 +156,7 @@ void Config::checkConfig()
 	for (int i = 0; i < 12; i++)	
 		if (!m_config.count(std::string("coin") + std::to_string(i))) corrupt = true;
 
-
-	if (corrupt)
-		loadDefaultConfig();
+	return corrupt;
 }
 
 Config & Config::getInstance()

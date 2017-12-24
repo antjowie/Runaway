@@ -47,4 +47,9 @@ void TextObject::setOriginToLeftMiddle()
 {
 	m_text.setOrigin(0, m_text.getLocalBounds().top + m_text.getLocalBounds().height / 2);
 }
+
+void TextObject::setOriginToRightMiddle()
+{
+	m_text.setOrigin(m_text.getLocalBounds().width, m_text.getLocalBounds().top + m_text.getLocalBounds().height / 2);
+}
  
