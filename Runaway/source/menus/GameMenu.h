@@ -27,6 +27,8 @@ private:
 	Camera m_camera;
 	Level *m_level;
 
+	bool m_resetSound;
+
 public:
 	GameMenu(MenuStack* const menuStack,LevelName &levelName, LevelName &currentLevel);
 	~GameMenu();

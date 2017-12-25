@@ -10,7 +10,6 @@ private:
 
 	bool m_hitDash{ false };
 
-	bool m_isCrouching{ false };
 	bool m_canJump{ false };
 
 	const bool isItemPressed(const std::string string) const;
@@ -41,5 +40,4 @@ public:
 	const sf::FloatRect getHitbox() const;
 	const sf::IntRect getTextureRect() const;
 	const sf::Vector2f getPos() const;
-	const sf::Vector2i getMoveDirection() const;
 };

@@ -4,9 +4,9 @@
 #include "MenuStack.h"
 #include "TileHeader.h"
 #include "DiedMenu.h"
-
+#include <iostream>
 GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &currentLevel):
-	Menu(menuStack), m_levelName(levelName), m_levelProgress(currentLevel)
+	Menu(menuStack), m_levelName(levelName), m_levelProgress(currentLevel), m_resetSound(false)
 {
 	m_player = new PlayerObject(m_soundManager,true);
 
@@ -19,6 +19,7 @@ GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &
 	
 	changeTitle("Runaway - " + m_level->getTitle());
 
+	m_soundManager.setTargetVolume(Config::getInstance().getConfig("effects").integer, SoundType::Effect);
 	m_soundManager.play();
 }
 
@@ -146,17 +147,23 @@ void GameMenu::update(const float elapsedTime)
 		else
 			m_player->m_respawn = true;
 
+	if (m_resetSound)
+	{
+		m_soundManager.setTargetVolume(Config::getInstance().getConfig("effects").integer, SoundType::Effect);
+		m_resetSound = false;
+	}
+
 	// Check player alive state
-	m_soundManager.setTargetVolume(Config::getInstance().getConfig("effects").integer, SoundType::Effect);
 	if (m_player->m_isDead)
 	{
-		m_soundManager.setTargetVolume(0,SoundType::Effect);
+		m_soundManager.setTargetVolume(0, SoundType::Effect);
 		m_menuStack->push(new DiedMenu(m_menuStack));
 
 		m_player->m_sprite.setPos(m_level->getOriginalSpawn());
 		m_player->m_isDead = false;
 
 		m_background.died();
+		m_resetSound = true;
 	}
 
 	if (m_player->m_respawn)

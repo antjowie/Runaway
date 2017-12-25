@@ -7,8 +7,6 @@
 #include "MainMenu.h"
 #include "Config.h"
 
-#include "OptionsMenu.h"
-
 int main() 
 {
 	Config::getInstance().loadConfig();
@@ -17,7 +15,7 @@ int main()
 	
 	sf::Clock time;
 	float elapsedTime;
-	float elapsedRenderTime = 0;
+	float elapsedRenderTime{ 0 };
 	MenuStack menuStack;
 	
 	const float frameLimit{ static_cast<float>(Config::getInstance().getConfig("frameLimit").integer) }; // So that our keyboard pollrate will not be tied to loop

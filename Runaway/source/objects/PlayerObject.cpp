@@ -154,10 +154,10 @@ void PlayerObject::logic(const float elapsedTime)
 	m_lightPoolSound->setPitch(m_lightPool.getPool()/ m_lightPool.getCap() + (0.2f / (m_lightPool.getPool() + 1.f)));
 
 	m_lightPool.isCapped() ? m_soundTimeline -= 50 * elapsedTime : m_soundTimeline += 50 * elapsedTime;
-	if (m_soundTimeline < 10)
-		m_soundTimeline = 10;
-	else if (m_soundTimeline > 100)
-		m_soundTimeline = 100;
+	if (m_soundTimeline < 0)
+		m_soundTimeline = 0;
+	else if (m_soundTimeline > Config::getInstance().getConfig("effects").integer * .5f)
+		m_soundTimeline = Config::getInstance().getConfig("effects").integer * .5f;
 	m_lightPoolSound->setVolume(m_soundTimeline);
 
 	// Update launcher

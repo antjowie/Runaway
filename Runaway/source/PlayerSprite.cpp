@@ -22,7 +22,7 @@ void Sprite::input()
 	// Reset directions
 	m_moveDirection.x = m_moveDirection.y = 0;
 
-	if ((isItemPressed("moveUp") || isItemPressed("jump")) && m_canJump)
+	if (isItemPressed("jump") && m_canJump)
 		m_moveDirection.y = -1;
 
 	if ((isItemPressed("dash") && (m_dashCooldown == 0)))
@@ -32,8 +32,6 @@ void Sprite::input()
 	if (m_moveDirection.x < -1) m_moveDirection.x = -1;
 	if (isItemPressed("moveRight")) m_moveDirection.x += 1;
 	if (m_moveDirection.x > 1) m_moveDirection.x = 1;
-
-	m_isCrouching = isItemPressed("moveDown");
 }
 
 void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler)
@@ -196,11 +194,6 @@ void Sprite::debugMove(const float elapsedTime)
 		m_sprite.move(0, m_velocity.y * elapsedTime* speed);
 
 	}
-	else if (m_isCrouching == true)
-	{
-		m_velocity.y = 2;
-		m_sprite.move(0, m_velocity.y * elapsedTime* speed);
-	}
 	else m_velocity.y = 0;
 	m_moveDirection.x = m_moveDirection.y = 0;
 }
@@ -245,14 +238,4 @@ const sf::IntRect Sprite::getTextureRect() const
 const sf::Vector2f Sprite::getPos() const
 {
 	return m_sprite.getPosition();
-}
-
-const sf::Vector2i Sprite::getMoveDirection() const
-{
-	sf::Vector2i moveDirection{ m_moveDirection };
-	if (m_velocity.y < 0)
-		moveDirection.y = 1;
-	if (m_isCrouching)
-		moveDirection.y = -1;
-	return moveDirection;
 }

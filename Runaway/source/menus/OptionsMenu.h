@@ -6,6 +6,9 @@
 #include "Menu.h"
 #include "TextButtonObject.h"
 
+#include "SoundManager.h"
+#include "SoundObject.h"
+
 // Volume sliders
 class Slider : public sf::Drawable
 {
@@ -85,8 +88,11 @@ private:
 	Slider m_effects;
 
 	std::vector<ConfigKey> m_keys;
+	
 	void initKeys();
 
+	SoundManager m_soundManager;
+	SoundObject * m_sound;
 public:
 	OptionsMenu(MenuStack* const menuStack);
 	virtual ~OptionsMenu() override final;

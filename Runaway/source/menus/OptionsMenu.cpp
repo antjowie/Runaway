@@ -57,6 +57,16 @@ OptionsMenu::OptionsMenu(MenuStack * const menuStack) :
 	m_buttons.push_back(reset);
 
 	pushObject(tempVec);
+
+	m_sound = new SoundObject(SoundType::Effect, m_soundManager);
+	m_sound->setRelativeToListener(true);
+	m_sound->setPosition(0, 0, 0);
+	m_sound->setBuffer(DataManager::getInstance().getSound("lightPool"));
+	m_sound->setLoop(true);
+	m_sound->setPitch(1);
+
+	m_soundManager.setTargetVolume(0, SoundType::Effect);
+	m_soundManager.play();
 }
 
 OptionsMenu::~OptionsMenu()
@@ -76,6 +86,7 @@ OptionsMenu::~OptionsMenu()
 	Config::getInstance().setConfig("jump", (m_keys[3].getKey().key));
 	Config::getInstance().setConfig("shoot", (m_keys[4].getKey().button));
 	Config::getInstance().setConfig("respawn", (m_keys[5].getKey().key));
+
 }
 
 void OptionsMenu::input(sf::RenderWindow & window)
@@ -137,7 +148,12 @@ void OptionsMenu::input(sf::RenderWindow & window)
 		if (m_music.getHitbox().contains(static_cast<sf::Vector2i>(mousePos)))
 			m_music.setProgress(mousePos);
 		else if (m_effects.getHitbox().contains(static_cast<sf::Vector2i>(mousePos)))
+		{
 			m_effects.setProgress(mousePos);
+			m_soundManager.setTargetVolume(m_effects.getProgress(),SoundType::Effect);
+		}
+		else
+		m_soundManager.setTargetVolume(0, SoundType::Effect);
 	}
 }
 

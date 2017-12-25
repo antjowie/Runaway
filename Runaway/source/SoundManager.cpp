@@ -33,19 +33,16 @@ void SoundManager::update()
 void SoundManager::setTargetVolume(const float volume, const SoundType type)
 {
 	// TODO push new volume values to config
-
 	switch (type)
 	{
 	case SoundType::Effect:
 		for (const auto& iter : m_effects)
 			iter->setVolume(volume);
-		Config::getInstance().setConfig("effects", Item((int)volume));
 		break;
 		
 	case SoundType::Music:
-		for (const auto& iter : m_effects)
+		for (const auto& iter : m_music)
 			iter->setVolume(volume);
-		Config::getInstance().setConfig("music", Item((int)volume));
 		
 	default:
 		// Maybe return error code
@@ -73,8 +70,9 @@ void SoundManager::addSound(SoundObject * const sound)
 
 SoundManager::SoundManager()
 {
-	setTargetVolume(Config::getInstance().getConfig("music").integer, SoundType::Music);
-	setTargetVolume(Config::getInstance().getConfig("effects").integer, SoundType::Effect);
+	// Doesn't work because there are no sounds loaded
+	//setTargetVolume(Config::getInstance().getConfig("music").integer, SoundType::Music);
+	//setTargetVolume(Config::getInstance().getConfig("effects").integer, SoundType::Effect);
 }
 
 SoundManager::~SoundManager()
