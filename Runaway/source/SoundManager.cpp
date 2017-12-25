@@ -56,10 +56,12 @@ void SoundManager::addSound(SoundObject * const sound)
 	{
 	case SoundType::Effect:
 		m_effects.push_back(sound);
+		sound->setVolume(Config::getInstance().getConfig("effects").integer);
 		break;
 
 	case SoundType::Music:
 		m_music.push_back(sound);
+		sound->setVolume(Config::getInstance().getConfig("music").integer);
 		break;
 
 	default:

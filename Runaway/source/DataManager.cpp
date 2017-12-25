@@ -41,6 +41,8 @@ DataManager::DataManager()
 	// Load sounds
 	std::string soundPath(dataPath + "sounds/");
 	loadSound("lightPool", soundPath + "lightPool.wav");
+	loadSound("doorMoving", soundPath + "doorMoving.wav");
+	loadSound("doorHit", soundPath + "doorHit.wav");
 }
 
 DataManager & DataManager::getInstance()

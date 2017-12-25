@@ -49,7 +49,7 @@ void converter(T &converted, const char &toConvert)
 	converter >> converted;
 }
 
-bool Level::initMap()
+bool Level::initMap(SoundManager & soundManager)
 {
 	std::ifstream file(m_levelPath + "tilemap.tmx");
 
@@ -62,7 +62,7 @@ bool Level::initMap()
 	file.close();
 
 	// Load all files
-	if (!loadTileLayer(buffer)) return false;
+	if (!loadTileLayer(buffer,soundManager)) return false;
 	return true;
 }
 
@@ -154,7 +154,7 @@ void Level::loadTilemap(std::vector<std::vector<Tile*>>& tilemap, const std::str
 	}
 }
 
-bool Level::loadTileLayer(std::vector<char> tilemap)
+bool Level::loadTileLayer(std::vector<char> tilemap, SoundManager & soundManager)
 {
 	rapidxml::xml_document<> map;
 	rapidxml::xml_node<> *node;
@@ -228,7 +228,7 @@ bool Level::loadTileLayer(std::vector<char> tilemap)
 
 	// Load other tilemap stuff
 	if (!loadEntities(map)) return false;
-	if (!loadGates(map)) return false;
+	if (!loadGates(map,soundManager)) return false;
 	if (!loadDarkZones(map)) return false;
 
 	return true;
@@ -304,7 +304,7 @@ bool Level::loadEntities(const rapidxml::xml_document<> &doc)
 	return true;
 }
 
-bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
+bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc, SoundManager & soundManager)
 {
 	struct GateNode
 	{
@@ -395,6 +395,7 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 			for (int i = 1; i < gateTiles.size() - 1;++i)
 				gateTiles[i]->setSolid(false);
 
+			gate.initSound(soundManager);
 			m_gateMap.push_back(std::move(gate));
 		}
 		else
@@ -421,8 +422,8 @@ bool Level::loadGates(const rapidxml::xml_document<> &xmlDoc)
 				for (std::size_t i = 1; i < elevatorTiles.size(); ++i)
 					elevatorTiles[i]->setSolid(false);
 				
-
-			m_elevatorMap.push_back(std::move(elevator));
+				elevator.initSound(soundManager);
+				m_elevatorMap.push_back(std::move(elevator));
 		}
 	}
 
@@ -474,9 +475,9 @@ Level::~Level()
 	m_entityMap.clear();
 }
 
-bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background, Light &light)
+bool Level::loadLevel(Camera & camera, PlayerObject * const player, GameBackground &background, Light &light, SoundManager & soundManager)
 {
-	if (!initMap()) return false;
+	if (!initMap(soundManager)) return false;
 	if (!initPlayer(player)) return false;
 	if (!initCamera(camera)) return false;
 	if (!initBackground(background)) return false;

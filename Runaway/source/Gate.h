@@ -7,7 +7,9 @@
 #pragma once
 #include <vector>
 #include <SFML\Graphics\RectangleShape.hpp>
+
 #include "GateTile.h"
+#include "SoundObject.h"
 
 class GatePart
 {
@@ -41,12 +43,20 @@ private:
 
 	const bool m_inverted;
 
+	bool m_hasHit{ true };
+	bool m_moving{ false };
+	float m_soundTimeline{ 0 };
+	SoundObject * m_movingSound;
+	SoundObject * m_hitSound;
+
 	int m_id; // The id value is a value that to connect with switches
 public:
 	bool m_isOpen; // Decides wheter gate should be opening or not
 
 	Gate(const int id, const float speed, const bool inverted = false);
-	
+
+	void initSound(SoundManager & soundManager);
+
 	// Init phase
 	void loadTopTile(GateTile* const topGateTile);
 	void loadBottomTile(GateTile* const bottomGateTile);

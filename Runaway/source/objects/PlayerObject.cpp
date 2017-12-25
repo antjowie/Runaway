@@ -2,8 +2,6 @@
 #include "Config.h"
 #include "DataManager.h"
 
-#include <iostream>
-
 PlayerObject::PlayerObject(SoundManager &soundManager, const bool isValid) :
 	Object(isValid),
 	m_animHandler(32 , 32)
@@ -151,11 +149,12 @@ void PlayerObject::logic(const float elapsedTime)
 	}
 
 	// Update sound
+	sf::Listener::setPosition(m_sprite.getPos().x, 0.f, m_sprite.getPos().y);
 	m_lightPoolSound->setPitch(m_lightPool.getPool()/ m_lightPool.getCap() + (0.2f / (m_lightPool.getPool() + 1.f)));
 
 	m_lightPool.isCapped() ? m_soundTimeline -= 50 * elapsedTime : m_soundTimeline += 50 * elapsedTime;
-	if (m_soundTimeline < 0)
-		m_soundTimeline = 0;
+	if (m_soundTimeline < std::min(Config::getInstance().getConfig("effects").integer, 10))
+		m_soundTimeline = std::min(Config::getInstance().getConfig("effects").integer, 10);
 	else if (m_soundTimeline > Config::getInstance().getConfig("effects").integer * .5f)
 		m_soundTimeline = Config::getInstance().getConfig("effects").integer * .5f;
 	m_lightPoolSound->setVolume(m_soundTimeline);

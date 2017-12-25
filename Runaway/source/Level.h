@@ -54,17 +54,17 @@ private:
 	const std::string m_title;
 	const std::string m_tilesetName;
 
-	bool initMap();
+	bool initMap(SoundManager & soundManager);
 	bool initCamera(Camera &camera);
 	bool initPlayer(PlayerObject *const player);
 	bool initBackground(GameBackground &background);
 	bool initLight(Light &light, const PlayerObject * const player);
 
-	bool loadTileLayer(std::vector<char> tilemap);
+	bool loadTileLayer(std::vector<char> tilemap, SoundManager & soundManager);
 	void loadTilemap(std::vector<std::vector<Tile*>> &tilemap, const std::string tilemapString);
 	
 	bool loadEntities(const rapidxml::xml_document<> &doc);
-	bool loadGates(const rapidxml::xml_document<> &xmlDox);
+	bool loadGates(const rapidxml::xml_document<> &xmlDox, SoundManager & soundManager);
 	bool loadDarkZones(const rapidxml::xml_document<> &doc);
 
 public:
@@ -80,7 +80,7 @@ public:
 	void toggleGate(const int id);
 	void setSpawn(const sf::Vector2f &pos);
 	
-	bool loadLevel(Camera &camera, PlayerObject * const player,GameBackground &background, Light &light); // This will load all the files for this level
+	bool loadLevel(Camera &camera, PlayerObject * const player,GameBackground &background, Light &light, SoundManager & soundManager); // This will load all the files for this level
 	
 	const sf::Vector2f getSpawn() const;
 	const sf::Vector2f getOriginalSpawn() const;
