@@ -13,11 +13,11 @@ std::string getLevelName(const LevelName levelName)
 	case LevelName::WakeUp:
 		return "Wake Up";
 		break;
-	case LevelName::Factory:
-		return "Factory";
+	case LevelName::TheFactory:
+		return "The Factory";
 		break;
-	case LevelName::Hallway:
-		return "Hallway";
+	case LevelName::TheHallway:
+		return "The Hallway";
 		break;
 	case LevelName::TheGate:
 		return "The Gate";
@@ -25,8 +25,11 @@ std::string getLevelName(const LevelName levelName)
 	case LevelName::TheMine:
 		return "The Mine";
 		break;
-	case LevelName::TheElevator:
-		return "The Elevator";
+	case LevelName::TheLaboratory:
+		return "The Laboratory";
+		break;
+	case LevelName::TheCore:
+		return "The Core";
 		break;
 	default:
 		return "ERROR";
@@ -73,7 +76,7 @@ GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 			temp.m_unlocked.setFillColor(sf::Color(60, 60, 60));
 
 			temp.m_text.setFont(DataManager::getInstance().getFont("pixel"));
-			temp.m_text.setCharacterSize(20);
+			temp.m_text.setCharacterSize(18);
 			std::string title(getLevelName(temp.m_level));
 			std::transform(title.begin(), title.end(), title.begin(), toupper);
 			temp.m_text.setString(title);
@@ -158,19 +161,18 @@ void GameSelectMenu::update(const float elapsedTime)
 		color.a = static_cast<sf::Uint8>(temp);
 		iter.m_rect.setOutlineColor(color);
 	}
-
 	m_timeline = 0;
 
 	// Checks if it can load special level by collecting all coins
 	bool allCoins{ true };
-	for (int i{ 0 }; i < static_cast<int>(LevelName::TheElevator); i++)
+	for (int i{ 0 }; i < static_cast<int>(LevelName::TheCore); i++)
 	{
 		allCoins = Config::getInstance().getConfig(std::string("coin" + std::to_string(i))).logic;
 		if (!allCoins)
 			break;
 	}
 	if (allCoins)
-		m_currentLevel = LevelName::TheElevator;
+		m_currentLevel = LevelName::TheCore;
 }
 
 void GameSelectMenu::draw(sf::RenderWindow &window)
