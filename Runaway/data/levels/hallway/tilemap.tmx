@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="119" height="51" tilewidth="32" tileheight="32" nextobjectid="53">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="119" height="51" tilewidth="32" tileheight="32" nextobjectid="54">
  <properties>
   <property name="cameraHeight" type="float" value="0"/>
   <property name="cameraWidth" type="float" value="16"/>
@@ -426,8 +426,9 @@
   <object id="8" type="finish" x="2912" y="1312"/>
   <object id="9" type="coin" x="1408" y="128">
    <properties>
-    <property name="id" type="int" value="3"/>
+    <property name="id" type="int" value="2"/>
    </properties>
   </object>
+  <object id="53" type="checkpoint" x="480" y="128" width="32" height="32"/>
  </objectgroup>
 </map>

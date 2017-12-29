@@ -1,6 +1,8 @@
 #include "PlayerSprite.h"
 #include "Config.h"
 
+#include <iostream>
+
 bool const Sprite::isItemPressed(const std::string itemString) const
 {
 	// This looks totally odd
@@ -51,7 +53,7 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 		dashCooldown{ 4 },
 		dashStrength{ 3 };	// Should be blocks to dash but is arbitrary at the moment (value isn't precise)
 
-							// Jump
+	// Jump
 	if (m_moveDirection.y == -1)
 	{
 		if (!m_hasJumped)
@@ -62,12 +64,11 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 		}
 	}
 
-	if (m_hasJumped && m_velocity.y < 0 && !((isItemPressed("moveUp") || isItemPressed("jump"))))
+	if (m_hasJumped && m_velocity.y < 0 && !(isItemPressed("jump")))
 		m_velocity.y += gravity * tileSize * elapsedTime;
 
 	// This is placed in the middle because otherwise the desired jump height won't be reached
 	m_sprite.move(0, m_velocity.y * elapsedTime);
-
 	// Gravity
 	if (collisionHandler.distanceTillBottomCollision(getHitbox()) == 0)
 	{
@@ -85,7 +86,7 @@ void Sprite::update(const float elapsedTime, CollisionHandler & collisionHandler
 	{
 		m_sprite.move(0, -collisionHandler.distanceTillBottomCollision(getHitbox()));
 		m_velocity.y = 0;
-		if (!isItemPressed("jump") && !isItemPressed("moveUp"))
+		if (!isItemPressed("jump"))
 			m_canJump = true;
 		m_hasJumped = false;
 	}

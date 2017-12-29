@@ -13,7 +13,7 @@ Coin::Coin(const EntityAction action, const sf::Vector2f &pos) :
 {
 	m_sprite.setTexture(DataManager::getInstance().getTexture("coin"));
 
-	if (Config::getInstance().getConfig("coin" + action.value).logic == true)
+	if (Config::getInstance().getConfig(std::string("coin" + std::to_string(action.value))).logic == true)
 		m_isActive = false;
 	else
 		m_isActive = true;
@@ -34,9 +34,8 @@ void Coin::logic(const float elapsedTime)
 const EntityAction & Coin::getAction()
 {
 	// Coin updates config self
-	Config::getInstance().setConfig("coin" + m_action.value, Item(true));
-	Config::getInstance().saveConfig();
-
+	Config::getInstance().setConfig(std::string("coin" + std::to_string(m_action.value)), Item(true));
+	
 	m_sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 	m_isActive = false;
 

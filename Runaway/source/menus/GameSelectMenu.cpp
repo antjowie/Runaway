@@ -22,11 +22,12 @@ std::string getLevelName(const LevelName levelName)
 	case LevelName::TheGate:
 		return "The Gate";
 		break;
-/*
 	case LevelName::TheMine:
 		return "The Mine";
 		break;
-*/
+	case LevelName::TheElevator:
+		return "The Elevator";
+		break;
 	default:
 		return "ERROR";
 		break;
@@ -150,12 +151,26 @@ void GameSelectMenu::update(const float elapsedTime)
 		if (temp < min)
 			temp = min;
 
+		// If the coin of the level has been found, change its color
+		if (Config::getInstance().getConfig(std::string("coin" + std::to_string(static_cast<int>(iter.m_level)))).logic)
+			iter.m_rect.setOutlineColor(sf::Color::Green);
 		sf::Color color{ iter.m_rect.getOutlineColor() };
 		color.a = static_cast<sf::Uint8>(temp);
 		iter.m_rect.setOutlineColor(color);
 	}
 
 	m_timeline = 0;
+
+	// Checks if it can load special level by collecting all coins
+	bool allCoins{ true };
+	for (int i{ 0 }; i < static_cast<int>(LevelName::TheElevator); i++)
+	{
+		allCoins = Config::getInstance().getConfig(std::string("coin" + std::to_string(i))).logic;
+		if (!allCoins)
+			break;
+	}
+	if (allCoins)
+		m_currentLevel = LevelName::TheElevator;
 }
 
 void GameSelectMenu::draw(sf::RenderWindow &window)
@@ -165,7 +180,8 @@ void GameSelectMenu::draw(sf::RenderWindow &window)
 	for (const auto &iter : m_levels)
 	{
 		window.draw(iter.m_rect);
-		window.draw(iter.m_text);
+		if(iter.m_level <= m_currentLevel)
+			window.draw(iter.m_text);
 		if (!(iter.m_level <= m_currentLevel))
 			window.draw(iter.m_unlocked);
 	}

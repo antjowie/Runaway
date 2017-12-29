@@ -1,29 +1,8 @@
-﻿  Launcher.cpp
-Runaway\source\Launcher.cpp(16): warning C4244: 'argument': conversion from 'const float' to 'const int', possible loss of data
-Runaway\source\Launcher.cpp(19): warning C4018: '<': signed/unsigned mismatch
-Runaway\source\Launcher.cpp(20): warning C4018: '<': signed/unsigned mismatch
-Runaway\source\Launcher.cpp(144): warning C4305: 'initializing': truncation from 'double' to 'float'
-  LightTrail.cpp
-Runaway\source\LightTrail.cpp(25): warning C4244: '=': conversion from 'float' to 'sf::Uint8', possible loss of data
-  GameSelectMenu.cpp
-Runaway\source\menus\GameSelectMenu.cpp(147): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  PlayerSprite.cpp
-  CollisionHandler.cpp
-  Level.cpp
-Runaway\source\Level.cpp(98): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-Runaway\source\Level.cpp(105): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
-Runaway\source\Level.cpp(395): warning C4018: '<': signed/unsigned mismatch
-  GameMenu.cpp
-Runaway\source\menus\GameMenu.cpp(11): warning C4244: 'argument': conversion from 'const int' to 'const float', possible loss of data
-Runaway\source\menus\GameMenu.cpp(153): warning C4244: 'argument': conversion from 'const int' to 'const float', possible loss of data
-  MainMenu.cpp
-Runaway\source\menus\MainMenu.cpp(48): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-Runaway\source\menus\MainMenu.cpp(51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  PlayerObject.cpp
+﻿  DataManager.cpp
   Generating code
-  6 of 3134 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  4 of 3139 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    23 functions had inline decision re-evaluated but remain unchanged
+    40 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Runaway.vcxproj -> E:\Docs\C++ projects\Runaway\Release\Runaway.exe
   Runaway.vcxproj -> E:\Docs\C++ projects\Runaway\Release\Runaway.pdb (Full PDB)

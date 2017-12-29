@@ -61,7 +61,9 @@ void Elevator::update(const float elapsedTime)
 		m_isOpen = !m_isOpen;
 	m_isOpen ? m_timeline += elapsedTime : m_timeline -= elapsedTime;
 	m_isOpen ? m_bottomElevatorTile->setTextureType(ElevatorTile::State::Open) : m_bottomElevatorTile->setTextureType(ElevatorTile::State::Closed);
-	
+
+	m_movingSound->setPosition(m_bottomElevatorTile->getHitbox().left + m_bottomElevatorTile->getHitbox().width / 2, 0.f, m_bottomElevatorTile->getHitbox().top);
+	m_hitSound->setPosition(m_bottomElevatorTile->getHitbox().left + m_bottomElevatorTile->getHitbox().width / 2, 0.f, m_bottomElevatorTile->getHitbox().top);
 	// Sound related
 	if (m_timeline > m_speed)
 	{

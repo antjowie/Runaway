@@ -448,7 +448,7 @@
   <object id="9" type="checkpoint" x="1312" y="848" width="32" height="32"/>
   <object id="19" type="coin" x="3168" y="992" width="32" height="32">
    <properties>
-    <property name="id" type="int" value="4"/>
+    <property name="id" type="int" value="3"/>
    </properties>
   </object>
   <object id="20" type="checkpoint" x="1920" y="960" width="32" height="32"/>

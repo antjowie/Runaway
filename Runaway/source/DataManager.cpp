@@ -1,4 +1,5 @@
 #include "DataManager.h"
+#include "menus\GameSelectMenu.h"
 
 DataManager::DataManager()
 {
@@ -14,6 +15,7 @@ DataManager::DataManager()
 	// Load entities
 	std::string entityPath(texturePath + "entities/");
 	loadTexture("player", entityPath + "player/playerSprite.png");
+	getTexture("player").setSmooth(true);
 	loadTexture("playerLight", entityPath + "player/playerLightSprite.png");
 
 	loadTexture("checkpoint", entityPath + "checkpoint/checkpointSprite.png");
@@ -30,13 +32,12 @@ DataManager::DataManager()
 
 	// Load level backgrounds
 	std::string levelPath(dataPath + "levels/");
-	loadTexture("factoryBackground", levelPath + "factory/background.png");
-	loadTexture("hallwayBackground", levelPath + "hallway/background.png");
-	loadTexture("the gateBackground", levelPath + "the gate/background.png");
-	loadTexture("the mineBackground", levelPath + "the mine/background.png");
-	loadTexture("wake upBackground", levelPath + "wake up/background.png");
-
-	getTexture("player").setSmooth(true);
+	for (int i{ 0 }; i < static_cast<int>(LevelName::Blank); i++)
+	{
+		std::string levelName{std::string(getLevelName(LevelName(i))) };
+		std::transform(levelName.begin(), levelName.end(), levelName.begin(), tolower);
+		loadTexture(levelName + "Background", levelPath + levelName + "/background.png");
+	}
 
 	// Load sounds
 	std::string soundPath(dataPath + "sounds/");

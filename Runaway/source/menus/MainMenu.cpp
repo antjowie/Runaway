@@ -99,6 +99,8 @@ void MainMenu::input(sf::RenderWindow & window)
 
 				case Function::Play:
 					Config::getInstance().setConfig("level", Item(0));
+					for (int i{ 0 }; i < static_cast<int>(LevelName::TheElevator); ++i)
+						Config::getInstance().setConfig(std::string("coin" + std::to_string(i)), Item(false));
 					m_menuStack->push(new GameSelectMenu(m_menuStack));
 					break;
 
