@@ -73,7 +73,7 @@ void Config::loadDefaultConfig()
 	m_config.emplace("music", 100);
 	m_config.emplace("effects", 100);
 
-	for (int i = 0; i < static_cast<int>(LevelName::TheCore); i++)
+	for (int i = 0; i < static_cast<int>(LevelName::Blank) - 1; i++)
 		m_config.emplace(std::string("coin") + std::to_string(i), false);
 }
 
@@ -151,7 +151,7 @@ bool Config::checkConfig()
 	if (!m_config.count("music")) corrupt = true;
 	if (!m_config.count("effects")) corrupt = true;
 	
-	for (int i = 0; i < static_cast<int>(LevelName::TheCore); i++)
+	for (int i = 0; i < static_cast<int>(static_cast<int>(LevelName::Blank) - 1); i++)
 		if (!m_config.count(std::string("coin") + std::to_string(i))) corrupt = true;
 
 	return corrupt;

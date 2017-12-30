@@ -5,6 +5,7 @@
 #include "BackgroundObject.h"
 #include "Config.h"
 #include "DiedMenu.h"
+#include "BossLevelMenu.h"
 
 std::string getLevelName(const LevelName levelName)
 {
@@ -28,9 +29,11 @@ std::string getLevelName(const LevelName levelName)
 	case LevelName::TheLaboratory:
 		return "The Laboratory";
 		break;
-	case LevelName::TheCore:
-		return "The Core";
+	case LevelName::TheElevator:
+		return "The Elevator";
 		break;
+	case LevelName::TheCore:
+		return "WIP";
 	default:
 		return "ERROR";
 		break;
@@ -66,24 +69,24 @@ GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
 			temp.m_level = static_cast<LevelName>(index);
 			
 			temp.m_rect.setTexture(&getLevelBackground(temp.m_level));
-			temp.m_rect.setPosition(i * width + 25, j * (height + 50));
+			temp.m_rect.setPosition(i * width + 62.5f, j * (height + 100));
 			temp.m_rect.setSize(sf::Vector2f(width - 50,height));
 			temp.m_rect.setOutlineThickness(5);
-			temp.m_rect.setOutlineColor(sf::Color::White);
+			temp.m_rect.setOutlineColor(sf::Color::Black);
 
 			temp.m_unlocked.setSize(temp.m_rect.getSize());
 			temp.m_unlocked.setPosition(temp.m_rect.getPosition());
 			temp.m_unlocked.setFillColor(sf::Color(60, 60, 60));
 
 			temp.m_text.setFont(DataManager::getInstance().getFont("pixel"));
-			temp.m_text.setCharacterSize(18);
+			temp.m_text.setCharacterSize(15);
 			std::string title(getLevelName(temp.m_level));
 			std::transform(title.begin(), title.end(), title.begin(), toupper);
 			temp.m_text.setString(title);
 			float textpos{ temp.m_text.getGlobalBounds().width - temp.m_rect.getGlobalBounds().width };
 			if (textpos < 0)
 				textpos = 0;
-			temp.m_text.setPosition(temp.m_rect.getPosition().x - textpos / 2.f, temp.m_rect.getPosition().y + temp.m_rect.getSize().y + temp.m_text.getCharacterSize() / 2);
+			temp.m_text.setPosition(temp.m_rect.getPosition().x - textpos / 2.f, temp.m_rect.getPosition().y + temp.m_rect.getSize().y + temp.m_text.getCharacterSize() / 2 + 5);
 		}
 }
 
@@ -111,7 +114,10 @@ void GameSelectMenu::input(sf::RenderWindow& window)
 		case sf::Event::MouseButtonPressed:
 			for (auto &iter : m_levels)
 				if (iter.m_rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))) && iter.m_level <= m_currentLevel)
-					m_menuStack->push(new GameMenu(m_menuStack,iter.m_level,m_currentLevel));
+					if (iter.m_level == LevelName::TheCore)
+						m_menuStack->push(new BossLevelMenu(m_menuStack));
+					else
+						m_menuStack->push(new GameMenu(m_menuStack,iter.m_level,m_currentLevel));
 			while (window.pollEvent(event));	// This line makes sure that player can't spam a level
 			break;
 
@@ -124,6 +130,7 @@ void GameSelectMenu::input(sf::RenderWindow& window)
 			break;
 
 		case sf::Event::Closed:
+			// I think this is unnecessary because game config should be saved when window is closed but better safe than sorry
 			Config::getInstance().saveConfig();
 			window.close();
 			break;
@@ -156,23 +163,12 @@ void GameSelectMenu::update(const float elapsedTime)
 
 		// If the coin of the level has been found, change its color
 		if (Config::getInstance().getConfig(std::string("coin" + std::to_string(static_cast<int>(iter.m_level)))).logic)
-			iter.m_rect.setOutlineColor(sf::Color::Green);
+			iter.m_rect.setOutlineColor(sf::Color(212,213,141));
 		sf::Color color{ iter.m_rect.getOutlineColor() };
 		color.a = static_cast<sf::Uint8>(temp);
 		iter.m_rect.setOutlineColor(color);
 	}
 	m_timeline = 0;
-
-	// Checks if it can load special level by collecting all coins
-	bool allCoins{ true };
-	for (int i{ 0 }; i < static_cast<int>(LevelName::TheCore); i++)
-	{
-		allCoins = Config::getInstance().getConfig(std::string("coin" + std::to_string(i))).logic;
-		if (!allCoins)
-			break;
-	}
-	if (allCoins)
-		m_currentLevel = LevelName::TheCore;
 }
 
 void GameSelectMenu::draw(sf::RenderWindow &window)

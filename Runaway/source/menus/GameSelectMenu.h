@@ -16,7 +16,7 @@ enum class LevelName {
 	TheGate,
 	TheMine,
 	TheLaboratory,
-	// The core is a special level which only unlocks when all the coins are collected
+	TheElevator,
 	TheCore,
 	Blank
 };

@@ -518,6 +518,9 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 		target.draw(temp, sf::BlendMultiply);
 	}
 
+	for (const auto &iter : m_textMap)
+		target.draw(iter);
+
 	for (const auto &iter : m_entityMap)
 		target.draw(*iter);
 
@@ -530,9 +533,6 @@ void Level::draw(sf::RenderTarget & target, const Camera &camera) const
 		for (int j = tileBounds.left; j < tileBounds.width + tileBounds.left; ++j)
 			if (m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Gate && m_tilemap[i][j]->getTileMeta().m_tileType != TileType::Elevator)
 			target.draw(*m_tilemap[i][j]);
-
-	for (const auto &iter : m_textMap)
-		target.draw(iter);
 }
 
 bool Level::inLevelBounds(const sf::Vector2f & point)

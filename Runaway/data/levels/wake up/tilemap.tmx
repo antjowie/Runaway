@@ -210,11 +210,11 @@
     <property name="id" type="int" value="0"/>
    </properties>
   </object>
-  <object id="47" type="text" x="3280" y="619" width="231" height="19">
-   <text>This is some kind of special item</text>
+  <object id="47" type="text" x="3268" y="619" width="255" height="19">
+   <text>This object contains unkown power</text>
   </object>
-  <object id="48" type="text" x="3254" y="636" width="286" height="19">
-   <text>It's purpose remains unkown to this day</text>
+  <object id="48" type="text" x="3226.67" y="636" width="340.667" height="19">
+   <text>It is said to protect the owner of it when needed</text>
   </object>
  </objectgroup>
 </map>
