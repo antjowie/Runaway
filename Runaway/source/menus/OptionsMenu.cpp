@@ -17,7 +17,7 @@ void OptionsMenu::initKeys()
 }
 
 OptionsMenu::OptionsMenu(MenuStack * const menuStack) :
-	Menu(menuStack),
+	Menu(menuStack, "Runaway - Options Menu"),
 	m_music(400, 170, Config::getInstance().getConfig("music").integer, 500),
 	m_effects(400, 215, Config::getInstance().getConfig("effects").integer, 500)
 {

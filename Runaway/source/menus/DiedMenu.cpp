@@ -5,7 +5,7 @@
 #include <iostream>
 
 DiedMenu::DiedMenu(MenuStack *const menuStack):
-	Menu::Menu(menuStack,"Runaway - you died")
+	Menu::Menu(menuStack,"You Died")
 {
 	m_blackFade.setFillColor(sf::Color::Black);
 	m_blackFade.setSize(sf::Vector2f(1280, 720));

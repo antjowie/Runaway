@@ -1,9 +1,30 @@
-﻿  GameSelectMenu.cpp
+﻿  Config.cpp
+  DataManager.cpp
+  MenuStack.cpp
+  Source.cpp
+  BossLevelMenu.cpp
+  DiedMenu.cpp
+Runaway\source\menus\DiedMenu.cpp(33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+Runaway\source\menus\DiedMenu.cpp(37): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Runaway\source\menus\DiedMenu.cpp(41): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+  GameMenu.cpp
+Runaway\source\menus\GameMenu.cpp(149): warning C4244: 'argument': conversion from 'const int' to 'const float', possible loss of data
+  GameSelectMenu.cpp
 Runaway\source\menus\GameSelectMenu.cpp(158): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  MainMenu.cpp
+Runaway\source\menus\MainMenu.cpp(48): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+Runaway\source\menus\MainMenu.cpp(51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Menu.cpp
+  OptionsMenu.cpp
+Runaway\source\menus\OptionsMenu.cpp(23): warning C4244: 'argument': conversion from 'const int' to 'const float', possible loss of data
+Runaway\source\menus\OptionsMenu.cpp(233): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+Runaway\source\menus\OptionsMenu.cpp(284): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  TextButtonObject.cpp
+  TextObject.cpp
   Generating code
-  0 of 3146 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  7 of 3139 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    67 functions had inline decision re-evaluated but remain unchanged
+    42 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Runaway.vcxproj -> E:\Docs\C++ projects\Runaway\Release\Runaway.exe
   Runaway.vcxproj -> E:\Docs\C++ projects\Runaway\Release\Runaway.pdb (Full PDB)

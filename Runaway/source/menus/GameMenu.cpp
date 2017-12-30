@@ -6,7 +6,7 @@
 #include "DiedMenu.h"
 #include <iostream>
 GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &currentLevel):
-	Menu(menuStack), m_levelName(levelName), m_levelProgress(currentLevel), m_resetSound(false)
+	Menu(menuStack,std::string("Runaway - " + getLevelName(levelName))), m_levelName(levelName), m_levelProgress(currentLevel), m_resetSound(false)
 {
 	m_player = new PlayerObject(m_soundManager,true);
 
@@ -16,8 +16,6 @@ GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &
 	m_level = new Level(levelPath + lower + '/', getLevelName(levelName) + " level", 1.f, "test");
 
 	m_level->loadLevel(m_camera, m_player, m_background, m_light,m_soundManager) && "Load level failed";
-	
-	changeTitle("Runaway - " + m_level->getTitle());
 	
 	m_soundManager.play();
 }

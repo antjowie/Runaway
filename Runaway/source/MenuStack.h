@@ -19,4 +19,3 @@ public:
 	void pop();
 	void push(Menu *newMenu);
 };
-

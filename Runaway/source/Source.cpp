@@ -35,10 +35,13 @@ int main()
 
 		// Failsave
 		if (menuStack.peek() == nullptr) break;
-		
-
 
 		// Logic
+		if (menuStack.peek()->m_cameBack)
+		{
+			menuStack.peek()->changeTitle(window);
+			menuStack.peek()->m_cameBack = false;
+		}
 		menuStack.peek()->input(window);
 		menuStack.peek()->update(elapsedTime);
 

@@ -48,12 +48,6 @@ void Menu::draw(sf::RenderWindow & window)
 			window.draw(*iter);
 		}
 	}
-
-	if (m_titleSwap)
-	{
-		window.setTitle(m_title);
-		m_titleSwap = false;
-	}
 }
 
 bool const Menu::isPop() const
@@ -77,13 +71,7 @@ void Menu::clearObject()
 	m_objects.clear();
 }
 
-void Menu::changeTitle(const std::string & title)
+void Menu::changeTitle(sf::RenderWindow &window)
 {
-	m_title = title;
-	m_titleSwap = true;
-}
-
-void Menu::defaultTitle()
-{
-	changeTitle("Runaway");
+	window.setTitle(m_title);
 }

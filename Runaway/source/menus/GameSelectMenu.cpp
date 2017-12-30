@@ -48,7 +48,7 @@ sf::Texture & GameSelectMenu::getLevelBackground(const LevelName levelName) cons
 }
 
 GameSelectMenu::GameSelectMenu(MenuStack* const menuStack):
-	Menu(menuStack, "Runaway - level select")
+	Menu(menuStack, "Runaway - Level Select")
 {
 	m_currentLevel = static_cast<LevelName>(Config::getInstance().getConfig("level").integer);
 	pushObject(new BackgroundObject("mainMenuBackground", true));
