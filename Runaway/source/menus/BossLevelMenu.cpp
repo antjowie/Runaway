@@ -35,7 +35,7 @@ void BossLevelMenu::update(const float elapsedTime)
 	// Had to be called after update because this will fix positions when player already has moved
 	m_level->update(elapsedTime);
 
-	const bool inDarkZone{ m_level->inDarkZone(m_player->m_sprite.getHitbox()) };
+	const bool inDarkZone{ m_core->inDarkZone() };
 
 	m_player->m_lightPool.setRate(50.f);
 	m_player->m_inDarkZone = inDarkZone;
@@ -75,6 +75,8 @@ void BossLevelMenu::update(const float elapsedTime)
 		m_soundManager.setTargetVolume(0, SoundType::Effect);
 		m_menuStack->push(new DiedMenu(m_menuStack));
 
+		m_player->m_lightPool.setRate(1000000.f);
+		m_player->m_lightPool.update(1.f);
 		m_player->m_sprite.setPos(m_level->getOriginalSpawn());
 		m_player->m_isDead = false;
 
@@ -102,6 +104,9 @@ BossLevelMenu::BossLevelMenu(MenuStack *const menuStack):
 	Menu(menuStack,"Runaway - The Core")
 {
 	m_player = new PlayerObject(m_soundManager, true);
+
+	m_player->m_lightPool.setRate(1000000.f);
+	m_player->m_lightPool.update(1.f);
 
 	std::string levelPath("Runaway/data/levels/");
 	std::string lower(getLevelName(LevelName::TheCore));

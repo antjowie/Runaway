@@ -110,6 +110,7 @@ public:
 
 	// Checks if hitbox is hit by projectiles and removes them
 	bool hit(const sf::FloatRect &hitbox);
+	bool inDarkZone() const;
 	Core();
 };
 

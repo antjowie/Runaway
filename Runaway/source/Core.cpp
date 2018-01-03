@@ -251,6 +251,11 @@ bool Core::hit(const sf::FloatRect & hitbox)
 	return isHit;
 }
 
+bool Core::inDarkZone() const
+{
+	return m_phase == Core::Charge || m_phase == Core::SwitchState;
+}
+
 Core::Core():
 	m_animHandler(576,480)
 {
