@@ -185,10 +185,12 @@ bool Level::loadTileLayer(std::vector<char> tilemap, SoundManager & soundManager
 	m_cameraSize.y *= static_cast<float>(m_tileHeight);
 
 	// Calculate aspect ratios if desired (assumes 16:9)
-	if (m_cameraSize.x == 0)
+	if (m_cameraSize.x == 0.0f)
 		m_cameraSize.x = 1920.f / 1080.f * m_cameraSize.y;
-	else if (m_cameraSize.y == 0)
+	else if (m_cameraSize.y == 0.0f)
 		m_cameraSize.y = 1080.f / 1920.f * m_cameraSize.x;
+
+	
 
 	// Load level attributes
 	node = node->first_node("layer");
@@ -218,7 +220,7 @@ bool Level::loadTileLayer(std::vector<char> tilemap, SoundManager & soundManager
 				for (const auto &j : i)
 				{
 					j->setSolid(false);
-					j->setBrightness(100); // Could use some fine tweaking
+					j->setBrightness(110); // Could use some fine tweaking
 				}
 		}
 	}

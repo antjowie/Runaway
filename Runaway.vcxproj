@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Runaway\source\BossLauncher.cpp" />
+    <ClCompile Include="Runaway\source\Core.cpp" />
     <ClCompile Include="Runaway\source\Elevator.cpp" />
     <ClCompile Include="Runaway\source\entities\Coin.cpp" />
     <ClCompile Include="Runaway\source\entities\Finish.cpp" />
@@ -65,6 +67,8 @@
     <ClCompile Include="Runaway\source\entities\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Runaway\source\BossLauncher.h" />
+    <ClInclude Include="Runaway\source\Core.h" />
     <ClInclude Include="Runaway\source\Elevator.h" />
     <ClInclude Include="Runaway\source\entities\Coin.h" />
     <ClInclude Include="Runaway\source\entities\Finish.h" />
@@ -202,7 +206,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>

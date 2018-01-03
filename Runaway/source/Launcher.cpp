@@ -10,7 +10,7 @@ void Launcher::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	}
 }
 
-bool Launcher::checkCollision(const Launcher::Projectile &projectile) const
+bool Launcher::checkCollision(const Projectile &projectile) const
 {
 	sf::Sprite sprite = projectile.m_sprite;
 	sf::Vector2i pos{ mapWorldToTilemap(sprite.getPosition(), (*m_tilemap)[0][0]->getHitbox().width, (*m_tilemap)[0][0]->getHitbox().height) };
@@ -24,7 +24,8 @@ bool Launcher::checkCollision(const Launcher::Projectile &projectile) const
 	return false;
 }
 
-Launcher::Launcher():
+Launcher::Launcher(const bool black):
+	m_black(black),
 	m_tilemap(nullptr),
 	m_pos(0,0),
 	m_cooldown(0),
@@ -48,7 +49,8 @@ void Launcher::shoot(const sf::Vector2f & pos)
 	if (triangle.x < 0)
 		angle += 180;
 	
-	m_projectiles.push_back(Projectile(m_projectileLife, m_projectileSize, m_pos, angle));
+	sf::Color temp = m_black ? sf::Color(0, 0, 0, 255) : sf::Color(255, 255, 255, 255);
+	m_projectiles.push_back(Projectile(m_projectileLife, m_projectileSize, m_pos, angle,temp));
 }
 
 void Launcher::setPos(const sf::Vector2f & pos)
@@ -115,28 +117,29 @@ const sf::Vector2f & Launcher::getProjectileSize() const
 	return m_projectileSize;
 }
 
-std::list<Launcher::Projectile> &Launcher::getProjectiles()
+std::list<Projectile> &Launcher::getProjectiles()
 {
 	return m_projectiles;
 }
 
-Launcher::Projectile::Projectile(const float maxLife, const sf::Vector2f &size, const sf::Vector2f &pos, const float angle):
+Projectile::Projectile(const float maxLife, const sf::Vector2f &size, const sf::Vector2f &pos, const float angle, sf::Color &color):
 	m_life(maxLife),
 	m_angle(angle)
 {
 	m_sprite.setTexture(DataManager::getInstance().getTexture("lightCircle"));
 	m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
+	m_sprite.setColor(color);
 	setSize(size.x,size.y);
 	m_sprite.setPosition(pos);
 }
 
-void Launcher::Projectile::setSize(const float width, const float height)
+void Projectile::setSize(const float width, const float height)
 {
 	// Because sprite will never grow in size, bounds checking isn't necessary
 	m_sprite.scale(width / m_sprite.getGlobalBounds().width, height / m_sprite.getGlobalBounds().height);
 }
 
-void Launcher::Projectile::setSize(const float diameter)
+void Projectile::setSize(const float diameter)
 {
 	setSize(diameter, diameter);
 }

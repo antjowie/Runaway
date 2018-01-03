@@ -22,7 +22,8 @@ GameMenu::GameMenu(MenuStack* const menuStack, LevelName &levelName, LevelName &
 
 GameMenu::~GameMenu()
 {
-	Menu::~Menu();
+	// Destructors are always called in reverse order so this line server no purpose
+	//Menu::~Menu();
 	delete m_player;
 	delete m_level;
 }

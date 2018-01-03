@@ -22,6 +22,8 @@ DataManager::DataManager()
 	loadTexture("switch", entityPath + "switch/switchSprite.png");
 	loadTexture("finish", entityPath + "finish/finishSprite.png");
 	loadTexture("coin", entityPath + "coin/coinSprite.png");
+	loadTexture("core", entityPath + "core/coreSprite.png");
+	loadTexture("coreEye", entityPath + "core/coreEye.png");
 
 	// Load meta
 	std::string metaPath(texturePath + "meta/");

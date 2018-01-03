@@ -33,7 +33,7 @@ std::string getLevelName(const LevelName levelName)
 		return "The Elevator";
 		break;
 	case LevelName::TheCore:
-		return "WIP";
+		return "The Core";
 	default:
 		return "ERROR";
 		break;
