@@ -93,11 +93,14 @@ private:
 	// Used to predict next shot
 	sf::Vector2f m_oldPlayerPos;
 	sf::Vector2f m_playerPos;
+	bool m_isDead{ false };
 	
 	void DefaultLauncher();
+	void ChargeLauncher();
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 public:
+	bool m_destroy{ false };
 
 	// This also removes collided objects, that's why we need projectile instead of just the hitbox
 	void updateCollision(std::list<Projectile> &projectiles);

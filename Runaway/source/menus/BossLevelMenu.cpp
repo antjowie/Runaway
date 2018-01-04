@@ -97,7 +97,8 @@ void BossLevelMenu::draw(sf::RenderWindow & window)
 	window.draw(m_light, sf::BlendMultiply);
 
 	window.draw(*m_player);
-	window.draw(*m_core);
+	if(!m_core->m_destroy)
+		window.draw(*m_core);
 }
 
 BossLevelMenu::BossLevelMenu(MenuStack *const menuStack):

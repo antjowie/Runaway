@@ -20,6 +20,9 @@ void Core::updateCollision(std::list<Projectile>& projectiles)
 
 void Core::update(const float elapsedTime)
 {
+	if (m_state <= 0)
+		m_phase = Core::Destroyed;
+
 	// Allows core to move smoothly
 	sf::Vector2f movement{ m_targetPos - m_body.getPos() };
 	float magnitude{ movement.x * movement.x + movement.y * movement.y };
@@ -77,28 +80,29 @@ void Core::update(const float elapsedTime)
 			m_timeline = 0;
 		}
 
-		if (m_state == 3)
+		if (m_timeline < 1.f)
+			m_timeline += elapsedTime / 1.5f;
+		else
 		{
-			m_middleLauncher.shoot(m_playerPos);
-		}
-		else if (m_state == 2)
-		{
-			float timeTillTarget{ std::sqrtf(std::powf(m_playerPos.x - getPos().x,2) + std::powf(m_playerPos.y - getPos().y,2)) / m_middleLauncher.getProjectileSpeed()};
-			sf::Vector2f nextPos{ (m_playerPos - m_oldPlayerPos) * (timeTillTarget / elapsedTime) };
-			sf::Vector2f predictedPos(m_playerPos + nextPos);
-		
-			m_leftLauncher.shoot(predictedPos);
-			m_rightLauncher.shoot(predictedPos);
-		}
-		else if (m_state == 1)
-		{
-			float timeTillTarget{ std::sqrtf(std::powf(m_playerPos.x - getPos().x,2) + std::powf(m_playerPos.y - getPos().y,2)) / m_middleLauncher.getProjectileSpeed() };
-			sf::Vector2f nextPos{ (m_playerPos - m_oldPlayerPos) * (timeTillTarget / elapsedTime) };
-			sf::Vector2f predictedPos(m_playerPos + nextPos);
-
-			m_leftLauncher.shoot(predictedPos);
-			m_middleLauncher.shoot(m_playerPos);
-			m_rightLauncher.shoot(predictedPos);
+			const float timeTillTarget{ std::sqrtf(std::powf(m_playerPos.x - getPos().x,2) + std::powf(m_playerPos.y - getPos().y,2)) / m_middleLauncher.getProjectileSpeed()};
+			const sf::Vector2f nextPos{ (m_playerPos - m_oldPlayerPos) * (timeTillTarget / elapsedTime) };
+			const sf::Vector2f predictedPos(m_playerPos + sf::Vector2f(nextPos.x, 0));
+				
+			switch (m_state)
+			{
+			case 3:
+				m_middleLauncher.shoot(m_playerPos);
+				break;
+			case 2:
+				m_leftLauncher.shoot(predictedPos);
+				m_rightLauncher.shoot(predictedPos);
+				break;
+			case 1:
+				m_leftLauncher.shoot(predictedPos);
+				m_middleLauncher.shoot(m_playerPos);
+				m_rightLauncher.shoot(predictedPos);
+				break;
+			}
 		}
 
 		if (m_eyes.isHit())
@@ -125,49 +129,95 @@ void Core::update(const float elapsedTime)
 		m_targetPos = sf::Vector2f(1376, 1316);
 		m_eyes.setPos(m_body.getPos());
 
+		float timeTillTarget{ std::sqrtf(std::powf(m_playerPos.x - getPos().x,2) + std::powf(m_playerPos.y - getPos().y,2)) / m_middleLauncher.getProjectileSpeed() };
+		sf::Vector2f nextPos{ (m_playerPos - m_oldPlayerPos) * (timeTillTarget / elapsedTime) };
+		sf::Vector2f predictedPos(m_playerPos + sf::Vector2f(nextPos.x,0));
+
 		if (m_timeline == -1)
 		{
-			m_leftLauncher.setFireRate(0.f);
-			m_middleLauncher.setFireRate(0.f);
-			m_rightLauncher.setFireRate(0.f);
-
-			m_leftLauncher.setProjectileLife(13.f);
-			m_middleLauncher.setProjectileLife(13.f);
-			m_rightLauncher.setProjectileLife(13.f);
-
-			m_leftLauncher.setProjectileSize(sf::Vector2f(64, 64 * 3));
-			m_middleLauncher.setProjectileSize(sf::Vector2f(64, 64 * 2));
-			m_rightLauncher.setProjectileSize(sf::Vector2f(64, 64 * 3));
-			
-			m_leftLauncher.setProjectileSpeed(32 * 10);
-			m_middleLauncher.setProjectileSpeed(32 * 10);
-			m_rightLauncher.setProjectileSpeed(32 * 10);
+			ChargeLauncher();
 			m_timeline = 0;
 		}
 		
 		if (m_timeline < 1)
 		{
 			m_timeline += elapsedTime / 3.f;
+			m_leftLauncher.setProjectileSpeed(0.f);
 			m_middleLauncher.setProjectileSpeed(0.f);
+			m_rightLauncher.setProjectileSpeed(0.f);
 		}
 		else if (m_timeline < 2)
 		{
+			ChargeLauncher();
 			m_timeline += elapsedTime / 10.f;
-			m_middleLauncher.setProjectileSpeed(32.f * 4.f);
 		}
-		m_middleLauncher.shoot(m_playerPos);
+		
+		switch (m_state)
+		{
+		case 3:
+			m_middleLauncher.shoot(m_playerPos);
+			break;
+		case 2:
+			m_leftLauncher.shoot(m_playerPos);
+			m_rightLauncher.shoot(m_playerPos);
+			break;
+		case 1:
+			m_leftLauncher.shoot(m_playerPos);
+			m_middleLauncher.shoot(m_playerPos);
+			m_rightLauncher.shoot(m_playerPos);
+			break;
+		}
 		
 		if (m_timeline > 2)
 		{
 			m_state -= 1;
-		//	m_timeline = -1;
+			m_timeline = -1;
 			m_phase = Core::Roam;
 		}
 	}
 		break;
 	case Core::Destroyed:
 	{
+		m_targetPos = sf::Vector2f(1376, 1316);
+		m_eyes.setPos(m_body.getPos());
 
+		if (m_timeline == -1)
+		{
+			m_hp = 3;
+			m_timeline = 0;
+			ChargeLauncher();
+		}
+		else if (!m_isDead && m_timeline > 1)
+		{
+			m_timeline = 1;
+
+			if (m_eyes.isHit() || m_body.isHit())
+			{
+				m_eyes.flash(0.3f);
+				m_body.flash(0.3f);
+				m_hp -= 1;
+			}
+			if (m_hp <= 0) 
+			{
+				m_isDead = true;
+				m_timeline = 0;
+			}
+
+			m_leftLauncher.shoot(m_playerPos);
+			m_middleLauncher.shoot(m_playerPos);
+			m_rightLauncher.shoot(m_playerPos);
+		}
+		else if (m_isDead)
+		{
+			m_timeline += elapsedTime / 5.f;
+			m_eyes.flash(5.f);
+			m_body.flash(5.f);
+			if (m_timeline > 1)
+				m_destroy = true;
+			// TODO animation
+		}
+		else 
+		m_timeline += elapsedTime / 3.f;
 	}
 		break;
 	
@@ -311,26 +361,9 @@ void Core::DefaultLauncher()
 	m_middleLauncher.setFireRate(1.f);
 	m_rightLauncher.setFireRate(1.f);
 
-	m_middleLauncher.setProjectileLife(0);
-	m_leftLauncher.setProjectileLife (0);
-	m_rightLauncher.setProjectileLife(0);
-	switch (m_state)
-	{
-	case 3:
-		m_middleLauncher.setProjectileLife(5);
-		break;
-
-	case 2:
-		m_leftLauncher.setProjectileLife(5);
-		m_rightLauncher.setProjectileLife(5);
-		break;
-
-	case 1:		
-		m_leftLauncher.setProjectileLife(5);
-		m_middleLauncher.setProjectileLife(5);
-		m_rightLauncher.setProjectileLife(5);
-		break;
-	}
+	m_middleLauncher.setProjectileLife(13);
+	m_leftLauncher.setProjectileLife(13);
+	m_rightLauncher.setProjectileLife(13);
 
 	m_leftLauncher.setProjectileSpeed(32 * 10);
 	m_middleLauncher.setProjectileSpeed(32 * 10);
@@ -339,6 +372,15 @@ void Core::DefaultLauncher()
 	m_leftLauncher.setProjectileSize(sf::Vector2f(64 * 2, 64 * 2));
 	m_middleLauncher.setProjectileSize(sf::Vector2f(64 * 2, 64 * 2));
 	m_rightLauncher.setProjectileSize(sf::Vector2f(64 * 2, 64 * 2));
+}
+
+void Core::ChargeLauncher()
+{
+	DefaultLauncher();
+
+	m_leftLauncher.setFireRate(0.f);
+	m_middleLauncher.setFireRate(0.f);
+	m_rightLauncher.setFireRate(0.f);
 }
 
 void Core::Part::setTexture(const sf::Texture &texture)
