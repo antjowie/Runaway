@@ -31,6 +31,11 @@ void Coin::logic(const float elapsedTime)
 	m_sprite.setTextureRect(m_animHandler.getFrame());
 }
 
+void Coin::setPosition(const sf::Vector2f & pos)
+{
+	m_sprite.setPosition(pos);
+}
+
 const EntityAction & Coin::getAction()
 {
 	// Coin updates config self

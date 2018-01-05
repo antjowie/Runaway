@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<keyboard coin7="0" dash="38" jump="57" moveLeft="0" moveRight="3" respawn="15"/>
+	<keyboard dash="38" jump="57" moveLeft="0" moveRight="3" respawn="15"/>
 	<mouse shoot="0"/>
-	<logic coin0="1" coin1="0" coin2="0" coin3="0" coin4="0" coin5="0" coin6="0"/>
-	<integer effects="100" frameLimit="60" level="7" music="100"/>
+	<logic coin0="0" coin1="0" coin2="0" coin3="0" coin4="0" coin5="0" coin6="0" coin7="0"/>
+	<integer effects="100" frameLimit="60" level="0" music="100"/>
 </config>
 

@@ -612,10 +612,10 @@
     <property name="speed" type="float" value="5"/>
    </properties>
   </object>
-  <object id="90" name="13" type="gate" x="2624" y="800" width="32" height="32">
+  <object id="90" name="13r" type="gate" x="2624" y="800" width="32" height="32">
    <properties>
     <property name="id" type="int" value="13"/>
-    <property name="inverted" type="bool" value="false"/>
+    <property name="inverted" type="bool" value="true"/>
     <property name="speed" type="float" value="5"/>
    </properties>
   </object>

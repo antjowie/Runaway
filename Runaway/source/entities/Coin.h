@@ -18,6 +18,9 @@ public:
 	
 	virtual void logic(const float elapsedTime) override final;
 	
+	// Used for boss fight
+	void setPosition(const sf::Vector2f & pos);
+
 	// This value doesn't matter
 	virtual const EntityAction &getAction() override final;
 };

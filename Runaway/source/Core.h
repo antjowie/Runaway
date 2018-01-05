@@ -23,7 +23,11 @@ private:
 	}m_phase{ Phase::Sleep };
 
 	AnimationHandler m_animHandler;
-	
+
+	SoundObject *m_bootSound;
+	SoundObject *m_switchToRoamSound;
+	SoundObject *m_chargeSound;
+	SoundObject *m_explosionSound;
 
 	// This class is a class for sprite, but it uses corrected hitboxes
 	class Part : public sf::Drawable
@@ -94,13 +98,18 @@ private:
 	sf::Vector2f m_oldPlayerPos;
 	sf::Vector2f m_playerPos;
 	bool m_isDead{ false };
-	
+	bool m_destroy{ false };
+	bool m_inDarkZone{ false };
+
+	// Used when core is exploding
+	sf::RectangleShape m_whiteOverlay;
+
 	void DefaultLauncher();
 	void ChargeLauncher();
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override final;
 public:
-	bool m_destroy{ false };
+	bool m_completed{ false };
 
 	// This also removes collided objects, that's why we need projectile instead of just the hitbox
 	void updateCollision(std::list<Projectile> &projectiles);
@@ -114,6 +123,8 @@ public:
 	// Checks if hitbox is hit by projectiles and removes them
 	bool hit(const sf::FloatRect &hitbox);
 	bool inDarkZone() const;
-	Core();
+	
+	Core(SoundManager &soundManager);
+	~Core();
 };
 

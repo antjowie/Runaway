@@ -10,6 +10,8 @@
 #include "Menu.h"
 #include "Level.h"
 #include "Core.h"
+#include "Finish.h"
+#include "Coin.h"
 
 class BossLevelMenu:
 	public Menu
@@ -22,6 +24,14 @@ private:
 	Camera m_camera;
 	Level *m_level;
 	Core *m_core;
+	Finish *m_finish;
+
+	// Used to keep track of collected coins
+	int m_coins{ 0 };
+	std::vector<Coin>m_coinSprites;
+	sf::CircleShape m_coinCircle;
+
+	bool m_resetSound{ false };
 
 public:
 	virtual void input(sf::RenderWindow &window) override final;

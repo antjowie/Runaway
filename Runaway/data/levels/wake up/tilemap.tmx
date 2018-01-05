@@ -4,7 +4,7 @@
   <property name="cameraHeight" type="float" value="0"/>
   <property name="cameraWidth" type="float" value="25"/>
  </properties>
- <tileset firstgid="1" source="../tileset.tsx"/>
+ <tileset firstgid="1" source="../extra/tileset.tsx"/>
  <layer name="background" width="125" height="40" opacity="0.25">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

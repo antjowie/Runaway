@@ -46,6 +46,10 @@ DataManager::DataManager()
 	loadSound("lightPool", soundPath + "lightPool.wav");
 	loadSound("doorMoving", soundPath + "doorMoving.wav");
 	loadSound("doorHit", soundPath + "doorHit.wav");
+	loadSound("coreBoot", soundPath + "coreBoot.wav");
+	loadSound("coreDestroy", soundPath + "coreDestroy.wav");
+	loadSound("coreCharge", soundPath + "coreCharge.wav");
+	loadSound("coreDash", soundPath + "coreDash.wav");
 }
 
 DataManager & DataManager::getInstance()

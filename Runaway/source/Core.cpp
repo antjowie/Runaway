@@ -1,10 +1,10 @@
 #include "Core.h"
 #include "DataManager.h"
-
-#include <iostream>
+#include "Config.h"
 
 void Core::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
+	target.draw(m_whiteOverlay, states);
 	target.draw(m_body, states);
 	target.draw(m_eyes, states);
 	target.draw(m_leftLauncher, states);
@@ -46,7 +46,12 @@ void Core::update(const float elapsedTime)
 	{
 		m_targetPos = m_body.getPos();
 		if ((m_body.isHit() || m_eyes.isHit()) && m_timeline == -1)
+		{
+			m_inDarkZone = true;
+			m_bootSound->setVolume(Config::getInstance().getConfig("effects").integer);
+			m_bootSound->play();
 			m_timeline = 0;
+		}
 		else if (m_timeline > 1)
 		{
 			m_phase = Core::Phase::Roam;
@@ -76,12 +81,15 @@ void Core::update(const float elapsedTime)
 
 		if (m_timeline == -1)
 		{
+			m_inDarkZone = false;
 			DefaultLauncher();
+			m_switchToRoamSound->setVolume(Config::getInstance().getConfig("effects").integer);
+			m_switchToRoamSound->play();
 			m_timeline = 0;
 		}
 
 		if (m_timeline < 1.f)
-			m_timeline += elapsedTime / 1.5f;
+			m_timeline += elapsedTime / 2.5f;
 		else
 		{
 			const float timeTillTarget{ std::sqrtf(std::powf(m_playerPos.x - getPos().x,2) + std::powf(m_playerPos.y - getPos().y,2)) / m_middleLauncher.getProjectileSpeed()};
@@ -135,6 +143,8 @@ void Core::update(const float elapsedTime)
 
 		if (m_timeline == -1)
 		{
+			m_chargeSound->setVolume(Config::getInstance().getConfig("effects").integer);
+			m_chargeSound->play();
 			ChargeLauncher();
 			m_timeline = 0;
 		}
@@ -183,6 +193,10 @@ void Core::update(const float elapsedTime)
 
 		if (m_timeline == -1)
 		{
+			m_inDarkZone = true;
+			m_chargeSound->setPlayingOffset(sf::Time::Zero);
+			m_chargeSound->setVolume(Config::getInstance().getConfig("effects").integer);
+			m_chargeSound->play();
 			m_hp = 3;
 			m_timeline = 0;
 			ChargeLauncher();
@@ -199,6 +213,8 @@ void Core::update(const float elapsedTime)
 			}
 			if (m_hp <= 0) 
 			{
+				m_inDarkZone = false;
+				m_chargeSound->stop();
 				m_isDead = true;
 				m_timeline = 0;
 			}
@@ -209,12 +225,36 @@ void Core::update(const float elapsedTime)
 		}
 		else if (m_isDead)
 		{
-			m_timeline += elapsedTime / 5.f;
-			m_eyes.flash(5.f);
-			m_body.flash(5.f);
-			if (m_timeline > 1)
+			if (m_timeline <= 1)
+			{
+				m_timeline += elapsedTime / 5.f;
+				m_eyes.setColor(sf::Color(255 - m_timeline * 255, 255 - m_timeline * 255, 255 - m_timeline * 255, 255));
+				m_body.setColor(sf::Color(255 - m_timeline * 255, 255 - m_timeline * 255, 255 - m_timeline * 255, 255));
+				m_whiteOverlay.setFillColor(sf::Color(255, 255, 255, m_timeline * 255));
+			}
+			else if (m_timeline <= 2)
+			{
+				m_timeline += elapsedTime / 3.f;
+				if (!m_destroy)
+				{
+					m_explosionSound->setVolume(Config::getInstance().getConfig("effects").integer);
+					m_explosionSound->play();
+					m_eyes.setColor(sf::Color(0, 0, 0, 0));
+					m_body.setColor(sf::Color(0, 0, 0, 0));
+				}
+				m_whiteOverlay.setFillColor(sf::Color(255, 255, 255, 255));
 				m_destroy = true;
-			// TODO animation
+			}
+			else if (m_timeline <= 3)
+			{
+				m_timeline += elapsedTime / 5.f;
+				m_whiteOverlay.setFillColor(sf::Color(255, 255, 255, 255 - (m_timeline - 2.f) * 255));
+			}
+			else
+			{
+				m_whiteOverlay.setFillColor(sf::Color(255, 255, 255, 0));
+				m_completed = true;
+			}
 		}
 		else 
 		m_timeline += elapsedTime / 3.f;
@@ -227,16 +267,18 @@ void Core::update(const float elapsedTime)
 		m_eyes.setPos(m_body.getPos());
 
 		if (m_timeline == -1)
+		{
+			m_inDarkZone = true;
 			m_timeline = 0;
+		}
 
-		m_timeline += elapsedTime / 3.f;
+		m_timeline += elapsedTime / 1.f;
 
 		if (m_timeline > 1)
 		{
 			m_timeline = -1;
 			m_phase = Core::Charge;
-		}
-			
+		}			
 	}
 		break;
 	}
@@ -249,6 +291,12 @@ void Core::update(const float elapsedTime)
 	m_leftLauncher.update(elapsedTime);
 	m_middleLauncher.update(elapsedTime);
 	m_rightLauncher.update(elapsedTime);
+	
+	// Update sound pos
+	m_bootSound			->setPosition(m_body.getPos().x, 0, m_body.getPos().y);
+	m_switchToRoamSound	->setPosition(m_body.getPos().x, 0, m_body.getPos().y);
+	m_chargeSound		->setPosition(m_body.getPos().x, 0, m_body.getPos().y);
+	m_explosionSound	->setPosition(m_body.getPos().x, 0, m_body.getPos().y);
 }
 
 void Core::setPos(const sf::Vector2f & pos)
@@ -303,10 +351,10 @@ bool Core::hit(const sf::FloatRect & hitbox)
 
 bool Core::inDarkZone() const
 {
-	return m_phase == Core::Charge || m_phase == Core::SwitchState;
+	return m_inDarkZone;
 }
 
-Core::Core():
+Core::Core(SoundManager &soundManager):
 	m_animHandler(576,480)
 {
 	// Center eye
@@ -348,6 +396,44 @@ Core::Core():
 	m_body.setPos(1376, 1616);
 	m_eyes.setPos(1376, 1616);
 	m_targetPos = m_body.getPos();
+
+	m_whiteOverlay.setFillColor(sf::Color(255,255,255,0));
+	m_whiteOverlay.setPosition(0, 0);
+	m_whiteOverlay.setSize(sf::Vector2f(10000, 10000));
+
+	m_bootSound = new SoundObject(SoundType::Effect, soundManager);
+	m_chargeSound = new SoundObject(SoundType::Effect, soundManager);
+	m_explosionSound = new SoundObject(SoundType::Effect, soundManager);
+	m_switchToRoamSound = new SoundObject(SoundType::Effect, soundManager);
+
+	m_bootSound->setBuffer(DataManager::getInstance().getSound("coreBoot"));
+	m_chargeSound->setBuffer(DataManager::getInstance().getSound("coreCharge"));
+	m_explosionSound->setBuffer(DataManager::getInstance().getSound("coreDestroy"));
+	m_switchToRoamSound->setBuffer(DataManager::getInstance().getSound("coreDash"));
+
+
+	m_bootSound			->setAttenuation(0.5f);
+	m_chargeSound		->setAttenuation(0.5f);
+	m_explosionSound	->setAttenuation(0.5f);
+	m_switchToRoamSound	->setAttenuation(0.5f);
+
+	m_bootSound			->setMinDistance(32.f * 6.f);
+	m_chargeSound		->setMinDistance(32.f * 6.f);
+	m_explosionSound	->setMinDistance(32.f * 6.f);
+	m_switchToRoamSound	->setMinDistance(32.f * 6.f);
+
+	m_bootSound			->setVolume(0);
+	m_chargeSound		->setVolume(0);
+	m_explosionSound	->setVolume(0);
+	m_switchToRoamSound	->setVolume(0);
+}
+
+Core::~Core()
+{
+	m_bootSound->m_shouldPop = true;
+	m_chargeSound->m_shouldPop = true;
+	m_explosionSound->m_shouldPop = true;
+	m_switchToRoamSound->m_shouldPop = true;
 }
 
 void Core::Part::draw(sf::RenderTarget & target, sf::RenderStates states) const
