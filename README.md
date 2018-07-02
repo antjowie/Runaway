@@ -1,6 +1,8 @@
 # Runaway
 A 2D platformer, made by using my knowledge gained at http://www.learncpp.com/ and the documentation of SFML.
 
+> If you want to play the game, download this repository and and run the Runaway.exe in the **Game** folder. To build the game yourself, be sure to build it in 32 bit because the version of SFML is 32 bit. 
+
 # Purpose
 I was originally planning to finish the book Game Engine Architecture http://www.gameenginebook.com/ first before I started another project.
 But I was intrested in how far this book would help me with my skills. So I decided to challenge myself. By building a game from scratch,
